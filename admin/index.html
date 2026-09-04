@@ -1,1 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — SCP: CB2</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0d10;
+      color: #e8e8e8;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .login,
+    .admin {
+      min-height: 100vh;
+    }
+
+    .login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: #11151a;
+      border: 1px solid #252b32;
+      border-radius: 12px;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #858e98;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 7px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      background: #0b0d10;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: white;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #65717e;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 16px;
+      cursor: pointer;
+      background: #e8e8e8;
+      color: #101214;
+      font-weight: 700;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    .login button {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    .error {
+      color: #ff7777;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    .admin {
+      display: none;
+    }
+
+    header {
+      height: 68px;
+      border-bottom: 1px solid #252b32;
+      background: #11151a;
+    }
+
+    .header-inner {
+      width: min(1100px, calc(100% - 30px));
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 800;
+    }
+
+    main {
+      width: min(1100px, calc(100% - 30px));
+      margin: auto;
+      padding: 35px 0 60px;
+    }
+
+    .panel {
+      background: #11151a;
+      border: 1px solid #252b32;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .upload-row {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 20px;
+      align-items: center;
+      padding: 18px 0;
+      border-top: 1px solid #252b32;
+    }
+
+    .upload-row:first-of-type {
+      border-top: 0;
+    }
+
+    .preview {
+      width: 180px;
+      height: 100px;
+      border: 1px dashed #3a424b;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #68717b;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .status {
+      margin-top: 15px;
+      color: #8fbcff;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .upload-row {
+        grid-template-columns: 1fr;
+      }
+
+      .preview {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+
+  <section class="login" id="loginScreen">
+    <div class="login-box">
+      <h1>Админ-панель</h1>
+      <p class="muted">
+        SCP: CB2 Multiplayer
+      </p>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="Email администратора">
+
+      <label for="password">Пароль</label>
+      <input id="password" type="password" placeholder="Пароль">
+
+      <button id="loginButton">Войти</button>
+
+      <div class="error" id="loginError"></div>
+    </div>
+  </section>
+
+
+  <!-- ADMIN -->
+
+  <section class="admin" id="adminScreen">
+
+    <header>
+      <div class="header-inner">
+        <div class="logo">SCP: CB2 — Админ-панель</div>
+
+        <button id="logoutButton">
+          Выйти
+        </button>
+      </div>
+    </header>
+
+    <main>
+
+      <div class="panel">
+        <h1>Настройки оформления</h1>
+
+        <p class="muted">
+          Здесь позже можно будет менять изображения сайта
+          без редактирования HTML.
+        </p>
+      </div>
+
+
+      <div class="panel">
+
+        <h2>Изображения</h2>
+
+        <!-- LOGO -->
+
+        <div class="upload-row">
+
+          <div>
+            <h3>Логотип</h3>
+
+            <p class="muted">
+              Основной логотип сайта.
+            </p>
+
+            <input
+              type="file"
+              id="logoFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('logo')"
+            >
+              Загрузить логотип
+            </button>
+          </div>
+
+          <div class="preview" id="logoPreview">
+            Нет изображения
+          </div>
+
+        </div>
+
+
+        <!-- BACKGROUND -->
+
+        <div class="upload-row">
+
+          <div>
+            <h3>Фон</h3>
+
+            <p class="muted">
+              Фоновое изображение сайта.
+            </p>
+
+            <input
+              type="file"
+              id="backgroundFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('background')"
+            >
+              Загрузить фон
+            </button>
+          </div>
+
+          <div class="preview" id="backgroundPreview">
+            Нет изображения
+          </div>
+
+        </div>
+
+
+        <!-- BANNER -->
+
+        <div class="upload-row">
+
+          <div>
+            <h3>Баннер</h3>
+
+            <p class="muted">
+              Большое изображение для оформления сайта.
+            </p>
+
+            <input
+              type="file"
+              id="bannerFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('banner')"
+            >
+              Загрузить баннер
+            </button>
+          </div>
+
+          <div class="preview" id="bannerPreview">
+            Нет изображения
+          </div>
+
+        </div>
+
+        <div class="status" id="status"></div>
+
+      </div>
+
+    </main>
+
+  </section>
+
+
+  <!-- SUPABASE -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+
+    /*
+      =====================================================
+      ВСТАВЬ СЮДА СВОИ ДАННЫЕ SUPABASE
+      =====================================================
+    */
+
+    const SUPABASE_URL = "ВСТАВЬ_СЮДА_PROJECT_URL";
+
+    const SUPABASE_KEY = "ВСТАВЬ_СЮДА_PUBLISHABLE_KEY";
+
+
+    const { createClient } =
+      supabase;
+
+    const db =
+      createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+
+    /*
+      ЭЛЕМЕНТЫ
+    */
+
+    const loginScreen =
+      document.getElementById("loginScreen");
+
+    const adminScreen =
+      document.getElementById("adminScreen");
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    const loginError =
+      document.getElementById("loginError");
+
+    const status =
+      document.getElementById("status");
+
+
+    /*
+      ПРОВЕРКА АВТОРИЗАЦИИ
+    */
+
+    async function checkUser() {
+
+      const {
+        data: {
+          session
+        }
+      } = await db.auth.getSession();
+
+      if (session) {
+
+        loginScreen.style.display = "none";
+        adminScreen.style.display = "block";
+
+      } else {
+
+        loginScreen.style.display = "flex";
+        adminScreen.style.display = "none";
+
+      }
+
+    }
+
+
+    /*
+      ВХОД
+    */
+
+    loginButton.addEventListener(
+      "click",
+      async () => {
+
+        loginError.textContent = "";
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+
+        if (!email || !password) {
+
+          loginError.textContent =
+            "Введите email и пароль.";
+
+          return;
+
+        }
+
+
+        const {
+          error
+        } = await db.auth.signInWithPassword({
+
+          email: email,
+          password: password
+
+        });
+
+
+        if (error) {
+
+          loginError.textContent =
+            "Ошибка входа: " + error.message;
+
+          return;
+
+        }
+
+
+        checkUser();
+
+      }
+    );
+
+
+    /*
+      ВЫХОД
+    */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        await db.auth.signOut();
+
+        checkUser();
+
+      }
+    );
+
+
+    /*
+      ЗАГРУЗКА КАРТИНКИ
+    */
+
+    async function uploadImage(type) {
+
+      const input =
+        document.getElementById(
+          type + "File"
+        );
+
+      const file =
+        input.files[0];
+
+
+      if (!file) {
+
+        status.textContent =
+          "Сначала выбери изображение.";
+
+        return;
+
+      }
+
+
+      if (file.size > 5 * 1024 * 1024) {
+
+        status.textContent =
+          "Файл слишком большой. Максимум 5 MB.";
+
+        return;
+
+      }
+
+
+      status.textContent =
+        "Загрузка...";
+
+
+      const extension =
+        file.name.split(".").pop();
+
+
+      const fileName =
+        type + "." + extension;
+
+
+      const filePath =
+        "site/" + fileName;
+
+
+      const {
+        error
+      } = await db.storage
+        .from("site-images")
+        .upload(
+          filePath,
+          file,
+          {
+            upsert: true,
+            contentType: file.type
+          }
+        );
+
+
+      if (error) {
+
+        status.textContent =
+          "Ошибка загрузки: " + error.message;
+
+        return;
+
+      }
+
+
+      const {
+        data
+      } = db.storage
+        .from("site-images")
+        .getPublicUrl(filePath);
+
+
+      const imageUrl =
+        data.publicUrl;
+
+
+      /*
+        Сохраняем ссылку в БД
+      */
+
+      const {
+        error: dbError
+      } = await db
+        .from("site_settings")
+        .upsert(
+          {
+            key: type,
+            value: imageUrl,
+            updated_at: new Date().toISOString()
+          },
+          {
+            onConflict: "key"
+          }
+        );
+
+
+      if (dbError) {
+
+        status.textContent =
+          "Картинка загружена, но ссылка не сохранилась: "
+          + dbError.message;
+
+        return;
+
+      }
+
+
+      /*
+        ПРЕДПРОСМОТР
+      */
+
+      const preview =
+        document.getElementById(
+          type + "Preview"
+        );
+
+
+      preview.innerHTML =
+        `<img src="${imageUrl}" alt="">`;
+
+
+      status.textContent =
+        "Изображение успешно сохранено.";
+
+    }
+
+
+    /*
+      СЛУШАЕМ ИЗМЕНЕНИЯ АВТОРИЗАЦИИ
+    */
+
+    db.auth.onAuthStateChange(
+      () => {
+
+        checkUser();
+
+      }
+    );
+
+
+    checkUser();
+
+  </script>
+
+</body>
+</html>
