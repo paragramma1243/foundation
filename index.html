@@ -1,90 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Новости SCP: CB2 Multiplayer — обновления, сервера, разработка и события сообщества.">
   <title>SCP: CB2 Multiplayer — Новости</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="page-glow"></div>
+
   <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="index.html">
-        <span class="brand-mark">SCP</span>
-        <span>
-          <strong>CB2</strong>
-          <small>MULTIPLAYER</small>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="SCP CB2 Multiplayer">
+        <span class="brand-mark">
+          <span class="brand-mark-ring"></span>
+          <span class="brand-mark-core">☣</span>
+        </span>
+        <span class="brand-copy">
+          <strong>SCP<br>CB2</strong>
+          <em>MULTIPLAYER</em>
         </span>
       </a>
-      <nav>
+
+      <nav class="main-nav" aria-label="Основная навигация">
         <a class="active" href="index.html">Новости</a>
         <a href="servers.html">Сервера</a>
-        <a href="#development">Разработка</a>
-        <a href="#community">Сообщество</a>
+        <a href="#">Разработка</a>
+        <a href="#">Сообщество</a>
+        <a href="#">О проекте</a>
       </nav>
-      <a class="admin-link" href="admin.html">ADMIN</a>
+
+      <button class="search-button" type="button" aria-label="Поиск">
+        <span></span>
+      </button>
+
+      <button class="mobile-menu" type="button" aria-label="Открыть меню">
+        <i></i><i></i><i></i>
+      </button>
     </div>
   </header>
 
   <main>
-    <section class="hero container">
-      <div class="hero-copy">
-        <span class="eyebrow">SCP: CONTAINMENT BREACH 2</span>
-        <h1>Новости проекта</h1>
-        <p>Главные события, обновления серверов, изменения в руководстве и новости разработки в одном месте.</p>
-        <a class="button" href="#news">Смотреть новости</a>
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="container hero-content">
+        <div class="eyebrow"><span></span> ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ</div>
+        <h1>НОВОСТИ <b>SCP: CB2</b></h1>
+        <p>Будьте в курсе изменений, обновлений и событий в мире SCP: CB2 Multiplayer.</p>
+        <a class="hero-button" href="#news">Смотреть новости <span>→</span></a>
       </div>
-      <div class="hero-art">
-        <div class="scanline"></div>
-        <div class="hero-label">CLASSIFIED<br><b>CB2 // NEWS</b></div>
-      </div>
+      <div class="hero-fade"></div>
     </section>
 
-    <section class="container section" id="news">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">LATEST REPORTS</span>
-          <h2>Последние новости</h2>
-        </div>
-        <div class="filters">
-          <button class="filter active" data-filter="all">Все</button>
-          <button class="filter" data-filter="Обновления">Обновления</button>
-          <button class="filter" data-filter="Сервера">Сервера</button>
-          <button class="filter" data-filter="Сообщество">Сообщество</button>
-          <button class="filter" data-filter="Разработка">Разработка</button>
-        </div>
-      </div>
-      <div class="news-grid" id="newsGrid"></div>
-    </section>
-
-    <section class="container changes-layout" id="development">
-      <div class="section changes-section">
-        <div class="section-head compact">
+    <section class="content-section" id="news">
+      <div class="container">
+        <div class="section-heading">
           <div>
-            <span class="eyebrow">CHANGELOG</span>
-            <h2>Последние изменения</h2>
+            <span class="section-kicker">ЦЕНТР ИНФОРМАЦИИ</span>
+            <h2>Последние новости</h2>
+          </div>
+          <div class="filters" id="filters">
+            <button class="filter active" data-filter="all">Все новости</button>
+            <button class="filter" data-filter="updates">Обновления</button>
+            <button class="filter" data-filter="servers">Сервера</button>
+            <button class="filter" data-filter="dev">Разработка</button>
+            <button class="filter" data-filter="events">События</button>
           </div>
         </div>
-        <div id="changesList" class="changes-list"></div>
-      </div>
 
-      <aside class="side-card" id="community">
-        <span class="eyebrow">PROJECT</span>
-        <h3>SCP: CB2<br>Multiplayer</h3>
-        <p>Новости проекта, серверов и сообщества. Здесь публикуются важные изменения и события.</p>
-        <div class="status"><i></i> Проект активен</div>
-      </aside>
+        <div class="news-layout">
+          <div class="news-list" id="newsList"></div>
+
+          <aside class="sidebar">
+            <section class="panel changes-panel">
+              <div class="panel-title">
+                <span class="title-icon">◈</span>
+                <h3>Последние изменения</h3>
+              </div>
+              <div id="changesList"></div>
+            </section>
+
+            <section class="panel project-panel">
+              <div class="panel-title">
+                <span class="title-icon">◉</span>
+                <h3>О проекте</h3>
+              </div>
+              <p>SCP: CB2 Multiplayer — новостной портал о серверах, разработке и событиях сообщества.</p>
+              <a href="#" class="panel-link">Подробнее о проекте <span>→</span></a>
+            </section>
+          </aside>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div><b>SCP: CB2 MULTIPLAYER</b><span>Новостной портал проекта</span></div>
-      <div class="footer-links">
-        <a href="#">Discord</a>
-        <a href="#">Правила</a>
-        <a href="#">Контакты</a>
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <span class="brand-mark small">
+            <span class="brand-mark-ring"></span>
+            <span class="brand-mark-core">☣</span>
+          </span>
+          <span class="brand-copy">
+            <strong>SCP<br>CB2</strong>
+            <em>MULTIPLAYER</em>
+          </span>
+        </a>
+        <p>Официальный новостной портал<br>SCP: CB2 Multiplayer.</p>
       </div>
+
+      <div class="footer-column">
+        <h4>Навигация</h4>
+        <a href="index.html">Новости</a>
+        <a href="servers.html">Сервера</a>
+        <a href="#">Разработка</a>
+        <a href="#">Сообщество</a>
+      </div>
+
+      <div class="footer-column">
+        <h4>Сообщество</h4>
+        <a href="#">Discord</a>
+        <a href="#">Steam</a>
+        <a href="#">Поддержка</a>
+        <a href="#">Предложить новость</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">© 2026 SCP: CB2 Multiplayer. Не является официальным продуктом SCP Foundation.</div>
     </div>
   </footer>
 
