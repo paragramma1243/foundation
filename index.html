@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCP: CB2 Multiplayer — Новости</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">SCP</span>
+        <span>
+          <strong>CB2</strong>
+          <small>MULTIPLAYER</small>
+        </span>
+      </a>
+      <nav>
+        <a class="active" href="index.html">Новости</a>
+        <a href="servers.html">Сервера</a>
+        <a href="#development">Разработка</a>
+        <a href="#community">Сообщество</a>
+      </nav>
+      <a class="admin-link" href="admin.html">ADMIN</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <span class="eyebrow">SCP: CONTAINMENT BREACH 2</span>
+        <h1>Новости проекта</h1>
+        <p>Главные события, обновления серверов, изменения в руководстве и новости разработки в одном месте.</p>
+        <a class="button" href="#news">Смотреть новости</a>
+      </div>
+      <div class="hero-art">
+        <div class="scanline"></div>
+        <div class="hero-label">CLASSIFIED<br><b>CB2 // NEWS</b></div>
+      </div>
+    </section>
+
+    <section class="container section" id="news">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">LATEST REPORTS</span>
+          <h2>Последние новости</h2>
+        </div>
+        <div class="filters">
+          <button class="filter active" data-filter="all">Все</button>
+          <button class="filter" data-filter="Обновления">Обновления</button>
+          <button class="filter" data-filter="Сервера">Сервера</button>
+          <button class="filter" data-filter="Сообщество">Сообщество</button>
+          <button class="filter" data-filter="Разработка">Разработка</button>
+        </div>
+      </div>
+      <div class="news-grid" id="newsGrid"></div>
+    </section>
+
+    <section class="container changes-layout" id="development">
+      <div class="section changes-section">
+        <div class="section-head compact">
+          <div>
+            <span class="eyebrow">CHANGELOG</span>
+            <h2>Последние изменения</h2>
+          </div>
+        </div>
+        <div id="changesList" class="changes-list"></div>
+      </div>
+
+      <aside class="side-card" id="community">
+        <span class="eyebrow">PROJECT</span>
+        <h3>SCP: CB2<br>Multiplayer</h3>
+        <p>Новости проекта, серверов и сообщества. Здесь публикуются важные изменения и события.</p>
+        <div class="status"><i></i> Проект активен</div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div><b>SCP: CB2 MULTIPLAYER</b><span>Новостной портал проекта</span></div>
+      <div class="footer-links">
+        <a href="#">Discord</a>
+        <a href="#">Правила</a>
+        <a href="#">Контакты</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

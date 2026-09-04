@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — SCP: CB2 Multiplayer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-body">
+  <main class="admin-shell">
+    <section class="login-card" id="loginCard">
+      <span class="brand-mark big">SCP</span>
+      <span class="eyebrow">CB2 MULTIPLAYER</span>
+      <h1>ADMIN PANEL</h1>
+      <p>Демо-интерфейс. Настоящая авторизация будет подключена на этапе backend.</p>
+      <label>Логин<input id="login" placeholder="admin"></label>
+      <label>Пароль<input id="password" type="password" placeholder="••••••••"></label>
+      <button class="button full" id="loginBtn">Войти</button>
+      <a class="back-link center" href="index.html">← Вернуться на сайт</a>
+    </section>
+
+    <section class="dashboard hidden" id="dashboard">
+      <div class="dash-top"><div><span class="eyebrow">CONTROL CENTER</span><h1>Панель управления</h1></div><a href="index.html" class="back-link">На сайт →</a></div>
+      <div class="dash-grid">
+        <div class="panel">
+          <div class="panel-head"><h2>Новости</h2><button class="button small" id="newNewsBtn">+ Новость</button></div>
+          <div id="adminNews"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Последние изменения</h2><button class="button small" id="newChangeBtn">+ Изменение</button></div>
+          <div id="adminChanges"></div>
+        </div>
+      </div>
+      <div class="editor hidden" id="editor">
+        <div class="panel-head"><h2 id="editorTitle">Новая новость</h2><button class="close" id="closeEditor">×</button></div>
+        <label>Заголовок<input id="formTitle" placeholder="Заголовок новости"></label>
+        <label>Тег<select id="formTag"><option>Обновления</option><option>Сервера</option><option>Сообщество</option><option>Разработка</option></select></label>
+        <label>Картинка<input id="formImage" type="file" accept="image/*"></label>
+        <label>Описание<textarea id="formDescription" rows="3" placeholder="Краткое описание"></textarea></label>
+        <label>Текст<textarea id="formContent" rows="8" placeholder="Текст новости"></textarea></label>
+        <button class="button" id="saveNews">Опубликовать</button>
+      </div>
+      <div class="editor hidden" id="changeEditor">
+        <div class="panel-head"><h2>Новое изменение</h2><button class="close" id="closeChange">×</button></div>
+        <label>Заголовок<input id="changeTitle" placeholder="Что изменилось?"></label>
+        <label>Описание<textarea id="changeDescription" rows="3" placeholder="Краткое описание изменения"></textarea></label>
+        <button class="button" id="saveChange">Добавить изменение</button>
+      </div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>
