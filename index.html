@@ -25,6 +25,10 @@ body{
   color:#ddd;
   font-family:Arial,Helvetica,sans-serif;
   line-height:1.5;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
 }
 
 a{
@@ -180,6 +184,9 @@ nav a.active:after{
   position:relative;
   overflow:hidden;
   background:#101111;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
   border-bottom:1px solid #242526;
 }
 
@@ -362,9 +369,6 @@ main{
   border-color:#454647;
 }
 
-
-/* Картинка + тег */
-
 .news-image-area{
   width:100%;
   height:100%;
@@ -382,9 +386,6 @@ main{
   background:#151616;
   display:block;
 }
-
-
-/* Тег над картинкой */
 
 .news-card-tag{
   position:absolute;
@@ -411,7 +412,6 @@ main{
   transform:translateY(-1px);
   box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
-
 
 .news-content{
   padding:22px 24px;
@@ -693,12 +693,6 @@ footer{
     height:70px;
   }
 
-  /*
-    На телефоне меню НЕ скрываем.
-    Оно становится горизонтально
-    прокручиваемым.
-  */
-
   .header-inner{
     gap:12px;
     min-width:0;
@@ -819,14 +813,10 @@ footer{
 
 }
 
-
-/* ================= RELATIVE TIME ================= */
-
 </style>
 </head>
 
 <body>
-
 
 <header>
 
@@ -858,7 +848,6 @@ footer{
 
     </a>
 
-
     <nav>
 
       <a
@@ -883,7 +872,6 @@ footer{
       </a>
 
     </nav>
-
 
     <div class="search">
       ⌕
@@ -932,9 +920,6 @@ footer{
 
   <div class="wrap">
 
-
-    <!-- Заголовок -->
-
     <div class="section-head">
 
       <div>
@@ -951,8 +936,6 @@ footer{
 
     </div>
 
-
-    <!-- ФИЛЬТРЫ НАД КАРТОЧКАМИ -->
 
     <div class="filters">
 
@@ -996,9 +979,6 @@ footer{
 
     <div class="content-grid">
 
-
-      <!-- НОВОСТИ -->
-
       <section>
 
         <div
@@ -1015,12 +995,7 @@ footer{
       </section>
 
 
-      <!-- ПРАВАЯ КОЛОНКА -->
-
       <aside class="sidebar">
-
-
-        <!-- ПОСЛЕДНИЕ ИЗМЕНЕНИЯ -->
 
         <div
           class="panel"
@@ -1056,8 +1031,6 @@ footer{
 
         </div>
 
-
-        <!-- О ПРОЕКТЕ -->
 
         <div
           class="panel"
@@ -1118,7 +1091,6 @@ footer{
 
         </div>
 
-
       </aside>
 
     </div>
@@ -1133,7 +1105,6 @@ footer{
   <div class="wrap">
 
     <div class="footer-grid">
-
 
       <div>
 
@@ -1206,7 +1177,6 @@ footer{
         </div>
 
       </div>
-
 
     </div>
 
@@ -1286,7 +1256,13 @@ async function loadSiteSettings(){
   });
 
 
-  if(settings.logo_url){
+  /*
+  ==========================================
+  ЛОГОТИП
+  ==========================================
+  */
+
+  if(settings.logo){
 
     const logo =
       document.getElementById(
@@ -1296,7 +1272,70 @@ async function loadSiteSettings(){
     if(logo){
 
       logo.src =
-        settings.logo_url;
+        settings.logo +
+        "?v=" +
+        Date.now();
+
+      logo.style.display =
+        "block";
+
+    }
+
+  }
+
+
+  /*
+  ==========================================
+  ФОН САЙТА
+  ==========================================
+  */
+
+  if(settings.background){
+
+    document.body.style.backgroundImage =
+      `url("${settings.background}?v=${Date.now()}")`;
+
+    document.body.style.backgroundSize =
+      "cover";
+
+    document.body.style.backgroundPosition =
+      "center top";
+
+    document.body.style.backgroundAttachment =
+      "fixed";
+
+    document.body.style.backgroundRepeat =
+      "no-repeat";
+
+  }
+
+
+  /*
+  ==========================================
+  БАННЕР
+  ==========================================
+  */
+
+  if(settings.banner){
+
+    const hero =
+      document.querySelector(
+        ".hero"
+      );
+
+    if(hero){
+
+      hero.style.backgroundImage =
+        `url("${settings.banner}?v=${Date.now()}")`;
+
+      hero.style.backgroundSize =
+        "cover";
+
+      hero.style.backgroundPosition =
+        "center";
+
+      hero.style.backgroundRepeat =
+        "no-repeat";
 
     }
 
@@ -1719,8 +1758,6 @@ function activateFilter(category){
 }
 
 
-/* Кнопки фильтров */
-
 document
   .querySelectorAll(
     ".filter"
@@ -1742,15 +1779,6 @@ document
 
 
 /* ================= HEADER NAV ================= */
-
-/*
-  Верхнее меню теперь связано
-  с фильтрами новостей.
-
-  Новости -> Все
-  Сервера -> Сервера
-  О проекте -> О проекте
-*/
 
 document
   .querySelectorAll(
