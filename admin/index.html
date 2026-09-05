@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Админ-панель — SCP: CB2</title>
+  <title>Админ-панель Новостей CB2</title>
 
   <style>
     * {
@@ -91,6 +91,11 @@
 
     button:hover {
       opacity: .9;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
     }
 
     .login button {
@@ -219,7 +224,8 @@
       width: 100%;
     }
 
-    .news-list {
+    .news-list,
+    .changes-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -271,6 +277,83 @@
       padding: 10px 0;
     }
 
+    /* ==============================
+       ПОСЛЕДНИЕ ИЗМЕНЕНИЯ
+    ============================== */
+
+    .change-form {
+      margin-top: 20px;
+    }
+
+    .change-icon-preview {
+      width: 90px;
+      height: 90px;
+      margin-top: 12px;
+      border: 1px dashed #3a424b;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #0b0d10;
+      color: #68717b;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .change-icon-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .change-add-button {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .change-item {
+      display: grid;
+      grid-template-columns: 55px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      background: #0b0d10;
+      border: 1px solid #252b32;
+      border-radius: 9px;
+    }
+
+    .change-item-icon {
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .change-item-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .change-item-title {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .change-item-meta {
+      color: #858e98;
+      font-size: 12px;
+    }
+
+    .change-list-title {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #252b32;
+    }
+
     @media (max-width: 700px) {
       .upload-row {
         grid-template-columns: 1fr;
@@ -288,6 +371,15 @@
         width: 100%;
         height: 180px;
       }
+
+      .change-item {
+        grid-template-columns: 50px 1fr;
+      }
+
+      .change-item .delete-button {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -297,6 +389,7 @@
   <!-- LOGIN -->
 
   <section class="login" id="loginScreen">
+
     <div class="login-box">
 
       <h1>Админ-панель</h1>
@@ -305,7 +398,9 @@
         SCP: CB2 Multiplayer
       </p>
 
-      <label for="email">Email</label>
+      <label for="email">
+        Email
+      </label>
 
       <input
         id="email"
@@ -313,7 +408,9 @@
         placeholder="Email администратора"
       >
 
-      <label for="password">Пароль</label>
+      <label for="password">
+        Пароль
+      </label>
 
       <input
         id="password"
@@ -325,15 +422,22 @@
         Войти
       </button>
 
-      <div class="error" id="loginError"></div>
+      <div
+        class="error"
+        id="loginError"
+      ></div>
 
     </div>
+
   </section>
 
 
   <!-- ADMIN -->
 
-  <section class="admin" id="adminScreen">
+  <section
+    class="admin"
+    id="adminScreen"
+  >
 
     <header>
 
@@ -518,8 +622,6 @@
 
         <div class="news-form">
 
-          <!-- ФОТО -->
-
           <label for="newsImage">
             Фотография новости
           </label>
@@ -538,8 +640,6 @@
           </div>
 
 
-          <!-- ЗАГОЛОВОК -->
-
           <label for="newsTitle">
             Заголовок
           </label>
@@ -552,8 +652,6 @@
           >
 
 
-          <!-- ОПИСАНИЕ -->
-
           <label for="newsDescription">
             Краткое описание
           </label>
@@ -565,8 +663,6 @@
           ></textarea>
 
 
-          <!-- ПОЛНЫЙ ТЕКСТ -->
-
           <label for="newsContent">
             Полный текст новости
           </label>
@@ -576,8 +672,6 @@
             placeholder="Полный текст новости, который будет отображаться на отдельной странице..."
           ></textarea>
 
-
-          <!-- ТЕГ -->
 
           <label for="newsCategory">
             Тег новости
@@ -616,6 +710,89 @@
             id="newsStatus"
           ></div>
 
+        </div>
+
+      </div>
+
+
+      <!-- ПОСЛЕДНИЕ ИЗМЕНЕНИЯ -->
+
+      <div class="panel">
+
+        <h2>
+          Последние изменения
+        </h2>
+
+        <p class="muted">
+          Добавляй изменения проекта, которые будут отображаться
+          в блоке «Последние изменения» на главной странице.
+        </p>
+
+
+        <div class="change-form">
+
+          <label for="changeTitle">
+            Название изменения
+          </label>
+
+          <input
+            id="changeTitle"
+            type="text"
+            maxlength="200"
+            placeholder="Например: Добавлена карта Site-65"
+          >
+
+
+          <label for="changeIcon">
+            Иконка изменения
+          </label>
+
+          <p class="muted">
+            Лучше использовать небольшое PNG или WEBP с прозрачным фоном.
+          </p>
+
+          <input
+            id="changeIcon"
+            type="file"
+            accept="image/png,image/webp,image/jpeg"
+          >
+
+
+          <div
+            class="change-icon-preview"
+            id="changeIconPreview"
+          >
+            Предпросмотр
+          </div>
+
+
+          <button
+            class="change-add-button"
+            id="addChangeButton"
+          >
+            Добавить изменение
+          </button>
+
+
+          <div
+            class="status"
+            id="changeStatus"
+          ></div>
+
+        </div>
+
+
+        <h3 class="change-list-title">
+          Добавленные изменения
+        </h3>
+
+        <div
+          class="changes-list"
+          id="changesList"
+        >
+          <div class="empty">
+            Загрузка...
+          </div>
         </div>
 
       </div>
@@ -704,6 +881,9 @@
     const newsStatus =
       document.getElementById("newsStatus");
 
+    const changeStatus =
+      document.getElementById("changeStatus");
+
     const newsImage =
       document.getElementById("newsImage");
 
@@ -715,6 +895,18 @@
 
     const newsList =
       document.getElementById("newsList");
+
+    const changeIcon =
+      document.getElementById("changeIcon");
+
+    const changeIconPreview =
+      document.getElementById("changeIconPreview");
+
+    const addChangeButton =
+      document.getElementById("addChangeButton");
+
+    const changesList =
+      document.getElementById("changesList");
 
 
     /*
@@ -738,6 +930,7 @@
         adminScreen.style.display = "block";
 
         loadNews();
+        loadChanges();
 
       } else {
 
@@ -960,7 +1153,7 @@
 
 
       preview.innerHTML =
-        `<img src="${imageUrl}" alt="">`;
+        `<img src="${escapeAttribute(imageUrl)}" alt="">`;
 
 
       status.textContent =
@@ -998,7 +1191,52 @@
 
 
         newsImagePreview.innerHTML =
-          `<img src="${url}" alt="">`;
+          `<img src="${escapeAttribute(url)}" alt="">`;
+
+      }
+    );
+
+
+    /*
+    =====================================================
+    ПРЕДПРОСМОТР ИКОНКИ ИЗМЕНЕНИЯ
+    =====================================================
+    */
+
+    changeIcon.addEventListener(
+      "change",
+      () => {
+
+        const file =
+          changeIcon.files[0];
+
+
+        if (!file) {
+
+          changeIconPreview.innerHTML =
+            "Предпросмотр";
+
+          return;
+
+        }
+
+
+        if (file.size > 5 * 1024 * 1024) {
+
+          changeIconPreview.innerHTML =
+            "Файл слишком большой";
+
+          return;
+
+        }
+
+
+        const url =
+          URL.createObjectURL(file);
+
+
+        changeIconPreview.innerHTML =
+          `<img src="${escapeAttribute(url)}" alt="">`;
 
       }
     );
@@ -1088,6 +1326,566 @@
 
     /*
     =====================================================
+    ЗАГРУЗКА ИКОНКИ ИЗМЕНЕНИЯ
+    =====================================================
+    */
+
+    async function uploadChangeIcon(file) {
+
+      if (!file) {
+        return null;
+      }
+
+
+      if (file.size > 5 * 1024 * 1024) {
+
+        throw new Error(
+          "Иконка слишком большая. Максимум 5 MB."
+        );
+
+      }
+
+
+      const extension =
+        file.name
+          .split(".")
+          .pop()
+          .toLowerCase();
+
+
+      const uniqueName =
+        "change-" +
+        Date.now() +
+        "-" +
+        Math.random()
+          .toString(36)
+          .substring(2, 8) +
+        "." +
+        extension;
+
+
+      const filePath =
+        "changes/" + uniqueName;
+
+
+      const {
+        error
+      } =
+        await db.storage
+          .from("site-images")
+          .upload(
+            filePath,
+            file,
+            {
+              upsert: false,
+              contentType: file.type
+            }
+          );
+
+
+      if (error) {
+
+        throw new Error(
+          "Ошибка загрузки иконки: " +
+          error.message
+        );
+
+      }
+
+
+      const {
+        data
+      } =
+        db.storage
+          .from("site-images")
+          .getPublicUrl(filePath);
+
+
+      return data.publicUrl;
+
+    }
+
+
+    /*
+    =====================================================
+    ДОБАВЛЕНИЕ ИЗМЕНЕНИЯ
+    =====================================================
+    */
+
+    addChangeButton.addEventListener(
+      "click",
+      async () => {
+
+        changeStatus.textContent =
+          "";
+
+
+        const title =
+          document
+            .getElementById("changeTitle")
+            .value
+            .trim();
+
+
+        const iconFile =
+          changeIcon.files[0];
+
+
+        if (!title) {
+
+          changeStatus.textContent =
+            "Введите название изменения.";
+
+          return;
+
+        }
+
+
+        if (!iconFile) {
+
+          changeStatus.textContent =
+            "Выберите иконку изменения.";
+
+          return;
+
+        }
+
+
+        addChangeButton.disabled =
+          true;
+
+        addChangeButton.textContent =
+          "Добавление...";
+
+
+        try {
+
+          const iconUrl =
+            await uploadChangeIcon(
+              iconFile
+            );
+
+
+          const {
+            error
+          } =
+            await db
+              .from("changes")
+              .insert({
+
+                title:
+                  title,
+
+                icon_url:
+                  iconUrl
+
+              });
+
+
+          if (error) {
+
+            throw new Error(
+              "Ошибка создания изменения: " +
+              error.message
+            );
+
+          }
+
+
+          document
+            .getElementById("changeTitle")
+            .value = "";
+
+          changeIcon.value = "";
+
+          changeIconPreview.innerHTML =
+            "Предпросмотр";
+
+
+          changeStatus.textContent =
+            "Изменение успешно добавлено.";
+
+
+          loadChanges();
+
+        } catch (error) {
+
+          changeStatus.textContent =
+            error.message;
+
+        }
+
+
+        addChangeButton.disabled =
+          false;
+
+        addChangeButton.textContent =
+          "Добавить изменение";
+
+      }
+    );
+
+
+    /*
+    =====================================================
+    ЗАГРУЗКА СПИСКА ИЗМЕНЕНИЙ
+    =====================================================
+    */
+
+    async function loadChanges() {
+
+      changesList.innerHTML =
+        `<div class="empty">Загрузка...</div>`;
+
+
+      const {
+        data,
+        error
+      } =
+        await db
+          .from("changes")
+          .select(
+            "id,title,icon_url,created_at"
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+      if (error) {
+
+        changesList.innerHTML =
+          `<div class="empty">
+            Ошибка загрузки изменений: ${escapeHtml(error.message)}
+          </div>`;
+
+        return;
+
+      }
+
+
+      if (!data || data.length === 0) {
+
+        changesList.innerHTML =
+          `<div class="empty">
+            Изменений пока нет.
+          </div>`;
+
+        return;
+
+      }
+
+
+      changesList.innerHTML = "";
+
+
+      data.forEach(
+        change => {
+
+          const item =
+            document.createElement("div");
+
+          item.className =
+            "change-item";
+
+
+          const icon =
+            document.createElement("div");
+
+          icon.className =
+            "change-item-icon";
+
+
+          if (change.icon_url) {
+
+            icon.innerHTML =
+              `<img
+                src="${escapeAttribute(change.icon_url)}"
+                alt=""
+              >`;
+
+          }
+
+
+          const info =
+            document.createElement("div");
+
+
+          const title =
+            document.createElement("div");
+
+          title.className =
+            "change-item-title";
+
+          title.textContent =
+            change.title;
+
+
+          const meta =
+            document.createElement("div");
+
+          meta.className =
+            "change-item-meta";
+
+
+          meta.textContent =
+            formatChangeTime(
+              change.created_at
+            );
+
+
+          info.appendChild(title);
+          info.appendChild(meta);
+
+
+          const deleteButton =
+            document.createElement("button");
+
+          deleteButton.className =
+            "delete-button";
+
+          deleteButton.textContent =
+            "Удалить";
+
+
+          deleteButton.addEventListener(
+            "click",
+            () => {
+
+              deleteChange(
+                change.id,
+                change.title
+              );
+
+            }
+          );
+
+
+          item.appendChild(icon);
+          item.appendChild(info);
+          item.appendChild(deleteButton);
+
+
+          changesList.appendChild(item);
+
+        }
+      );
+
+    }
+
+
+    /*
+    =====================================================
+    ВРЕМЯ ИЗМЕНЕНИЯ
+    =====================================================
+    */
+
+    function formatChangeTime(dateString) {
+
+      const date =
+        new Date(dateString);
+
+      const now =
+        new Date();
+
+      const seconds =
+        Math.floor(
+          (now - date) / 1000
+        );
+
+
+      if (seconds < 60) {
+
+        return "Только что";
+
+      }
+
+
+      const minutes =
+        Math.floor(
+          seconds / 60
+        );
+
+
+      if (minutes < 60) {
+
+        return (
+          minutes +
+          " " +
+          getRussianPlural(
+            minutes,
+            "минуту",
+            "минуты",
+            "минут"
+          ) +
+          " назад"
+        );
+
+      }
+
+
+      const hours =
+        Math.floor(
+          minutes / 60
+        );
+
+
+      if (hours < 24) {
+
+        return (
+          hours +
+          " " +
+          getRussianPlural(
+            hours,
+            "час",
+            "часа",
+            "часов"
+          ) +
+          " назад"
+        );
+
+      }
+
+
+      const days =
+        Math.floor(
+          hours / 24
+        );
+
+
+      if (days === 1) {
+
+        return "Вчера";
+
+      }
+
+
+      if (days < 7) {
+
+        return (
+          days +
+          " " +
+          getRussianPlural(
+            days,
+            "день",
+            "дня",
+            "дней"
+          ) +
+          " назад"
+        );
+
+      }
+
+
+      return date.toLocaleDateString(
+        "ru-RU"
+      );
+
+    }
+
+
+    function getRussianPlural(
+      number,
+      one,
+      few,
+      many
+    ) {
+
+      const mod10 =
+        number % 10;
+
+      const mod100 =
+        number % 100;
+
+
+      if (
+        mod10 === 1 &&
+        mod100 !== 11
+      ) {
+        return one;
+      }
+
+
+      if (
+        mod10 >= 2 &&
+        mod10 <= 4 &&
+        (
+          mod100 < 10 ||
+          mod100 >= 20
+        )
+      ) {
+        return few;
+      }
+
+
+      return many;
+
+    }
+
+
+    /*
+    =====================================================
+    УДАЛЕНИЕ ИЗМЕНЕНИЯ
+    =====================================================
+    */
+
+    async function deleteChange(
+      id,
+      title
+    ) {
+
+      const confirmed =
+        confirm(
+          `Удалить изменение "${title}"?`
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      changeStatus.textContent =
+        "Удаление...";
+
+
+      const {
+        error
+      } =
+        await db
+          .from("changes")
+          .delete()
+          .eq(
+            "id",
+            id
+          );
+
+
+      if (error) {
+
+        changeStatus.textContent =
+          "Ошибка удаления: " +
+          error.message;
+
+        return;
+
+      }
+
+
+      changeStatus.textContent =
+        "Изменение удалено.";
+
+
+      loadChanges();
+
+    }
+
+
+    /*
+    =====================================================
     СОЗДАНИЕ НОВОСТИ
     =====================================================
     */
@@ -1130,10 +1928,6 @@
         const imageFile =
           newsImage.files[0];
 
-
-        /*
-        ПРОВЕРКА
-        */
 
         if (!title) {
 
@@ -1184,19 +1978,11 @@
 
         try {
 
-          /*
-          Сначала загружаем фотографию
-          */
-
           const imageUrl =
             await uploadNewsImage(
               imageFile
             );
 
-
-          /*
-          Затем создаём запись
-          */
 
           const {
             error
@@ -1233,10 +2019,6 @@
           }
 
 
-          /*
-          ОЧИЩАЕМ ФОРМУ
-          */
-
           document
             .getElementById("newsTitle")
             .value = "";
@@ -1258,10 +2040,6 @@
           newsStatus.textContent =
             "Новость успешно опубликована.";
 
-
-          /*
-          ОБНОВЛЯЕМ СПИСОК
-          */
 
           loadNews();
 
