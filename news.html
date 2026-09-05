@@ -160,6 +160,9 @@ nav a.active:after{
   bottom:0;
 }
 
+
+/* ================= SEARCH BUTTON ================= */
+
 .search{
   width:34px;
   height:34px;
@@ -171,11 +174,101 @@ nav a.active:after{
   transition:.2s;
   flex-shrink:0;
   font-size:20px;
+  background:#050606;
+  padding:0;
+  appearance:none;
 }
 
 .search:hover{
   border-color:#777;
   color:#fff;
+}
+
+.search.active{
+  border-color:#d5b42e;
+  color:#d5b42e;
+}
+
+
+/* ================= SEARCH PANEL ================= */
+
+.search-panel{
+  position:absolute;
+  top:82px;
+  left:0;
+  right:0;
+  z-index:20;
+
+  background:#050606;
+  border-bottom:1px solid #292a2b;
+
+  padding:14px 0;
+
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-8px);
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease,
+    visibility .2s ease;
+}
+
+.search-panel.open{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.search-panel-inner{
+  width:min(1220px,calc(100% - 40px));
+  margin:auto;
+}
+
+.header-search-box{
+  width:100%;
+  height:42px;
+
+  display:flex;
+  align-items:center;
+
+  border:1px solid #303233;
+  background:#0c0d0d;
+
+  transition:.2s;
+}
+
+.header-search-box:focus-within{
+  border-color:#777;
+}
+
+.header-search-icon{
+  width:45px;
+  height:100%;
+  display:grid;
+  place-items:center;
+  color:#666;
+  font-size:20px;
+  flex-shrink:0;
+}
+
+.header-search-input{
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+
+  background:transparent;
+  color:#ddd;
+
+  font-size:12px;
+  letter-spacing:.5px;
+
+  padding:0 15px 0 0;
+}
+
+.header-search-input::placeholder{
+  color:#555;
 }
 
 
@@ -290,49 +383,6 @@ main{
   font-size:26px;
   color:#eee;
   letter-spacing:.5px;
-}
-
-
-/* ================= SEARCH ================= */
-
-.search-box{
-  display:flex;
-  align-items:center;
-  width:330px;
-  height:38px;
-  border:1px solid #303233;
-  background:#0c0d0d;
-  transition:.2s;
-}
-
-.search-box:focus-within{
-  border-color:#777;
-}
-
-.search-box-icon{
-  width:38px;
-  height:100%;
-  display:grid;
-  place-items:center;
-  color:#666;
-  font-size:19px;
-  flex-shrink:0;
-}
-
-.search-input{
-  width:100%;
-  height:100%;
-  border:0;
-  outline:0;
-  background:transparent;
-  color:#ddd;
-  font-size:11px;
-  letter-spacing:.5px;
-  padding:0 12px 0 0;
-}
-
-.search-input::placeholder{
-  color:#555;
 }
 
 
@@ -724,21 +774,14 @@ footer{
     font-size:47px;
   }
 
-  .section-head{
-    gap:20px;
-  }
-
-  .search-box{
-    width:280px;
-  }
-
 }
 
 
 @media(max-width:700px){
 
   .wrap,
-  .header-inner{
+  .header-inner,
+  .search-panel-inner{
     width:min(100% - 25px,1220px);
   }
 
@@ -781,7 +824,11 @@ footer{
   }
 
   .search{
-    display:none;
+    display:grid;
+  }
+
+  .search-panel{
+    top:70px;
   }
 
   .logo{
@@ -824,11 +871,6 @@ footer{
     align-items:flex-start;
     flex-direction:column;
     gap:15px;
-  }
-
-  .search-box{
-    width:100%;
-    height:40px;
   }
 
   .filters{
@@ -894,17 +936,14 @@ footer{
 
       <div class="logo-text">
 
-        <strong>
-          SCP: CB2
-        </strong>
+        <strong>SCP: CB2</strong>
 
-        <span>
-          MULTIPLAYER
-        </span>
+        <span>MULTIPLAYER</span>
 
       </div>
 
     </a>
+
 
     <nav>
 
@@ -923,20 +962,51 @@ footer{
         Сервера
       </a>
 
-      <a
-        href="#about"
-      >
+      <a href="#about">
         О проекте
       </a>
 
     </nav>
 
-    <div
+
+    <button
+      type="button"
       class="search"
       id="headerSearchButton"
       title="Поиск"
+      aria-label="Открыть поиск"
     >
       ⌕
+    </button>
+
+  </div>
+
+
+  <!-- ПОИСК -->
+
+  <div
+    class="search-panel"
+    id="searchPanel"
+  >
+
+    <div class="search-panel-inner">
+
+      <div class="header-search-box">
+
+        <div class="header-search-icon">
+          ⌕
+        </div>
+
+        <input
+          id="searchInput"
+          class="header-search-input"
+          type="search"
+          placeholder="Поиск по новостям..."
+          autocomplete="off"
+        >
+
+      </div>
+
     </div>
 
   </div>
@@ -993,23 +1063,6 @@ footer{
         <h2>
           Последние новости
         </h2>
-
-      </div>
-
-
-      <div class="search-box">
-
-        <div class="search-box-icon">
-          ⌕
-        </div>
-
-        <input
-          id="searchInput"
-          class="search-input"
-          type="search"
-          placeholder="Поиск по новостям..."
-          autocomplete="off"
-        >
 
       </div>
 
@@ -1142,13 +1195,9 @@ footer{
 
             <div class="about-stat">
 
-              <span>
-                Проект
-              </span>
+              <span>Проект</span>
 
-              <span>
-                SCP: CB2
-              </span>
+              <span>SCP: CB2</span>
 
             </div>
 
@@ -1156,13 +1205,9 @@ footer{
 
             <div class="about-stat">
 
-              <span>
-                Статус
-              </span>
+              <span>Статус</span>
 
-              <span>
-                Development
-              </span>
+              <span>Development</span>
 
             </div>
 
@@ -1279,7 +1324,6 @@ footer{
 
 <script>
 
-
 /* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
@@ -1306,7 +1350,6 @@ async function loadSiteSettings(){
     .from("site_settings")
     .select("*");
 
-
   if(error){
 
     console.error(
@@ -1318,14 +1361,11 @@ async function loadSiteSettings(){
 
   }
 
-
   if(!data){
     return;
   }
 
-
   const settings = {};
-
 
   data.forEach(item => {
 
@@ -1335,11 +1375,7 @@ async function loadSiteSettings(){
   });
 
 
-  /*
-  ==========================================
-  ЛОГОТИП
-  ==========================================
-  */
+  /* ЛОГО */
 
   if(settings.logo){
 
@@ -1363,11 +1399,7 @@ async function loadSiteSettings(){
   }
 
 
-  /*
-  ==========================================
-  ФОН САЙТА
-  ==========================================
-  */
+  /* ФОН */
 
   if(settings.background){
 
@@ -1389,11 +1421,7 @@ async function loadSiteSettings(){
   }
 
 
-  /*
-  ==========================================
-  БАННЕР
-  ==========================================
-  */
+  /* БАННЕР */
 
   if(settings.banner){
 
@@ -1430,22 +1458,18 @@ function formatDate(date){
   const d =
     new Date(date);
 
-
   const day =
     String(
       d.getDate()
     ).padStart(2,"0");
-
 
   const month =
     String(
       d.getMonth()+1
     ).padStart(2,"0");
 
-
   const year =
     d.getFullYear();
-
 
   return `${day}.${month}.${year}`;
 
@@ -1462,25 +1486,19 @@ function formatRelativeTime(date){
   const past =
     new Date(date);
 
-
   const seconds =
     Math.floor(
       (now - past) / 1000
     );
 
-
   if(seconds < 60){
-
     return "только что";
-
   }
-
 
   const minutes =
     Math.floor(
       seconds / 60
     );
-
 
   if(minutes < 60){
 
@@ -1492,21 +1510,17 @@ function formatRelativeTime(date){
       minutes >= 2 &&
       minutes <= 4
     ){
-
       return `${minutes} минуты назад`;
-
     }
 
     return `${minutes} минут назад`;
 
   }
 
-
   const hours =
     Math.floor(
       minutes / 60
     );
-
 
   if(hours < 24){
 
@@ -1518,21 +1532,17 @@ function formatRelativeTime(date){
       hours >= 2 &&
       hours <= 4
     ){
-
       return `${hours} часа назад`;
-
     }
 
     return `${hours} часов назад`;
 
   }
 
-
   const days =
     Math.floor(
       hours / 24
     );
-
 
   if(days < 7){
 
@@ -1544,21 +1554,17 @@ function formatRelativeTime(date){
       days >= 2 &&
       days <= 4
     ){
-
       return `${days} дня назад`;
-
     }
 
     return `${days} дней назад`;
 
   }
 
-
   const weeks =
     Math.floor(
       days / 7
     );
-
 
   if(weeks < 5){
 
@@ -1570,15 +1576,12 @@ function formatRelativeTime(date){
       weeks >= 2 &&
       weeks <= 4
     ){
-
       return `${weeks} недели назад`;
-
     }
 
     return `${weeks} недель назад`;
 
   }
-
 
   return formatDate(date);
 
@@ -1611,15 +1614,12 @@ function createNewsCard(news){
       "article"
     );
 
-
   card.className =
     "news-card";
-
 
   const image =
     news.image_url ||
     "";
-
 
   card.innerHTML = `
 
@@ -1662,20 +1662,17 @@ function createNewsCard(news){
 
       </div>
 
-
       <h3>
         ${escapeHtml(
           news.title
         )}
       </h3>
 
-
       <p>
         ${escapeHtml(
           news.description || ""
         )}
       </p>
-
 
       <a
         class="news-more"
@@ -1689,7 +1686,6 @@ function createNewsCard(news){
     </div>
 
   `;
-
 
   return card;
 
@@ -1715,20 +1711,10 @@ function newsMatchesSearch(news){
     return true;
   }
 
-
   const searchText =
     normalizeSearchText(
       currentSearch
     );
-
-
-  /*
-  Поиск НЕ проверяет category.
-  Ищем только:
-  - заголовок
-  - описание
-  - полный текст новости
-  */
 
   const title =
     normalizeSearchText(
@@ -1745,6 +1731,16 @@ function newsMatchesSearch(news){
       news.content
     );
 
+  /*
+    ВАЖНО:
+
+    category здесь НЕ используется.
+
+    Поиск происходит только по:
+    title
+    description
+    content
+  */
 
   return (
     title.includes(searchText) ||
@@ -1755,6 +1751,8 @@ function newsMatchesSearch(news){
 }
 
 
+/* ================= RENDER NEWS ================= */
+
 function renderNews(
   category=currentCategory
 ){
@@ -1762,24 +1760,19 @@ function renderNews(
   currentCategory =
     category;
 
-
   const list =
     document.getElementById(
       "newsList"
     );
 
-
   list.innerHTML =
     "";
-
 
   let filtered =
     allNews;
 
 
-  /*
-  ФИЛЬТР КАТЕГОРИИ
-  */
+  /* КАТЕГОРИЯ */
 
   if(category !== "all"){
 
@@ -1793,9 +1786,7 @@ function renderNews(
   }
 
 
-  /*
-  ПОИСК
-  */
+  /* ПОИСК */
 
   filtered =
     filtered.filter(
@@ -1806,9 +1797,7 @@ function renderNews(
     );
 
 
-  /*
-  НЕТ РЕЗУЛЬТАТОВ
-  */
+  /* НЕТ РЕЗУЛЬТАТОВ */
 
   if(!filtered.length){
 
@@ -1879,7 +1868,6 @@ async function loadNews(){
       error
     );
 
-
     document.getElementById(
       "newsList"
     ).innerHTML = `
@@ -1898,13 +1886,22 @@ async function loadNews(){
   allNews =
     data || [];
 
-
   renderNews();
 
 }
 
 
-/* ================= SEARCH INPUT ================= */
+/* ================= SEARCH PANEL ================= */
+
+const headerSearchButton =
+  document.getElementById(
+    "headerSearchButton"
+  );
+
+const searchPanel =
+  document.getElementById(
+    "searchPanel"
+  );
 
 const searchInput =
   document.getElementById(
@@ -1912,11 +1909,108 @@ const searchInput =
   );
 
 
+function openSearch(){
+
+  if(!searchPanel){
+    return;
+  }
+
+  searchPanel.classList.add(
+    "open"
+  );
+
+  if(headerSearchButton){
+
+    headerSearchButton.classList.add(
+      "active"
+    );
+
+  }
+
+  setTimeout(
+    () => {
+
+      if(searchInput){
+        searchInput.focus();
+      }
+
+    },
+    150
+  );
+
+}
+
+
+function closeSearch(){
+
+  if(!searchPanel){
+    return;
+  }
+
+  searchPanel.classList.remove(
+    "open"
+  );
+
+  if(headerSearchButton){
+
+    headerSearchButton.classList.remove(
+      "active"
+    );
+
+  }
+
+}
+
+
+function toggleSearch(){
+
+  if(!searchPanel){
+    return;
+  }
+
+  if(
+    searchPanel.classList.contains(
+      "open"
+    )
+  ){
+
+    closeSearch();
+
+  }else{
+
+    openSearch();
+
+  }
+
+}
+
+
+/* КЛИК ПО КНОПКЕ ПОИСКА */
+
+if(headerSearchButton){
+
+  headerSearchButton.addEventListener(
+    "click",
+    function(event){
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      toggleSearch();
+
+    }
+  );
+
+}
+
+
+/* ВВОД ПОИСКА */
+
 if(searchInput){
 
   searchInput.addEventListener(
     "input",
-    () => {
+    function(){
 
       currentSearch =
         searchInput.value;
@@ -1931,7 +2025,7 @@ if(searchInput){
 
   searchInput.addEventListener(
     "keydown",
-    event => {
+    function(event){
 
       if(
         event.key ===
@@ -1948,7 +2042,7 @@ if(searchInput){
           currentCategory
         );
 
-        searchInput.blur();
+        closeSearch();
 
       }
 
@@ -1958,53 +2052,54 @@ if(searchInput){
 }
 
 
-/* ================= HEADER SEARCH ================= */
+/* ESC ЗАКРЫВАЕТ ПОИСК */
 
-const headerSearchButton =
-  document.getElementById(
-    "headerSearchButton"
-  );
+document.addEventListener(
+  "keydown",
+  function(event){
 
+    if(
+      event.key === "Escape"
+    ){
 
-if(headerSearchButton){
-
-  headerSearchButton.addEventListener(
-    "click",
-    () => {
-
-      const search =
-        document.getElementById(
-          "searchInput"
-        );
-
-      if(!search){
-        return;
-      }
-
-
-      document
-        .getElementById(
-          "news"
+      if(
+        searchPanel &&
+        searchPanel.classList.contains(
+          "open"
         )
-        .scrollIntoView({
-          behavior:"smooth",
-          block:"start"
-        });
+      ){
 
+        closeSearch();
 
-      setTimeout(
-        () => {
-
-          search.focus();
-
-        },
-        400
-      );
+      }
 
     }
-  );
 
-}
+  }
+);
+
+
+/* КЛИК ВНЕ ПОИСКА */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    if(!searchPanel){
+      return;
+    }
+
+    if(
+      !searchPanel.contains(event.target) &&
+      !headerSearchButton.contains(event.target)
+    ){
+
+      closeSearch();
+
+    }
+
+  }
+);
 
 
 /* ================= FILTERS ================= */
@@ -2084,10 +2179,8 @@ document
 
         event.preventDefault();
 
-
         const category =
           link.dataset.navCategory;
-
 
         activateFilter(
           category
@@ -2146,7 +2239,6 @@ function createChange(change){
       "div"
     );
 
-
   row.className =
     "change-row";
 
@@ -2171,13 +2263,11 @@ function createChange(change){
       ${icon}
     </div>
 
-
     <div class="change-title">
       ${escapeHtml(
         change.title
       )}
     </div>
-
 
     <div class="change-time">
       ${formatRelativeTime(
