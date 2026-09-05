@@ -1,15 +1,15 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SCP: CB2 Multiplayer — Новости</title>
+<title>SCP:CB2 — Новости</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -185,12 +185,19 @@ nav a.active:after{
   width:62%;
   height:520px;
   transform:skewX(-18deg);
+
+  /*
+    Картинку здесь специально НЕ ставим.
+    Фон остаётся тёмным.
+  */
+
   background:
     linear-gradient(
       90deg,
       transparent,
       rgba(255,255,255,.025)
     );
+
   opacity:.35;
 }
 
@@ -258,7 +265,7 @@ main{
   display:flex;
   align-items:flex-end;
   justify-content:space-between;
-  margin-bottom:25px;
+  margin-bottom:18px;
 }
 
 .section-kicker{
@@ -284,6 +291,7 @@ main{
   justify-content:flex-start;
   gap:8px;
   flex-wrap:wrap;
+  margin-bottom:25px;
 }
 
 .filter{
@@ -297,32 +305,31 @@ main{
   cursor:pointer;
 
   transform:scale(1);
-  transform-origin:center;
 
   transition:
-    transform .25s ease,
-    color .25s ease,
-    border-color .25s ease,
-    background .25s ease,
-    box-shadow .25s ease;
+    transform .22s ease,
+    color .22s ease,
+    border-color .22s ease,
+    background .22s ease,
+    box-shadow .22s ease;
 }
 
 .filter:hover{
   color:#ddd;
   border-color:#555;
-  transform:scale(1.03);
+  transform:translateY(-1px);
 }
 
 .filter.active{
   color:#111;
   background:#d5b42e;
   border-color:#d5b42e;
-  transform:scale(1.08);
-  box-shadow:0 0 14px rgba(213,180,46,.10);
+  transform:scale(1.07);
+  box-shadow:0 0 14px rgba(213,180,46,.12);
 }
 
 
-/* ================= CONTENT GRID ================= */
+/* ================= CONTENT ================= */
 
 .content-grid{
   display:grid;
@@ -354,6 +361,18 @@ main{
   border-color:#454647;
 }
 
+
+/* Картинка + тег */
+
+.news-image-area{
+  width:100%;
+  height:100%;
+  min-height:200px;
+  position:relative;
+  overflow:hidden;
+  background:#151616;
+}
+
 .news-image{
   width:100%;
   height:100%;
@@ -362,6 +381,36 @@ main{
   background:#151616;
   display:block;
 }
+
+
+/* Тег над картинкой */
+
+.news-card-tag{
+  position:absolute;
+  top:14px;
+  left:14px;
+  z-index:2;
+
+  padding:5px 8px;
+
+  background:#d5b42e;
+  color:#111;
+
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
+}
+
+.news-card:hover .news-card-tag{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
 
 .news-content{
   padding:22px 24px;
@@ -374,16 +423,6 @@ main{
   align-items:center;
   gap:10px;
   margin-bottom:11px;
-}
-
-.news-tag{
-  padding:4px 7px;
-  background:#d5b42e;
-  color:#111;
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:1px;
-  text-transform:uppercase;
 }
 
 .news-date{
@@ -639,17 +678,7 @@ footer{
     font-size:47px;
   }
 
-  .section-head{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:18px;
-  }
-
-  .filters{
-    justify-content:flex-start;
-  }
 }
-
 
 @media(max-width:700px){
 
@@ -691,7 +720,7 @@ footer{
   .section-head{
     align-items:flex-start;
     flex-direction:column;
-    gap:18px;
+    gap:0;
   }
 
   .filters{
@@ -705,6 +734,11 @@ footer{
 
   .news-card{
     grid-template-columns:1fr;
+  }
+
+  .news-image-area{
+    height:190px;
+    min-height:0;
   }
 
   .news-image{
@@ -725,19 +759,29 @@ footer{
     flex-direction:column;
     gap:8px;
   }
+
 }
+
+
+/* ================= RELATIVE TIME ================= */
+
 </style>
 </head>
 
 <body>
 
 <header>
+
   <div class="header-inner">
 
     <a href="./" class="logo">
 
       <div class="logo-symbol">
-        <img id="siteLogo" src="" alt="SCP">
+        <img
+          id="siteLogo"
+          src=""
+          alt="SCP"
+        >
       </div>
 
       <div class="logo-text">
@@ -747,17 +791,33 @@ footer{
 
     </a>
 
+
     <nav>
-      <a href="./" class="active">Новости</a>
-      <a href="#changes">Изменения</a>
-      <a href="#about">О проекте</a>
+
+      <a
+        href="./"
+        class="active"
+      >
+        Новости
+      </a>
+
+      <a href="#changes">
+        Изменения
+      </a>
+
+      <a href="#about">
+        О проекте
+      </a>
+
     </nav>
+
 
     <div class="search">
       ⌕
     </div>
 
   </div>
+
 </header>
 
 
@@ -781,7 +841,10 @@ footer{
         Следите за развитием игры и всеми изменениями проекта.
       </p>
 
-      <a href="#news" class="hero-button">
+      <a
+        href="#news"
+        class="hero-button"
+      >
         Смотреть новости
       </a>
 
@@ -796,9 +859,13 @@ footer{
 
   <div class="wrap">
 
+
+    <!-- Заголовок -->
+
     <div class="section-head">
 
       <div>
+
         <div class="section-kicker">
           Новости проекта
         </div>
@@ -806,40 +873,65 @@ footer{
         <h2>
           Последние новости
         </h2>
-      </div>
-
-      <div class="filters">
-
-        <button class="filter active" data-category="all">
-          Все
-        </button>
-
-        <button class="filter" data-category="Сервера">
-          Сервера
-        </button>
-
-        <button class="filter" data-category="Обновления">
-          Обновления
-        </button>
-
-        <button class="filter" data-category="События">
-          События
-        </button>
-
-        <button class="filter" data-category="Разработка">
-          Разработка
-        </button>
 
       </div>
 
     </div>
 
 
+    <!-- ФИЛЬТРЫ НАД КАРТОЧКАМИ -->
+
+    <div class="filters">
+
+      <button
+        class="filter active"
+        data-category="all"
+      >
+        Все
+      </button>
+
+      <button
+        class="filter"
+        data-category="Сервера"
+      >
+        Сервера
+      </button>
+
+      <button
+        class="filter"
+        data-category="Обновления"
+      >
+        Обновления
+      </button>
+
+      <button
+        class="filter"
+        data-category="События"
+      >
+        События
+      </button>
+
+      <button
+        class="filter"
+        data-category="Разработка"
+      >
+        Разработка
+      </button>
+
+    </div>
+
+
     <div class="content-grid">
+
+
+      <!-- НОВОСТИ -->
 
       <section>
 
-        <div id="newsList" class="news-grid">
+        <div
+          id="newsList"
+          class="news-grid"
+        >
 
           <div class="loading">
             Загрузка новостей...
@@ -850,10 +942,17 @@ footer{
       </section>
 
 
+      <!-- ПРАВАЯ КОЛОНКА -->
+
       <aside class="sidebar">
 
 
-        <div class="panel" id="changes">
+        <!-- ПОСЛЕДНИЕ ИЗМЕНЕНИЯ -->
+
+        <div
+          class="panel"
+          id="changes"
+        >
 
           <div class="panel-head">
 
@@ -869,7 +968,10 @@ footer{
 
           <div class="panel-body">
 
-            <div id="changesList" class="changes-list">
+            <div
+              id="changesList"
+              class="changes-list"
+            >
 
               <div class="loading">
                 Загрузка изменений...
@@ -882,7 +984,12 @@ footer{
         </div>
 
 
-        <div class="panel" id="about">
+        <!-- О ПРОЕКТЕ -->
+
+        <div
+          class="panel"
+          id="about"
+        >
 
           <div class="panel-head">
 
@@ -954,6 +1061,7 @@ footer{
 
     <div class="footer-grid">
 
+
       <div>
 
         <div class="footer-title">
@@ -1020,6 +1128,7 @@ footer{
 
       </div>
 
+
     </div>
 
 
@@ -1041,6 +1150,8 @@ footer{
 
 
 <script>
+
+/* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
   "https://ajmavwxzakkjsfolijhp.supabase.co";
@@ -1066,6 +1177,7 @@ async function loadSiteSettings(){
     .from("site_settings")
     .select("*");
 
+
   if(error){
 
     console.error(
@@ -1074,26 +1186,38 @@ async function loadSiteSettings(){
     );
 
     return;
+
   }
+
 
   if(!data){
     return;
   }
 
+
   const settings = {};
 
+
   data.forEach(item => {
-    settings[item.key] = item.value;
+
+    settings[item.key] =
+      item.value;
+
   });
 
 
   if(settings.logo_url){
 
     const logo =
-      document.getElementById("siteLogo");
+      document.getElementById(
+        "siteLogo"
+      );
 
     if(logo){
-      logo.src = settings.logo_url;
+
+      logo.src =
+        settings.logo_url;
+
     }
 
   }
@@ -1101,22 +1225,164 @@ async function loadSiteSettings(){
 }
 
 
-/* ================= TIME ================= */
+/* ================= DATE ================= */
 
 function formatDate(date){
 
-  const d = new Date(date);
+  const d =
+    new Date(date);
+
 
   const day =
-    String(d.getDate()).padStart(2,"0");
+    String(
+      d.getDate()
+    ).padStart(2,"0");
+
 
   const month =
-    String(d.getMonth()+1).padStart(2,"0");
+    String(
+      d.getMonth()+1
+    ).padStart(2,"0");
+
 
   const year =
     d.getFullYear();
 
+
   return `${day}.${month}.${year}`;
+
+}
+
+
+/* ================= RELATIVE TIME ================= */
+
+function formatRelativeTime(date){
+
+  const now =
+    new Date();
+
+  const past =
+    new Date(date);
+
+
+  const seconds =
+    Math.floor(
+      (now - past) / 1000
+    );
+
+
+  if(seconds < 60){
+
+    return "только что";
+
+  }
+
+
+  const minutes =
+    Math.floor(
+      seconds / 60
+    );
+
+
+  if(minutes < 60){
+
+    if(minutes === 1){
+      return "1 минуту назад";
+    }
+
+    if(
+      minutes >= 2 &&
+      minutes <= 4
+    ){
+
+      return `${minutes} минуты назад`;
+
+    }
+
+    return `${minutes} минут назад`;
+
+  }
+
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+
+  if(hours < 24){
+
+    if(hours === 1){
+      return "1 час назад";
+    }
+
+    if(
+      hours >= 2 &&
+      hours <= 4
+    ){
+
+      return `${hours} часа назад`;
+
+    }
+
+    return `${hours} часов назад`;
+
+  }
+
+
+  const days =
+    Math.floor(
+      hours / 24
+    );
+
+
+  if(days < 7){
+
+    if(days === 1){
+      return "вчера";
+    }
+
+    if(
+      days >= 2 &&
+      days <= 4
+    ){
+
+      return `${days} дня назад`;
+
+    }
+
+    return `${days} дней назад`;
+
+  }
+
+
+  const weeks =
+    Math.floor(
+      days / 7
+    );
+
+
+  if(weeks < 5){
+
+    if(weeks === 1){
+      return "неделю назад";
+    }
+
+    if(
+      weeks >= 2 &&
+      weeks <= 4
+    ){
+
+      return `${weeks} недели назад`;
+
+    }
+
+    return `${weeks} недель назад`;
+
+  }
+
+
+  return formatDate(date);
 
 }
 
@@ -1128,7 +1394,8 @@ let allNews = [];
 
 function categoryClass(category){
 
-  return category || "Новости";
+  return category ||
+    "Новости";
 
 }
 
@@ -1136,26 +1403,37 @@ function categoryClass(category){
 function createNewsCard(news){
 
   const card =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
+
 
   card.className =
     "news-card";
 
 
   /*
-    ВАЖНО:
-    Здесь больше НЕТ Unsplash.
-    Если image_url отсутствует,
-    остаётся обычный тёмный блок.
+    Фото берётся ТОЛЬКО из Supabase.
+    Если image_url пустой —
+    никакая чужая картинка не ставится.
   */
 
   const image =
-    news.image_url || "";
+    news.image_url ||
+    "";
 
 
   card.innerHTML = `
 
-    <div class="news-image-wrap">
+    <div class="news-image-area">
+
+      <div class="news-card-tag">
+        ${escapeHtml(
+          categoryClass(
+            news.category
+          )
+        )}
+      </div>
 
       ${
         image
@@ -1173,31 +1451,39 @@ function createNewsCard(news){
 
     </div>
 
+
     <div class="news-content">
 
       <div class="news-meta">
 
-        <span class="news-tag">
-          ${escapeHtml(categoryClass(news.category))}
-        </span>
-
         <span class="news-date">
-          ${formatDate(news.created_at)}
+          ${formatDate(
+            news.created_at
+          )}
         </span>
 
       </div>
 
+
       <h3>
-        ${escapeHtml(news.title)}
+        ${escapeHtml(
+          news.title
+        )}
       </h3>
 
+
       <p>
-        ${escapeHtml(news.description || "")}
+        ${escapeHtml(
+          news.description || ""
+        )}
       </p>
+
 
       <a
         class="news-more"
-        href="./news.html?id=${encodeURIComponent(news.id)}"
+        href="./news.html?id=${encodeURIComponent(
+          news.id
+        )}"
       >
         Читать далее →
       </a>
@@ -1212,12 +1498,18 @@ function createNewsCard(news){
 }
 
 
-function renderNews(category="all"){
+function renderNews(
+  category="all"
+){
 
   const list =
-    document.getElementById("newsList");
+    document.getElementById(
+      "newsList"
+    );
 
-  list.innerHTML = "";
+
+  list.innerHTML =
+    "";
 
 
   let filtered =
@@ -1229,7 +1521,8 @@ function renderNews(category="all"){
     filtered =
       allNews.filter(
         item =>
-          item.category === category
+          item.category ===
+          category
       );
 
   }
@@ -1238,9 +1531,11 @@ function renderNews(category="all"){
   if(!filtered.length){
 
     list.innerHTML = `
+
       <div class="empty">
         Новостей пока нет
       </div>
+
     `;
 
     return;
@@ -1251,13 +1546,17 @@ function renderNews(category="all"){
   filtered.forEach(news => {
 
     list.appendChild(
-      createNewsCard(news)
+      createNewsCard(
+        news
+      )
     );
 
   });
 
 }
 
+
+/* ================= LOAD NEWS ================= */
 
 async function loadNews(){
 
@@ -1267,9 +1566,12 @@ async function loadNews(){
   } = await supabaseClient
     .from("news")
     .select("*")
-    .order("created_at", {
-      ascending:false
-    });
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
 
 
   if(error){
@@ -1307,7 +1609,9 @@ async function loadNews(){
 /* ================= FILTERS ================= */
 
 document
-  .querySelectorAll(".filter")
+  .querySelectorAll(
+    ".filter"
+  )
   .forEach(button => {
 
     button.addEventListener(
@@ -1315,7 +1619,9 @@ document
       () => {
 
         document
-          .querySelectorAll(".filter")
+          .querySelectorAll(
+            ".filter"
+          )
           .forEach(btn => {
 
             btn.classList.remove(
@@ -1345,7 +1651,10 @@ document
 function createChange(change){
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   row.className =
     "change-row";
@@ -1355,7 +1664,9 @@ function createChange(change){
     change.icon_url
       ? `
         <img
-          src="${escapeHtml(change.icon_url)}"
+          src="${escapeHtml(
+            change.icon_url
+          )}"
           alt=""
           loading="lazy"
         >
@@ -1369,12 +1680,18 @@ function createChange(change){
       ${icon}
     </div>
 
+
     <div class="change-title">
-      ${escapeHtml(change.title)}
+      ${escapeHtml(
+        change.title
+      )}
     </div>
 
+
     <div class="change-time">
-      ${formatDate(change.created_at)}
+      ${formatRelativeTime(
+        change.created_at
+      )}
     </div>
 
   `;
@@ -1384,6 +1701,8 @@ function createChange(change){
 
 }
 
+
+/* ================= LOAD CHANGES ================= */
 
 async function loadChanges(){
 
@@ -1399,9 +1718,12 @@ async function loadChanges(){
   } = await supabaseClient
     .from("changes")
     .select("*")
-    .order("created_at", {
-      ascending:false
-    })
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    )
     .limit(5);
 
 
@@ -1426,10 +1748,14 @@ async function loadChanges(){
   }
 
 
-  list.innerHTML = "";
+  list.innerHTML =
+    "";
 
 
-  if(!data || !data.length){
+  if(
+    !data ||
+    !data.length
+  ){
 
     list.innerHTML = `
 
@@ -1447,7 +1773,9 @@ async function loadChanges(){
   data.forEach(change => {
 
     list.appendChild(
-      createChange(change)
+      createChange(
+        change
+      )
     );
 
   });
@@ -1470,22 +1798,27 @@ function escapeHtml(value){
 
 
   return String(value)
+
     .replaceAll(
       "&",
       "&amp;"
     )
+
     .replaceAll(
       "<",
       "&lt;"
     )
+
     .replaceAll(
       ">",
       "&gt;"
     )
+
     .replaceAll(
       '"',
       "&quot;"
     )
+
     .replaceAll(
       "'",
       "&#039;"
@@ -1497,11 +1830,12 @@ function escapeHtml(value){
 /* ================= START ================= */
 
 loadSiteSettings();
+
 loadNews();
+
 loadChanges();
 
 </script>
 
 </body>
 </html>
-```
