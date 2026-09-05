@@ -176,6 +176,7 @@
       color: #68717b;
       font-size: 12px;
       text-align: center;
+      background: #0b0d10;
     }
 
     .preview img {
@@ -355,6 +356,7 @@
     }
 
     @media (max-width: 700px) {
+
       .upload-row {
         grid-template-columns: 1fr;
       }
@@ -380,6 +382,7 @@
         grid-column: 1 / -1;
         width: 100%;
       }
+
     }
   </style>
 </head>
@@ -847,6 +850,7 @@
 
     const { createClient } = supabase;
 
+
     const db =
       createClient(
         SUPABASE_URL,
@@ -927,14 +931,19 @@
       if (session) {
 
         loginScreen.style.display = "none";
+
         adminScreen.style.display = "block";
 
+        loadSiteSettings();
+
         loadNews();
+
         loadChanges();
 
       } else {
 
         loginScreen.style.display = "flex";
+
         adminScreen.style.display = "none";
 
       }
@@ -976,12 +985,19 @@
         }
 
 
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+          "Вход...";
+
+
         const {
           error
         } =
           await db.auth.signInWithPassword({
 
             email: email,
+
             password: password
 
           });
@@ -993,9 +1009,20 @@
             "Ошибка входа: " +
             error.message;
 
+          loginButton.disabled = false;
+
+          loginButton.textContent =
+            "Войти";
+
           return;
 
         }
+
+
+        loginButton.disabled = false;
+
+        loginButton.textContent =
+          "Войти";
 
 
         checkUser();
@@ -1020,6 +1047,120 @@
 
       }
     );
+
+
+    /*
+    =====================================================
+    ЗАГРУЗКА СОХРАНЁННЫХ НАСТРОЕК
+    =====================================================
+    */
+
+    async function loadSiteSettings() {
+
+      const {
+        data,
+        error
+      } =
+        await db
+          .from("site_settings")
+          .select("*");
+
+
+      if (error) {
+
+        console.error(
+          "Ошибка загрузки настроек:",
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      const settings = {};
+
+
+      if (data) {
+
+        data.forEach(
+          item => {
+
+            settings[item.key] =
+              item.value;
+
+          }
+        );
+
+      }
+
+
+      /*
+      ===============================
+      ЛОГОТИП
+      ===============================
+      */
+
+      if (settings.logo) {
+
+        const preview =
+          document.getElementById(
+            "logoPreview"
+          );
+
+        preview.innerHTML =
+          `<img
+            src="${escapeAttribute(settings.logo)}"
+            alt=""
+          >`;
+
+      }
+
+
+      /*
+      ===============================
+      ФОН
+      ===============================
+      */
+
+      if (settings.background) {
+
+        const preview =
+          document.getElementById(
+            "backgroundPreview"
+          );
+
+        preview.innerHTML =
+          `<img
+            src="${escapeAttribute(settings.background)}"
+            alt=""
+          >`;
+
+      }
+
+
+      /*
+      ===============================
+      БАННЕР
+      ===============================
+      */
+
+      if (settings.banner) {
+
+        const preview =
+          document.getElementById(
+            "bannerPreview"
+          );
+
+        preview.innerHTML =
+          `<img
+            src="${escapeAttribute(settings.banner)}"
+            alt=""
+          >`;
+
+      }
+
+    }
 
 
     /*
@@ -1072,11 +1213,14 @@
 
 
       const fileName =
-        type + "." + extension;
+        type +
+        "." +
+        extension;
 
 
       const filePath =
-        "site/" + fileName;
+        "site/" +
+        fileName;
 
 
       const {
@@ -1110,7 +1254,9 @@
       } =
         db.storage
           .from("site-images")
-          .getPublicUrl(filePath);
+          .getPublicUrl(
+            filePath
+          );
 
 
       const imageUrl =
@@ -1125,9 +1271,12 @@
           .upsert(
             {
               key: type,
+
               value: imageUrl,
+
               updated_at:
                 new Date().toISOString()
+
             },
             {
               onConflict: "key"
@@ -1153,7 +1302,13 @@
 
 
       preview.innerHTML =
-        `<img src="${escapeAttribute(imageUrl)}" alt="">`;
+        `<img
+          src="${escapeAttribute(imageUrl)}"
+          alt=""
+        >`;
+
+
+      input.value = "";
 
 
       status.textContent =
@@ -1191,7 +1346,10 @@
 
 
         newsImagePreview.innerHTML =
-          `<img src="${escapeAttribute(url)}" alt="">`;
+          `<img
+            src="${escapeAttribute(url)}"
+            alt=""
+          >`;
 
       }
     );
@@ -1236,7 +1394,10 @@
 
 
         changeIconPreview.innerHTML =
-          `<img src="${escapeAttribute(url)}" alt="">`;
+          `<img
+            src="${escapeAttribute(url)}"
+            alt=""
+          >`;
 
       }
     );
@@ -1283,7 +1444,8 @@
 
 
       const filePath =
-        "news/" + uniqueName;
+        "news/" +
+        uniqueName;
 
 
       const {
@@ -1316,7 +1478,9 @@
       } =
         db.storage
           .from("site-images")
-          .getPublicUrl(filePath);
+          .getPublicUrl(
+            filePath
+          );
 
 
       return data.publicUrl;
@@ -1365,7 +1529,8 @@
 
 
       const filePath =
-        "changes/" + uniqueName;
+        "changes/" +
+        uniqueName;
 
 
       const {
@@ -1398,7 +1563,9 @@
       } =
         db.storage
           .from("site-images")
-          .getPublicUrl(filePath);
+          .getPublicUrl(
+            filePath
+          );
 
 
       return data.publicUrl;
@@ -1496,7 +1663,9 @@
             .getElementById("changeTitle")
             .value = "";
 
+
           changeIcon.value = "";
+
 
           changeIconPreview.innerHTML =
             "Предпросмотр";
@@ -1535,7 +1704,9 @@
     async function loadChanges() {
 
       changesList.innerHTML =
-        `<div class="empty">Загрузка...</div>`;
+        `<div class="empty">
+          Загрузка...
+        </div>`;
 
 
       const {
@@ -1559,7 +1730,8 @@
 
         changesList.innerHTML =
           `<div class="empty">
-            Ошибка загрузки изменений: ${escapeHtml(error.message)}
+            Ошибка загрузки изменений:
+            ${escapeHtml(error.message)}
           </div>`;
 
         return;
@@ -1638,6 +1810,7 @@
 
 
           info.appendChild(title);
+
           info.appendChild(meta);
 
 
@@ -1665,7 +1838,9 @@
 
 
           item.appendChild(icon);
+
           item.appendChild(info);
+
           item.appendChild(deleteButton);
 
 
@@ -1805,7 +1980,9 @@
         mod10 === 1 &&
         mod100 !== 11
       ) {
+
         return one;
+
       }
 
 
@@ -1817,7 +1994,9 @@
           mod100 >= 20
         )
       ) {
+
         return few;
+
       }
 
 
@@ -2023,15 +2202,19 @@
             .getElementById("newsTitle")
             .value = "";
 
+
           document
             .getElementById("newsDescription")
             .value = "";
+
 
           document
             .getElementById("newsContent")
             .value = "";
 
+
           newsImage.value = "";
+
 
           newsImagePreview.innerHTML =
             "Предпросмотр фотографии";
@@ -2070,7 +2253,9 @@
     async function loadNews() {
 
       newsList.innerHTML =
-        `<div class="empty">Загрузка...</div>`;
+        `<div class="empty">
+          Загрузка...
+        </div>`;
 
 
       const {
@@ -2094,7 +2279,8 @@
 
         newsList.innerHTML =
           `<div class="empty">
-            Ошибка загрузки новостей: ${escapeHtml(error.message)}
+            Ошибка загрузки новостей:
+            ${escapeHtml(error.message)}
           </div>`;
 
         return;
@@ -2181,6 +2367,7 @@
 
 
           info.appendChild(title);
+
           info.appendChild(meta);
 
 
@@ -2208,7 +2395,9 @@
 
 
           item.appendChild(image);
+
           item.appendChild(info);
+
           item.appendChild(deleteButton);
 
 
@@ -2300,10 +2489,22 @@
     function escapeAttribute(text) {
 
       return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        );
 
     }
 
