@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>SCP: CB2 Multiplayer — Архив</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SCP:CB2 — Архив</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 html{
@@ -16,22 +22,14 @@ html{
 }
 
 body{
-  margin:0;
   background:#080909;
-  color:#eee;
+  color:#ddd;
   font-family:Arial,Helvetica,sans-serif;
-  min-height:100vh;
+  line-height:1.5;
+  background-repeat:no-repeat;
   background-size:cover;
-  background-position:center;
+  background-position:center top;
   background-attachment:fixed;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  z-index:-1;
 }
 
 a{
@@ -44,382 +42,331 @@ input{
   font:inherit;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:rgba(8,9,9,.94);
-  border-bottom:1px solid #292a2b;
-  backdrop-filter:blur(10px);
-}
-
-.header-inner{
-  max-width:1200px;
+.wrap{
+  width:min(1220px,calc(100% - 40px));
   margin:auto;
-  min-height:72px;
-  padding:0 20px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  min-width:0;
-}
-
-.brand img{
-  width:42px;
-  height:42px;
-  object-fit:contain;
-  display:block;
-}
-
-.brand-text{
-  min-width:0;
-}
-
-.brand-title{
-  font-size:15px;
-  font-weight:800;
-  letter-spacing:1px;
-  white-space:nowrap;
-}
-
-.brand-subtitle{
-  margin-top:3px;
-  color:#777;
-  font-size:11px;
-  white-space:nowrap;
-}
-
-nav{
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
-
-nav a{
-  position:relative;
-  padding:11px 13px;
-
-  color:#999;
-
-  font-size:13px;
-  font-weight:700;
-
-  border-radius:6px;
-
-  transition:
-    color .2s ease,
-    background .2s ease,
-    transform .2s ease;
-}
-
-nav a:hover{
-  color:#eee;
-  background:#141515;
-  transform:translateY(-1px);
-}
-
-/* АКТИВНЫЙ РАЗДЕЛ */
-
-nav a.active{
-  color:#eee;
-  background:transparent;
-}
-
-nav a.active::after{
-  content:"";
-
-  position:absolute;
-
-  left:12px;
-  right:12px;
-  bottom:3px;
-
-  height:2px;
-
-  background:#d5b42e;
-
-  border-radius:2px;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-wrap{
-  position:relative;
-}
-
-.search-toggle{
-  list-style:none;
-  cursor:pointer;
-
-  width:40px;
-  height:40px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border:1px solid #292a2b;
-  background:#101111;
-  color:#aaa;
-
-  border-radius:6px;
-
-  transition:
-    background .2s ease,
-    color .2s ease,
-    border-color .2s ease,
-    transform .2s ease;
-}
-
-.search-toggle::-webkit-details-marker{
-  display:none;
-}
-
-.search-toggle:hover{
-  color:#d5b42e;
-  border-color:#51491f;
-  background:#151515;
-  transform:translateY(-1px);
-}
-
-.search-toggle svg{
-  width:17px;
-  height:17px;
-}
-
-.search-box{
-  position:absolute;
-
-  top:50px;
-  right:0;
-
-  width:310px;
-
-  padding:10px;
-
-  background:#0d0e0e;
-  border:1px solid #292a2b;
-  border-radius:7px;
-
-  box-shadow:0 12px 35px rgba(0,0,0,.45);
-}
-
-.search-box input{
-  width:100%;
-  height:40px;
-
-  padding:0 12px;
-
-  background:#080909;
-  border:1px solid #292a2b;
-  border-radius:5px;
-
-  color:#eee;
-  outline:none;
-
-  transition:border-color .2s ease;
-}
-
-.search-box input:focus{
-  border-color:#625623;
-}
-
-.search-box input::placeholder{
-  color:#666;
-}
-
-/* =========================
-   PAGE
-========================= */
-
-.container{
-  width:min(1200px,calc(100% - 40px));
-  margin:auto;
-}
-
-/* =========================
-   HERO
-========================= */
-
-.hero{
-  position:relative;
-
-  min-height:250px;
-
-  margin-top:25px;
-  padding:45px 42px;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-
-  overflow:hidden;
-
-  background:#101111;
-  border:1px solid #292a2b;
-  border-radius:8px;
-
-  background-size:cover;
-  background-position:center;
-}
-
-.hero::before{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,.88),
-      rgba(0,0,0,.62),
-      rgba(0,0,0,.45)
-    );
-}
-
-.hero-content{
   position:relative;
   z-index:1;
 }
 
-.hero-label{
-  display:inline-block;
 
-  margin-bottom:12px;
-  padding:5px 9px;
+/* ================= HEADER ================= */
 
-  background:#d5b42e;
-  color:#111;
-
-  border-radius:4px;
-
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:1px;
+header{
+  height:82px;
+  background:#050606;
+  border-bottom:1px solid #242526;
+  display:flex;
+  align-items:center;
+  position:relative;
+  z-index:10;
 }
 
-.hero h1{
-  margin:0;
-
-  font-size:clamp(28px,5vw,46px);
-  line-height:1.05;
-
-  letter-spacing:2px;
-}
-
-.hero p{
-  max-width:720px;
-
-  margin:13px 0 0;
-
-  color:#bbb;
-
-  font-size:14px;
-  line-height:1.6;
-}
-
-/* =========================
-   CONTENT
-========================= */
-
-.main-layout{
-  display:block;
-
-  margin-top:20px;
-}
-
-.section{
-  min-width:0;
-}
-
-.section-title{
+.header-inner{
+  width:min(1220px,calc(100% - 40px));
+  margin:auto;
   display:flex;
   align-items:center;
   justify-content:space-between;
-
-  margin-bottom:13px;
+  gap:30px;
 }
 
-.section-title h2{
-  margin:0;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:max-content;
+}
 
+.logo-symbol{
+  width:45px;
+  height:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  position:relative;
+  overflow:visible;
+}
+
+.logo-symbol img{
+  width:45px;
+  height:45px;
+  object-fit:contain;
+  border-radius:0;
+  position:relative;
+  z-index:2;
+  display:block;
+}
+
+.logo-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1;
+}
+
+.logo-text strong{
   font-size:18px;
-  letter-spacing:1px;
+  letter-spacing:2px;
+  color:#eee;
 }
 
-.section-title span{
+.logo-text span{
+  font-size:9px;
+  letter-spacing:3px;
+  color:#777;
+  margin-top:5px;
+}
+
+
+/* ================= NAVIGATION ================= */
+
+nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:32px;
+  height:100%;
+}
+
+nav a{
+  height:100%;
+  display:flex;
+  align-items:center;
+  position:relative;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  color:#888;
+  text-transform:uppercase;
+  transition:.2s ease;
+  white-space:nowrap;
+}
+
+nav a:hover{
+  color:#eee;
+  transform:translateY(-1px);
+}
+
+nav a.active{
+  color:#eee;
+}
+
+nav a.active:after{
+  content:"";
+  position:absolute;
+  height:2px;
+  background:#e3bd32;
+  left:0;
+  right:0;
+  bottom:0;
+}
+
+
+/* ================= SEARCH ================= */
+
+.search-dropdown{
+  position:relative;
+  flex-shrink:0;
+}
+
+.search{
+  width:34px;
+  height:34px;
+  border:1px solid #303233;
+  display:grid;
+  place-items:center;
+  color:#aaa;
+  cursor:pointer;
+  transition:
+    transform .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+  font-size:20px;
+  background:#050606;
+  padding:0;
+  list-style:none;
+  outline:none;
+  border-radius:5px;
+}
+
+.search::-webkit-details-marker{
+  display:none;
+}
+
+.search:hover{
+  border-color:#777;
+  color:#fff;
+  transform:translateY(-1px);
+}
+
+.search-dropdown[open] .search{
+  border-color:#d5b42e;
+  color:#d5b42e;
+}
+
+.search-dropdown[open] .search:hover{
+  border-color:#d5b42e;
+  color:#d5b42e;
+}
+
+.search-panel{
+  position:absolute;
+  top:calc(100% + 15px);
+  right:0;
+  width:min(500px,calc(100vw - 30px));
+  z-index:9999;
+  background:#050606;
+  border:1px solid #292a2b;
+  padding:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+
+.search-dropdown:not([open]) .search-panel{
+  display:none;
+}
+
+.header-search-box{
+  width:100%;
+  height:42px;
+  display:flex;
+  align-items:center;
+  border:1px solid #303233;
+  background:#0c0d0d;
+  transition:.2s ease;
+}
+
+.header-search-box:focus-within{
+  border-color:#777;
+}
+
+.header-search-icon{
+  width:45px;
+  height:100%;
+  display:grid;
+  place-items:center;
   color:#666;
-  font-size:11px;
+  font-size:20px;
+  flex-shrink:0;
 }
 
-/* =========================
-   FILTERS
-========================= */
+.header-search-input{
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#ddd;
+  font-size:12px;
+  letter-spacing:.5px;
+  padding:0 15px 0 0;
+}
+
+.header-search-input::placeholder{
+  color:#555;
+}
+
+
+/* ================= MAIN ================= */
+
+main{
+  padding:40px 0 75px;
+}
+
+.section-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.section-kicker{
+  color:#777;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:7px;
+}
+
+.section-head h2{
+  font-size:26px;
+  color:#eee;
+  letter-spacing:.5px;
+}
+
+
+/* ================= FILTERS ================= */
+
+.filters-title{
+  color:#555;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:9px;
+}
 
 .filters{
   display:flex;
-  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-start;
   gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
 
-  margin-bottom:15px;
+.month-filters{
+  display:none;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+.month-filters.visible{
+  display:flex;
 }
 
 .filter{
-  padding:9px 13px;
-
-  background:#101111;
-  border:1px solid #292a2b;
-  color:#888;
-
-  border-radius:6px;
-
+  border:1px solid #303233;
+  background:#0c0d0d;
+  color:#777;
+  padding:8px 13px;
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
   cursor:pointer;
-
-  font-size:12px;
-  font-weight:700;
-
+  transform:scale(1);
   transition:
-    background .2s ease,
-    color .2s ease,
-    border-color .2s ease,
-    transform .2s ease;
+    transform .22s ease,
+    color .22s ease,
+    border-color .22s ease,
+    background .22s ease,
+    box-shadow .22s ease;
+  border-radius:5px;
 }
 
 .filter:hover{
   color:#ddd;
-  background:#161717;
-  border-color:#3a3b3c;
-
+  border-color:#555;
   transform:translateY(-1px);
+}
+
+.filter:active{
+  transform:translateY(0) scale(.97);
 }
 
 .filter.active{
   color:#111;
-
   background:#d5b42e;
   border-color:#d5b42e;
-
-  transform:scale(1.025);
+  transform:scale(1.07);
+  box-shadow:0 0 14px rgba(213,180,46,.12);
 }
 
-/* =========================
-   NEWS
-========================= */
+
+/* ================= NEWS ================= */
 
 .news-grid{
   display:flex;
@@ -429,328 +376,298 @@ nav a.active::after{
 
 .news-card{
   min-height:200px;
-
-  display:grid;
-
-  grid-template-columns:
-    280px
-    minmax(0,1fr);
-
-  background:#0d0e0e;
-
   border:1px solid #292a2b;
-  border-radius:7px;
-
-  overflow:hidden;
-
-  cursor:pointer;
-
+  background:#0d0e0e;
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
   transition:
-    border-color .2s ease,
-    transform .2s ease,
-    background .2s ease,
-    box-shadow .2s ease;
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+  overflow:hidden;
+  border-radius:7px;
 }
 
 .news-card:hover{
-  border-color:#4a462c;
-  background:#101111;
-
-  transform:translateY(-2px);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
+  transform:translateY(-3px);
+  border-color:#454647;
+  box-shadow:0 9px 25px rgba(0,0,0,.2);
 }
 
-.news-image{
-  position:relative;
-
+.news-image-area{
+  width:100%;
+  height:100%;
   min-height:200px;
-
+  position:relative;
   overflow:hidden;
-
   background:#151616;
 }
 
-.news-image img{
+.news-image{
   width:100%;
   height:100%;
-
-  display:block;
-
+  min-height:200px;
   object-fit:cover;
-
-  transition:
-    transform .35s ease;
+  background:#151616;
+  display:block;
+  transition:transform .35s ease;
 }
 
-.news-card:hover
-.news-image img{
-  transform:scale(1.035);
+.news-card:hover .news-image{
+  transform:scale(1.025);
 }
 
-.news-tag{
+
+/* ================= TAG COLORS ================= */
+
+.news-card-tag{
   position:absolute;
-
-  top:10px;
-  left:10px;
-
-  padding:6px 9px;
-
-  color:#fff;
-
+  top:14px;
+  left:14px;
+  z-index:2;
+  padding:5px 8px;
+  color:white;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
   border-radius:4px;
-
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.4px;
-
-  box-shadow:
-    0 3px 10px rgba(0,0,0,.25);
 }
 
-.tag-updates{
+.news-card-tag.tag-updates{
   background:#964ce0;
 }
 
-.tag-events{
-  background:#bc7722;
-}
-
-.tag-development{
-  background:#258b59;
-}
-
-.tag-servers{
+.news-card-tag.tag-servers{
   background:#397ecb;
 }
 
-.tag-default{
-  background:#555;
+.news-card-tag.tag-development{
+  background:#258b59;
 }
 
-.news-info{
-  min-width:0;
+.news-card-tag.tag-events{
+  background:#bc7722;
+}
 
-  padding:22px 23px;
+.news-card-tag.tag-default{
+  background:#d5b42e;
+  color:#111;
+}
 
+.news-card:hover .news-card-tag{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+
+/* ================= NEWS CONTENT ================= */
+
+.news-content{
+  padding:22px 24px;
   display:flex;
   flex-direction:column;
 }
 
-.news-date{
-  margin-bottom:8px;
-
-  color:#666;
-
-  font-size:10px;
-
-  text-transform:uppercase;
-  letter-spacing:.7px;
-}
-
-.news-title{
-  margin:0 0 9px;
-
-  font-size:20px;
-  line-height:1.25;
-}
-
-.news-description{
-  margin:0;
-
-  color:#999;
-
-  font-size:13px;
-  line-height:1.55;
-
-  display:-webkit-box;
-  -webkit-line-clamp:3;
-  -webkit-box-orient:vertical;
-
-  overflow:hidden;
-}
-
-.news-bottom{
-  margin-top:auto;
-
-  padding-top:15px;
-
+.news-meta{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-
-  gap:15px;
+  gap:10px;
+  margin-bottom:11px;
 }
 
-.news-category{
+.news-date{
   color:#666;
-  font-size:11px;
+  font-size:10px;
 }
 
-.read-more{
-  color:#d5b42e;
-
-  font-size:11px;
+.news-content h3{
+  font-size:23px;
+  line-height:1.15;
+  color:#eee;
   font-weight:800;
+  margin-bottom:10px;
+}
 
+.news-content p{
+  color:#777;
+  font-size:13px;
+  line-height:1.65;
+}
+
+.news-more{
+  margin-top:auto;
+  padding-top:15px;
+  color:#c5a82c;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
   transition:
+    color .2s ease,
     transform .2s ease;
 }
 
-.news-card:hover
-.read-more{
+.news-more:hover{
+  color:#f0ce43;
   transform:translateX(3px);
 }
 
-/* =========================
-   LOAD MORE
-========================= */
+
+/* ================= LOAD MORE ================= */
 
 .load-more-wrap{
   display:flex;
   justify-content:center;
-
-  margin-top:20px;
+  margin-top:22px;
 }
 
 .load-more{
-  padding:11px 20px;
-
-  background:#111212;
-
-  border:1px solid #39392e;
-
-  color:#d5b42e;
-
-  border-radius:6px;
-
+  border:1px solid #303233;
+  background:#0c0d0d;
+  color:#aaa;
+  padding:11px 22px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
   cursor:pointer;
-
-  font-size:12px;
-  font-weight:800;
-
+  border-radius:5px;
   transition:
+    transform .2s ease,
+    color .2s ease,
     background .2s ease,
     border-color .2s ease,
-    transform .2s ease;
+    box-shadow .2s ease;
 }
 
 .load-more:hover{
-  background:#191917;
-  border-color:#665d27;
-
-  transform:translateY(-1px);
+  color:#111;
+  background:#d5b42e;
+  border-color:#d5b42e;
+  transform:translateY(-2px);
+  box-shadow:0 7px 18px rgba(213,180,46,.12);
 }
 
-.load-more.hidden{
-  display:none;
+.load-more:active{
+  transform:translateY(0) scale(.98);
 }
 
-/* =========================
-   EMPTY
-========================= */
+
+/* ================= LOADING ================= */
+
+.loading{
+  padding:40px;
+  text-align:center;
+  color:#555;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
 
 .empty{
-  padding:45px 20px;
-
-  text-align:center;
-
-  background:#0d0e0e;
-
+  padding:35px;
   border:1px solid #292a2b;
   border-radius:7px;
-
-  color:#666;
-
-  font-size:13px;
+  color:#555;
+  text-align:center;
+  font-size:12px;
 }
 
-.empty strong{
-  display:block;
 
-  margin-bottom:7px;
-
-  color:#aaa;
-}
-
-/* =========================
-   FOOTER
-========================= */
+/* ================= FOOTER ================= */
 
 footer{
-  margin-top:45px;
-
-  padding:25px 0;
-
-  border-top:1px solid #292a2b;
-
-  background:#080909;
+  border-top:1px solid #252627;
+  background:#050606;
+  padding:42px 0;
 }
 
-.footer-inner{
-  width:min(1200px,calc(100% - 40px));
-
-  margin:auto;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  gap:20px;
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:50px;
 }
 
-.footer-copy{
-  color:#555;
+.footer-brand{
+  color:#777;
+  font-size:11px;
+  line-height:1.7;
+  max-width:430px;
+}
+
+.footer-title{
+  color:#bbb;
   font-size:10px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:15px;
+  text-transform:uppercase;
 }
 
-.footer-nav{
+.footer-links{
   display:flex;
-  gap:15px;
+  flex-direction:column;
+  gap:9px;
 }
 
-.footer-nav a{
+.footer-links a{
   color:#666;
-  font-size:10px;
-
-  transition:
-    color .2s ease;
+  font-size:11px;
+  transition:.2s ease;
 }
 
-.footer-nav a:hover{
-  color:#d5b42e;
+.footer-links a:hover{
+  color:#ddd;
+  transform:translateX(2px);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+.footer-bottom{
+  margin-top:35px;
+  padding-top:18px;
+  border-top:1px solid #1e1f20;
+  display:flex;
+  justify-content:space-between;
+  color:#444;
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+
+/* ================= RESPONSIVE ================= */
 
 @media(max-width:700px){
 
+  .wrap,
   .header-inner{
-    min-height:auto;
-
-    padding-top:10px;
-    padding-bottom:10px;
-
-    flex-wrap:wrap;
+    width:min(100% - 25px,1220px);
   }
 
-  .brand{
-    flex:1;
+  header{
+    height:70px;
+  }
+
+  .header-inner{
+    gap:12px;
+    min-width:0;
   }
 
   nav{
-    order:3;
-
-    width:100%;
-
+    display:flex;
+    flex:1;
+    min-width:0;
+    height:70px;
+    justify-content:flex-start;
+    gap:25px;
     overflow-x:auto;
-
-    padding-bottom:2px;
-
+    overflow-y:hidden;
     scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    padding:0 2px;
   }
 
   nav::-webkit-scrollbar{
@@ -759,85 +676,100 @@ footer{
 
   nav a{
     flex:0 0 auto;
+    height:70px;
+    font-size:9px;
+    letter-spacing:1px;
   }
 
-  .search-wrap{
-    flex:0 0 auto;
+  .search{
+    display:grid;
   }
 
-  .search-box{
-    right:0;
-
-    width:
-      min(
-        310px,
-        calc(100vw - 40px)
-      );
+  .search-panel{
+    top:calc(100% + 10px);
   }
 
-  .hero{
-    min-height:220px;
-
-    padding:30px 25px;
+  .logo{
+    flex-shrink:0;
   }
 
-  .hero h1{
-    font-size:30px;
+  .logo-symbol{
+    width:38px;
+    height:38px;
+  }
+
+  .logo-symbol img{
+    width:38px;
+    height:38px;
+  }
+
+  .logo-text strong{
+    font-size:15px;
+    letter-spacing:1.5px;
+  }
+
+  .logo-text span{
+    font-size:7px;
+    letter-spacing:2px;
+  }
+
+  .section-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .filters{
+    width:100%;
+    justify-content:flex-start;
+    gap:7px;
+  }
+
+  .month-filters{
+    width:100%;
+    justify-content:flex-start;
+    gap:7px;
+  }
+
+  .filter.active{
+    transform:scale(1.05);
   }
 
   .news-card{
-    display:flex;
-    flex-direction:column;
+    grid-template-columns:1fr;
+  }
+
+  .news-image-area{
+    height:190px;
+    min-height:0;
   }
 
   .news-image{
     height:190px;
-    min-height:190px;
+    min-height:0;
   }
 
-  .news-info{
-    padding:18px;
+  .footer-grid{
+    grid-template-columns:1fr;
+    gap:30px;
   }
 
-  .footer-inner{
+  .footer-bottom{
     flex-direction:column;
-    align-items:flex-start;
+    gap:8px;
   }
 
 }
 
-@media(max-width:450px){
 
-  .container{
-    width:
-      min(
-        100% - 24px,
-        1200px
-      );
+@media(max-width:430px){
+
+  .news-image-area{
+    height:180px;
   }
 
-  .hero{
-    margin-top:12px;
-  }
-
-  .brand-title{
-    font-size:13px;
-  }
-
-  .brand-subtitle{
-    display:none;
-  }
-
-  .hero h1{
-    font-size:26px;
-  }
-
-  .hero p{
-    font-size:12px;
-  }
-
-  .news-title{
-    font-size:18px;
+  .news-image{
+    height:180px;
   }
 
 }
@@ -845,32 +777,33 @@ footer{
 </style>
 </head>
 
+
 <body>
+
+
+<!-- ================= HEADER ================= -->
 
 <header>
 
   <div class="header-inner">
 
-    <a
-      href="./index.html"
-      class="brand"
-    >
+    <a href="./" class="logo">
 
-      <img
-        id="siteLogo"
-        src=""
-        alt="SCP:CB2"
-      >
+      <div class="logo-symbol">
 
-      <div class="brand-text">
+        <img
+          id="siteLogo"
+          src=""
+          alt="SCP"
+        >
 
-        <div class="brand-title">
-          SCP: CB2 MULTIPLAYER
-        </div>
+      </div>
 
-        <div class="brand-subtitle">
-          НОВОСТИ ПРОЕКТА
-        </div>
+      <div class="logo-text">
+
+        <strong>SCP: CB2</strong>
+
+        <span>MULTIPLAYER</span>
 
       </div>
 
@@ -879,7 +812,7 @@ footer{
 
     <nav>
 
-      <a href="./index.html">
+      <a href="./">
         Новости
       </a>
 
@@ -890,52 +823,42 @@ footer{
         Архив
       </a>
 
-      <a href="./index.html#about">
+      <a href="./#about">
         О проекте
       </a>
 
     </nav>
 
 
-    <details class="search-wrap">
+    <!-- ПОИСК -->
+
+    <details class="search-dropdown">
 
       <summary
-        class="search-toggle"
-        aria-label="Поиск"
+        class="search"
+        title="Поиск"
+        aria-label="Открыть поиск"
       >
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-
-          <circle
-            cx="11"
-            cy="11"
-            r="7"
-          ></circle>
-
-          <path
-            d="m20 20-3.5-3.5"
-          ></path>
-
-        </svg>
-
+        ⌕
       </summary>
 
+      <div class="search-panel">
 
-      <div class="search-box">
+        <div class="header-search-box">
 
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Поиск по архиву..."
-          autocomplete="off"
-        >
+          <div class="header-search-icon">
+            ⌕
+          </div>
+
+          <input
+            id="searchInput"
+            class="header-search-input"
+            type="search"
+            placeholder="Поиск по новостям..."
+            autocomplete="off"
+          >
+
+        </div>
 
       </div>
 
@@ -946,83 +869,93 @@ footer{
 </header>
 
 
-<main class="container">
+<!-- ================= MAIN ================= -->
 
-  <section
-    class="hero"
-    id="hero"
-  >
+<main>
 
-    <div class="hero-content">
+  <div class="wrap">
 
-      <div class="hero-label">
-        АРХИВ
+    <div class="section-head">
+
+      <div>
+
+        <div class="section-kicker">
+          Архив проекта
+        </div>
+
+        <h2>
+          Все новости
+        </h2>
+
       </div>
-
-      <h1>
-        АРХИВ НОВОСТЕЙ
-      </h1>
-
-      <p>
-        Все новости, события и обновления проекта SCP:CB2,
-        собранные в одном месте.
-      </p>
 
     </div>
 
-  </section>
+
+    <!-- ================= YEAR FILTER ================= -->
+
+    <div class="filters-title">
+      Год публикации
+    </div>
+
+    <div
+      id="yearFilters"
+      class="filters"
+    >
+
+      <button
+        class="filter active"
+        data-year="all"
+      >
+        Все новости
+      </button>
+
+    </div>
 
 
-  <div class="main-layout">
+    <!-- ================= MONTH FILTER ================= -->
 
-    <section class="section">
+    <div
+      id="monthFilters"
+      class="month-filters"
+    >
 
-      <div class="section-title">
+      <button
+        class="filter active"
+        data-month="all"
+      >
+        Все месяцы
+      </button>
 
-        <h2>
-          Архив публикаций
-        </h2>
+    </div>
 
-        <span id="newsCount">
-          Загрузка...
-        </span>
+
+    <!-- ================= NEWS ================= -->
+
+    <section>
+
+      <div
+        id="newsList"
+        class="news-grid"
+      >
+
+        <div class="loading">
+          Загрузка архива...
+        </div>
 
       </div>
 
 
       <div
-        class="filters"
-        id="yearFilters"
-      ></div>
-
-
-      <div
-        class="news-grid"
-        id="newsGrid"
-      ></div>
-
-
-      <div
-        class="empty"
-        id="emptyState"
+        id="loadMoreWrap"
+        class="load-more-wrap"
         style="display:none"
       >
 
-        <strong>
-          Ничего не найдено
-        </strong>
-
-        Попробуйте изменить поисковый запрос
-        или выбрать другой год.
-
-      </div>
-
-
-      <div class="load-more-wrap">
-
         <button
+          id="loadMoreButton"
           class="load-more"
-          id="loadMore"
+          type="button"
         >
           Показать ещё
         </button>
@@ -1036,28 +969,93 @@ footer{
 </main>
 
 
+<!-- ================= FOOTER ================= -->
+
 <footer>
 
-  <div class="footer-inner">
+  <div class="wrap">
 
-    <div class="footer-copy">
-      © SCP: CB2 Multiplayer
+    <div class="footer-grid">
+
+
+      <div>
+
+        <div class="footer-title">
+          SCP: CB2 MULTIPLAYER
+        </div>
+
+        <div class="footer-brand">
+
+          Фанатский многопользовательский проект,
+          вдохновлённый SCP: Containment Breach.
+
+          <br><br>
+
+          Все новости и обновления проекта
+          публикуются на данном сайте.
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="footer-title">
+          Навигация
+        </div>
+
+        <div class="footer-links">
+
+          <a href="./">
+            Новости
+          </a>
+
+          <a href="./archive.html">
+            Архив
+          </a>
+
+          <a href="./#about">
+            О проекте
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="footer-title">
+          Проект
+        </div>
+
+        <div class="footer-links">
+
+          <a href="#">
+            Discord
+          </a>
+
+          <a href="#">
+            GitHub
+          </a>
+
+        </div>
+
+      </div>
+
     </div>
 
 
-    <div class="footer-nav">
+    <div class="footer-bottom">
 
-      <a href="./index.html">
-        Новости
-      </a>
+      <span>
+        SCP: CB2 MULTIPLAYER
+      </span>
 
-      <a href="./archive.html">
-        Архив
-      </a>
-
-      <a href="./index.html#about">
-        О проекте
-      </a>
+      <span>
+        NOT AFFILIATED WITH SCP FOUNDATION
+      </span>
 
     </div>
 
@@ -1066,16 +1064,10 @@ footer{
 </footer>
 
 
-<!-- SUPABASE -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
 
-/* =========================
-   SUPABASE
-========================= */
+
+/* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
   "https://ajmavwxzakkjsfolijhp.supabase.co";
@@ -1090,325 +1082,457 @@ const supabaseClient =
   );
 
 
-/* =========================
-   GLOBAL
-========================= */
-
-let allNews = [];
-
-let filteredNews = [];
-
-let currentYear = "all";
-
-let searchQuery = "";
-
-let visibleCount = 6;
-
-const newsPerLoad = 6;
-
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const newsGrid =
-  document.getElementById(
-    "newsGrid"
-  );
-
-const emptyState =
-  document.getElementById(
-    "emptyState"
-  );
-
-const loadMore =
-  document.getElementById(
-    "loadMore"
-  );
-
-const newsCount =
-  document.getElementById(
-    "newsCount"
-  );
-
-const yearFilters =
-  document.getElementById(
-    "yearFilters"
-  );
-
-const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
-
-const siteLogo =
-  document.getElementById(
-    "siteLogo"
-  );
-
-const hero =
-  document.getElementById(
-    "hero"
-  );
-
-
-/* =========================
-   SETTINGS
-========================= */
+/* ================= SETTINGS ================= */
 
 async function loadSiteSettings(){
 
-  try{
-
-    const { data, error } =
-      await supabaseClient
-        .from("site_settings")
-        .select("*");
-
-
-    if(error){
-
-      console.error(
-        "Ошибка загрузки настроек:",
-        error
-      );
-
-      return;
-
-    }
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("site_settings")
+    .select("*");
 
 
-    const settings = {};
+  if(error){
 
-
-    (data || []).forEach(
-      item => {
-
-        settings[item.key] =
-          item.value;
-
-      }
+    console.error(
+      "Ошибка site_settings:",
+      error
     );
 
+    return;
 
-    /* LOGO */
+  }
 
-    if(settings.logo){
 
-      siteLogo.src =
+  if(!data){
+    return;
+  }
+
+
+  const settings = {};
+
+
+  data.forEach(item => {
+
+    settings[item.key] =
+      item.value;
+
+  });
+
+
+  /* ЛОГО */
+
+  if(settings.logo){
+
+    const logo =
+      document.getElementById(
+        "siteLogo"
+      );
+
+    if(logo){
+
+      logo.src =
         settings.logo +
         "?v=" +
         Date.now();
 
-    }
-
-
-    /* BACKGROUND */
-
-    if(settings.background){
-
-      document.body.style.backgroundImage =
-        `url("${settings.background}?v=${Date.now()}")`;
+      logo.style.display =
+        "block";
 
     }
 
+  }
 
-    /* BANNER */
 
-    if(settings.banner){
+  /* ФОН */
 
-      hero.style.backgroundImage =
-        `url("${settings.banner}?v=${Date.now()}")`;
+  if(settings.background){
 
-    }
+    document.body.style.backgroundImage =
+      `url("${settings.background}?v=${Date.now()}")`;
 
-  }catch(error){
+    document.body.style.backgroundSize =
+      "cover";
 
-    console.error(
-      "Ошибка настроек:",
-      error
-    );
+    document.body.style.backgroundPosition =
+      "center top";
+
+    document.body.style.backgroundAttachment =
+      "fixed";
+
+    document.body.style.backgroundRepeat =
+      "no-repeat";
 
   }
 
 }
 
 
-/* =========================
-   CATEGORY CLASS
-========================= */
+/* ================= DATE ================= */
+
+function formatDate(date){
+
+  const d =
+    new Date(date);
+
+
+  const day =
+    String(
+      d.getDate()
+    ).padStart(2,"0");
+
+
+  const month =
+    String(
+      d.getMonth()+1
+    ).padStart(2,"0");
+
+
+  const year =
+    d.getFullYear();
+
+
+  return `${day}.${month}.${year}`;
+
+}
+
+
+/* ================= MONTH NAMES ================= */
+
+const monthNames = [
+
+  "Январь",
+  "Февраль",
+  "Март",
+  "Апрель",
+  "Май",
+  "Июнь",
+  "Июль",
+  "Август",
+  "Сентябрь",
+  "Октябрь",
+  "Ноябрь",
+  "Декабрь"
+
+];
+
+
+/* ================= CATEGORY COLORS ================= */
 
 function categoryClass(category){
 
-  if(
-    category === "Обновления"
-  )
+  if(category === "Обновления"){
     return "tag-updates";
+  }
 
-
-  if(
-    category === "Сервера"
-  )
+  if(category === "Сервера"){
     return "tag-servers";
+  }
 
-
-  if(
-    category === "Разработка"
-  )
+  if(category === "Разработка"){
     return "tag-development";
+  }
 
-
-  if(
-    category === "События"
-  )
+  if(category === "События"){
     return "tag-events";
-
+  }
 
   return "tag-default";
 
 }
 
 
-/* =========================
-   FORMAT DATE
-========================= */
+/* ================= NEWS ================= */
 
-function formatDate(
-  dateString
-){
+let allNews = [];
 
-  if(!dateString)
-    return "";
+let currentYear =
+  "all";
+
+let currentMonth =
+  "all";
+
+let currentSearch =
+  "";
+
+let visibleNewsCount =
+  6;
+
+const NEWS_PER_LOAD =
+  6;
 
 
-  const date =
-    new Date(
-      dateString
+/* ================= CREATE NEWS CARD ================= */
+
+function createNewsCard(news){
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+  card.className =
+    "news-card";
+
+
+  const image =
+    news.image_url ||
+    "";
+
+
+  const tagClass =
+    categoryClass(
+      news.category
     );
 
 
-  return date.toLocaleDateString(
-    "ru-RU",
-    {
-      day:"2-digit",
-      month:"long",
-      year:"numeric"
-    }
+  card.innerHTML = `
+
+    <div class="news-image-area">
+
+      <div
+        class="news-card-tag ${tagClass}"
+      >
+        ${escapeHtml(
+          news.category ||
+          "Новости"
+        )}
+      </div>
+
+
+      ${
+        image
+        ?
+        `
+        <img
+          class="news-image"
+          src="${escapeHtml(image)}"
+          alt=""
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
+        `
+        :
+        ""
+      }
+
+    </div>
+
+
+    <div class="news-content">
+
+      <div class="news-meta">
+
+        <span class="news-date">
+
+          ${formatDate(
+            news.created_at
+          )}
+
+        </span>
+
+      </div>
+
+
+      <h3>
+
+        ${escapeHtml(
+          news.title
+        )}
+
+      </h3>
+
+
+      <p>
+
+        ${escapeHtml(
+          news.description ||
+          ""
+        )}
+
+      </p>
+
+
+      <a
+        class="news-more"
+        href="./news.html?id=${encodeURIComponent(
+          news.id
+        )}"
+      >
+
+        Читать далее →
+
+      </a>
+
+    </div>
+
+  `;
+
+
+  return card;
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function normalizeSearchText(value){
+
+  return String(
+    value || ""
+  )
+  .toLowerCase()
+  .trim();
+
+}
+
+
+function newsMatchesSearch(news){
+
+  if(!currentSearch){
+    return true;
+  }
+
+
+  const searchText =
+    normalizeSearchText(
+      currentSearch
+    );
+
+
+  const title =
+    normalizeSearchText(
+      news.title
+    );
+
+
+  const description =
+    normalizeSearchText(
+      news.description
+    );
+
+
+  const content =
+    normalizeSearchText(
+      news.content
+    );
+
+
+  return (
+
+    title.includes(
+      searchText
+    )
+
+    ||
+
+    description.includes(
+      searchText
+    )
+
+    ||
+
+    content.includes(
+      searchText
+    )
+
   );
 
 }
 
 
-/* =========================
-   LOAD NEWS
-========================= */
+/* ================= YEAR ================= */
 
-async function loadNews(){
+function getNewsYear(news){
 
-  newsGrid.innerHTML = `
-    <div class="empty">
-      Загрузка новостей...
-    </div>
-  `;
-
-
-  try{
-
-    const { data, error } =
-      await supabaseClient
-        .from("news")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    if(error)
-      throw error;
-
-
-    allNews =
-      data || [];
-
-
-    createYearFilters();
-
-    applyFilters();
-
-  }catch(error){
-
-    console.error(
-      "Ошибка загрузки новостей:",
-      error
-    );
-
-
-    newsGrid.innerHTML = `
-      <div class="empty">
-
-        <strong>
-          Не удалось загрузить архив
-        </strong>
-
-        Проверьте подключение к Supabase.
-
-      </div>
-    `;
-
-
-    newsCount.textContent =
-      "";
-
-
-    loadMore.classList.add(
-      "hidden"
-    );
-
-  }
+  return new Date(
+    news.created_at
+  ).getFullYear();
 
 }
 
 
-/* =========================
-   YEAR FILTERS
-========================= */
+/* ================= MONTH ================= */
 
-function createYearFilters(){
+function getNewsMonth(news){
 
-  const years =
-    [
-      ...new Set(
+  return new Date(
+    news.created_at
+  ).getMonth();
 
-        allNews
-          .map(news => {
-
-            if(
-              !news.created_at
-            )
-              return null;
+}
 
 
-            return new Date(
-              news.created_at
-            ).getFullYear();
+/* ================= FILTERED NEWS ================= */
 
-          })
+function getFilteredNews(){
 
-          .filter(Boolean)
+  let filtered =
+    allNews;
 
-      )
-    ]
 
-    .sort(
-      (a,b) => b-a
+  /* ГОД */
+
+  if(currentYear !== "all"){
+
+    filtered =
+      filtered.filter(
+        news =>
+          getNewsYear(news) ===
+          Number(currentYear)
+      );
+
+  }
+
+
+  /* МЕСЯЦ */
+
+  if(currentMonth !== "all"){
+
+    filtered =
+      filtered.filter(
+        news =>
+          getNewsMonth(news) ===
+          Number(currentMonth)
+      );
+
+  }
+
+
+  /* ПОИСК */
+
+  filtered =
+    filtered.filter(
+      news =>
+        newsMatchesSearch(
+          news
+        )
     );
 
 
-  yearFilters.innerHTML =
-    "";
+  return filtered;
+
+}
+
+
+/* ================= YEAR FILTERS ================= */
+
+function buildYearFilters(){
+
+  const container =
+    document.getElementById(
+      "yearFilters"
+    );
+
+
+  if(!container){
+    return;
+  }
+
+
+  container.innerHTML = "";
 
 
   const allButton =
@@ -1429,180 +1553,256 @@ function createYearFilters(){
     "Все новости";
 
 
-  yearFilters.appendChild(
+  container.appendChild(
     allButton
   );
 
 
-  years.forEach(
-    year => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.className =
-        "filter";
-
-
-      button.dataset.year =
-        year;
-
-
-      button.textContent =
-        year;
-
-
-      yearFilters.appendChild(
-        button
-      );
-
-    }
+  const years = [
+    ...new Set(
+      allNews.map(
+        news =>
+          getNewsYear(news)
+      )
+    )
+  ]
+  .sort(
+    (a,b) => b-a
   );
 
 
-  yearFilters
+  years.forEach(year => {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+
+    button.className =
+      "filter";
+
+
+    button.dataset.year =
+      year;
+
+
+    button.textContent =
+      year;
+
+
+    container.appendChild(
+      button
+    );
+
+  });
+
+
+  container
     .querySelectorAll(
       ".filter"
     )
-    .forEach(
-      button => {
+    .forEach(button => {
 
-        button.addEventListener(
-          "click",
-          () => {
+      button.addEventListener(
+        "click",
+        function(){
 
-            yearFilters
-              .querySelectorAll(
-                ".filter"
-              )
-              .forEach(
-                item => {
-
-                  item.classList.remove(
-                    "active"
-                  );
-
-                }
-              );
-
-
-            button.classList.add(
-              "active"
-            );
-
-
-            currentYear =
-              button.dataset.year;
-
-
-            visibleCount =
-              6;
-
-
-            applyFilters();
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-/* =========================
-   SEARCH
-========================= */
-
-function matchesSearch(news){
-
-  if(!searchQuery)
-    return true;
-
-
-  const title =
-    String(
-      news.title || ""
-    ).toLowerCase();
-
-
-  const description =
-    String(
-      news.description || ""
-    ).toLowerCase();
-
-
-  const content =
-    String(
-      news.content || ""
-    ).toLowerCase();
-
-
-  return (
-    title.includes(
-      searchQuery
-    ) ||
-
-    description.includes(
-      searchQuery
-    ) ||
-
-    content.includes(
-      searchQuery
-    )
-  );
-
-}
-
-
-/* =========================
-   APPLY FILTERS
-========================= */
-
-function applyFilters(){
-
-  filteredNews =
-    allNews.filter(
-      news => {
-
-        let yearMatch =
-          true;
-
-
-        if(
-          currentYear !== "all"
-        ){
-
-          if(
-            !news.created_at
-          )
-            return false;
-
-
-          const year =
-            new Date(
-              news.created_at
-            )
-            .getFullYear()
-            .toString();
-
-
-          yearMatch =
-            year === currentYear;
+          selectYear(
+            button.dataset.year
+          );
 
         }
+      );
+
+    });
+
+}
 
 
-        return (
-          yearMatch &&
-          matchesSearch(news)
-        );
+/* ================= MONTH FILTERS ================= */
 
-      }
+function buildMonthFilters(){
+
+  const container =
+    document.getElementById(
+      "monthFilters"
     );
+
+
+  if(!container){
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  if(currentYear === "all"){
+
+    container.classList.remove(
+      "visible"
+    );
+
+    currentMonth =
+      "all";
+
+    return;
+
+  }
+
+
+  const year =
+    Number(
+      currentYear
+    );
+
+
+  const months = [
+    ...new Set(
+
+      allNews
+
+        .filter(
+          news =>
+            getNewsYear(news) ===
+            year
+        )
+
+        .map(
+          news =>
+            getNewsMonth(news)
+        )
+
+    )
+  ]
+  .sort(
+    (a,b) => b-a
+  );
+
+
+  if(!months.length){
+
+    container.classList.remove(
+      "visible"
+    );
+
+    return;
+
+  }
+
+
+  container.classList.add(
+    "visible"
+  );
+
+
+  const allButton =
+    document.createElement(
+      "button"
+    );
+
+
+  allButton.className =
+    "filter active";
+
+
+  allButton.dataset.month =
+    "all";
+
+
+  allButton.textContent =
+    "Все месяцы";
+
+
+  container.appendChild(
+    allButton
+  );
+
+
+  months.forEach(month => {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+
+    button.className =
+      "filter";
+
+
+    button.dataset.month =
+      month;
+
+
+    button.textContent =
+      monthNames[
+        month
+      ];
+
+
+    container.appendChild(
+      button
+    );
+
+  });
+
+
+  container
+    .querySelectorAll(
+      ".filter"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          selectMonth(
+            button.dataset.month
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+/* ================= SELECT YEAR ================= */
+
+function selectYear(year){
+
+  currentYear =
+    year;
+
+
+  currentMonth =
+    "all";
+
+
+  visibleNewsCount =
+    NEWS_PER_LOAD;
+
+
+  document
+    .querySelectorAll(
+      "#yearFilters .filter"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.year ===
+        String(year)
+      );
+
+    });
+
+
+  buildMonthFilters();
 
 
   renderNews();
@@ -1610,349 +1810,326 @@ function applyFilters(){
 }
 
 
-/* =========================
-   RENDER NEWS
-========================= */
+/* ================= SELECT MONTH ================= */
+
+function selectMonth(month){
+
+  currentMonth =
+    month;
+
+
+  visibleNewsCount =
+    NEWS_PER_LOAD;
+
+
+  document
+    .querySelectorAll(
+      "#monthFilters .filter"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.month ===
+        String(month)
+      );
+
+    });
+
+
+  renderNews();
+
+}
+
+
+/* ================= RENDER NEWS ================= */
 
 function renderNews(){
 
-  const visibleNews =
-    filteredNews.slice(
-      0,
-      visibleCount
+  const list =
+    document.getElementById(
+      "newsList"
     );
 
 
-  newsGrid.innerHTML =
+  const loadMoreWrap =
+    document.getElementById(
+      "loadMoreWrap"
+    );
+
+
+  if(!list){
+    return;
+  }
+
+
+  list.innerHTML =
     "";
 
 
-  if(
-    filteredNews.length === 0
-  ){
-
-    emptyState.style.display =
-      "block";
+  const filtered =
+    getFilteredNews();
 
 
-    loadMore.classList.add(
-      "hidden"
-    );
+  if(!filtered.length){
+
+    if(loadMoreWrap){
+
+      loadMoreWrap.style.display =
+        "none";
+
+    }
 
 
-    newsCount.textContent =
-      "0 публикаций";
+    if(currentSearch){
 
+      list.innerHTML = `
+
+        <div class="empty">
+
+          По запросу
+          «${escapeHtml(
+            currentSearch
+          )}»
+          ничего не найдено
+
+        </div>
+
+      `;
+
+    }
+
+    else{
+
+      list.innerHTML = `
+
+        <div class="empty">
+
+          В выбранном периоде
+          новостей нет
+
+        </div>
+
+      `;
+
+    }
 
     return;
 
   }
 
 
-  emptyState.style.display =
-    "none";
+  const visible =
+    filtered.slice(
+      0,
+      visibleNewsCount
+    );
 
 
-  visibleNews.forEach(
-    news => {
+  visible.forEach(news => {
 
-      const card =
-        document.createElement(
-          "article"
-        );
+    list.appendChild(
+      createNewsCard(
+        news
+      )
+    );
 
-
-      card.className =
-        "news-card";
+  });
 
 
-      card.addEventListener(
-        "click",
-        () => {
+  if(loadMoreWrap){
 
-          window.location.href =
-            "./news.html?id=" +
-            encodeURIComponent(
-              news.id
-            );
+    if(
+      visible.length <
+      filtered.length
+    ){
 
-        }
-      );
+      loadMoreWrap.style.display =
+        "flex";
 
+    }
 
-      const image =
-        news.image_url ||
-        "";
+    else{
 
+      loadMoreWrap.style.display =
+        "none";
 
-      const imageHTML =
-        image
+    }
 
-          ? `
-            <img
-              src="${escapeHTML(image)}"
-              alt=""
-              loading="lazy"
-            >
-          `
+  }
 
-          : `
-            <div
-              style="
-                width:100%;
-                height:100%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                color:#444;
-                font-size:11px;
-              "
-            >
-              NO IMAGE
-            </div>
-          `;
+}
 
 
-      card.innerHTML = `
+/* ================= LOAD MORE ================= */
 
-        <div class="news-image">
-
-          ${imageHTML}
-
-          <div
-            class="news-tag
-            ${categoryClass(
-              news.category
-            )}"
-          >
-            ${escapeHTML(
-              news.category ||
-              "Новости"
-            )}
-          </div>
-
-        </div>
+const loadMoreButton =
+  document.getElementById(
+    "loadMoreButton"
+  );
 
 
-        <div class="news-info">
+if(loadMoreButton){
 
-          <div class="news-date">
+  loadMoreButton.addEventListener(
+    "click",
+    function(){
 
-            ${formatDate(
-              news.created_at
-            )}
+      visibleNewsCount +=
+        NEWS_PER_LOAD;
 
-          </div>
+      renderNews();
 
+    }
+  );
 
-          <h3 class="news-title">
-
-            ${escapeHTML(
-              news.title ||
-              "Без названия"
-            )}
-
-          </h3>
+}
 
 
-          <p class="news-description">
+/* ================= LOAD NEWS ================= */
 
-            ${escapeHTML(
-              news.description ||
-              ""
-            )}
+async function loadNews(){
 
-          </p>
+  const {
+    data,
+    error
+  } = await supabaseClient
 
+    .from("news")
 
-          <div class="news-bottom">
+    .select("*")
 
-            <div class="news-category">
-
-              ${escapeHTML(
-                news.category ||
-                "Новости"
-              )}
-
-            </div>
-
-
-            <div class="read-more">
-              Читать →
-            </div>
-
-          </div>
-
-        </div>
-
-      `;
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
 
 
-      newsGrid.appendChild(
-        card
-      );
+  if(error){
+
+    console.error(
+      "Ошибка news:",
+      error
+    );
+
+
+    document.getElementById(
+      "newsList"
+    ).innerHTML = `
+
+      <div class="empty">
+
+        Не удалось загрузить архив
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  allNews =
+    data || [];
+
+
+  buildYearFilters();
+
+  buildMonthFilters();
+
+  renderNews();
+
+}
+
+
+/* ================= SEARCH INPUT ================= */
+
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
+
+
+if(searchInput){
+
+  searchInput.addEventListener(
+    "input",
+    function(){
+
+      currentSearch =
+        searchInput.value;
+
+
+      visibleNewsCount =
+        NEWS_PER_LOAD;
+
+
+      renderNews();
 
     }
   );
 
 
-  newsCount.textContent =
-    `${filteredNews.length} ${
-      getNewsWord(
-        filteredNews.length
-      )
-    }`;
+  searchInput.addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key ===
+        "Escape"
+      ){
+
+        searchInput.value =
+          "";
+
+        currentSearch =
+          "";
+
+        visibleNewsCount =
+          NEWS_PER_LOAD;
 
 
-  if(
-    visibleCount <
-    filteredNews.length
-  ){
-
-    loadMore.classList.remove(
-      "hidden"
-    );
-
-  }else{
-
-    loadMore.classList.add(
-      "hidden"
-    );
-
-  }
-
-}
+        renderNews();
 
 
-/* =========================
-   LOAD MORE
-========================= */
-
-loadMore.addEventListener(
-  "click",
-  () => {
-
-    visibleCount +=
-      newsPerLoad;
-
-    renderNews();
-
-  }
-);
+        const dropdown =
+          document.querySelector(
+            ".search-dropdown"
+          );
 
 
-/* =========================
-   SEARCH LISTENER
-========================= */
+        if(dropdown){
 
-searchInput.addEventListener(
-  "input",
-  () => {
+          dropdown.removeAttribute(
+            "open"
+          );
 
-    searchQuery =
-      searchInput.value
-        .trim()
-        .toLowerCase();
+        }
 
-
-    visibleCount =
-      6;
-
-
-    applyFilters();
-
-  }
-);
-
-
-/* =========================
-   ESCAPE SEARCH
-========================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if(
-      event.key === "Escape"
-    ){
-
-      searchInput.value =
-        "";
-
-
-      searchQuery =
-        "";
-
-
-      visibleCount =
-        6;
-
-
-      applyFilters();
-
-
-      const searchWrap =
-        document.querySelector(
-          ".search-wrap"
-        );
-
-
-      searchWrap.removeAttribute(
-        "open"
-      );
+      }
 
     }
-
-  }
-);
-
-
-/* =========================
-   WORD FORMS
-========================= */
-
-function getNewsWord(
-  number
-){
-
-  const n =
-    number % 10;
-
-  const n100 =
-    number % 100;
-
-
-  if(
-    n === 1 &&
-    n100 !== 11
-  )
-    return "публикация";
-
-
-  if(
-    n >= 2 &&
-    n <= 4 &&
-    !(
-      n100 >= 12 &&
-      n100 <= 14
-    )
-  )
-    return "публикации";
-
-
-  return "публикаций";
+  );
 
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+/* ================= ESCAPE ================= */
 
-function escapeHTML(
-  value
-){
+function escapeHtml(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return "";
+
+  }
+
 
   return String(value)
 
@@ -1984,20 +2161,11 @@ function escapeHTML(
 }
 
 
-/* =========================
-   INIT
-========================= */
+/* ================= START ================= */
 
-async function init(){
+loadSiteSettings();
 
-  await loadSiteSettings();
-
-  await loadNews();
-
-}
-
-
-init();
+loadNews();
 
 </script>
 
