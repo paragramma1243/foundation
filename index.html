@@ -1,2101 +1,1363 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>SCP: CB2 Multiplayer — Новости</title>
-
-<style>
-
-*{
- box-sizing:border-box
-}
-
-html{
- scroll-behavior:smooth
-}
-
-body{
- margin:0;
- background:#080909;
- color:#eee;
- font-family:Arial,Helvetica,sans-serif;
-}
-
-body:before{
- content:"";
- position:fixed;
- inset:0;
- pointer-events:none;
- opacity:.18;
- background:
- linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
- linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
- background-size:45px 45px;
-}
-
-a{
- text-decoration:none;
- color:inherit
-}
-
-.wrap{
- max-width:1220px;
- width:calc(100% - 50px);
- margin:auto
-}
-
-
-/* ==========================================
-   HEADER
-========================================== */
-
-header{
- height:82px;
- background:#050606;
- border-bottom:1px solid #202122;
- position:relative;
- z-index:5
-}
-
-.head{
- height:100%;
- display:flex;
- align-items:center;
- gap:45px
-}
-
-.logo{
- display:flex;
- align-items:center;
- gap:12px;
- min-width:205px
-}
-
-.logo-symbol{
- width:45px;
- height:45px;
- border:2px solid #ddd;
- border-radius:50%;
- display:grid;
- place-items:center;
- font-size:22px;
- position:relative;
- overflow:hidden
-}
-
-.logo-symbol:after{
- content:"";
- position:absolute;
- width:31px;
- height:31px;
- border:1px solid #aaa;
- border-radius:50%
-}
-
-.logo-symbol img{
- width:100%;
- height:100%;
- object-fit:contain;
- border-radius:50%;
- position:relative;
- z-index:2
-}
-
-.logo-text{
- line-height:.82;
- font-weight:800;
- font-size:25px;
- letter-spacing:-1px
-}
-
-.logo-text small{
- display:block;
- color:#e52b2b;
- font-size:9px;
- letter-spacing:.7px;
- margin-top:7px
-}
-
-
-/* ==========================================
-   NAVIGATION
-========================================== */
-
-nav{
- display:flex;
- height:100%;
- align-items:stretch;
- margin-left:auto
-}
-
-nav a{
- display:flex;
- align-items:center;
- padding:0 15px;
- color:#a4a5a6;
- font-size:13px;
- font-weight:bold;
- text-transform:uppercase;
- position:relative
-}
-
-nav a:hover,
-nav a.active{
- color:#fff
-}
-
-nav a.active:after{
- content:"";
- position:absolute;
- height:2px;
- left:15px;
- right:15px;
- bottom:0;
- background:#f4ca28
-}
-
-
-/* ==========================================
-   SEARCH
-========================================== */
-
-.search{
- width:40px;
- height:40px;
- border:0;
- background:none;
- position:relative;
- margin-left:5px
-}
-
-.search:before{
- content:"";
- position:absolute;
- width:14px;
- height:14px;
- border:2px solid #ddd;
- border-radius:50%;
- left:9px;
- top:8px
-}
-
-.search:after{
- content:"";
- position:absolute;
- width:8px;
- height:2px;
- background:#ddd;
- transform:rotate(45deg);
- left:23px;
- top:24px
-}
-
-
-/* ==========================================
-   HERO
-========================================== */
-
-.hero{
- height:345px;
- border-bottom:1px solid #222;
- position:relative;
- overflow:hidden;
- background:
- linear-gradient(
-  90deg,
-  #070809 0%,
-  #0a0b0c 42%,
-  #181a1b 100%
- );
-}
-
-.hero:before{
- content:"";
- position:absolute;
- right:0;
- top:0;
- width:57%;
- height:100%;
- background:
- linear-gradient(
-  90deg,
-  rgba(8,9,9,1),
-  rgba(8,9,9,.28)
- ),
- linear-gradient(
-  135deg,
-  #272a2b,
-  #0b0c0d 55%,
-  #202324
- );
- clip-path:polygon(
-  23% 0,
-  100% 0,
-  100% 100%,
-  0 100%
- )
-}
-
-.hero:after{
- content:"SCP";
- position:absolute;
- right:10%;
- top:45px;
- font-size:150px;
- font-weight:900;
- color:rgba(255,255,255,.035);
- letter-spacing:5px
-}
-
-.hero .wrap{
- position:relative;
- z-index:2;
- padding-top:78px
-}
-
-.kicker{
- color:#f4ca28;
- font-size:10px;
- font-weight:bold;
- letter-spacing:2px
-}
-
-h1{
- font-size:57px;
- margin:12px 0 13px;
- line-height:.98;
- letter-spacing:-2px
-}
-
-.hero p{
- color:#a7a9aa;
- font-size:14px;
- max-width:570px;
- line-height:1.7
-}
-
-.yellow-btn{
- display:inline-block;
- background:#f4ca28;
- color:#101010;
- padding:13px 20px;
- margin-top:12px;
- font-size:11px;
- font-weight:800;
- text-transform:uppercase
-}
-
-
-/* ==========================================
-   MAIN
-========================================== */
-
-main{
- padding:40px 0 75px
-}
-
-
-/* ==========================================
-   NEWS HEADER
-========================================== */
-
-.news-heading{
- margin-bottom:18px
-}
-
-.section-label{
- font-size:10px;
- color:#65686a;
- letter-spacing:2px;
- font-weight:bold
-}
-
-h2{
- font-size:29px;
- margin:5px 0 0;
- text-transform:uppercase
-}
-
-
-/* ==========================================
-   FILTERS
-========================================== */
-
-.filters{
- display:flex;
- gap:7px;
- flex-wrap:wrap;
- align-items:center;
- margin-bottom:18px
-}
-
-.filter{
- border:1px solid #2a2c2d;
- background:#111213;
- color:#9b9d9e;
- padding:11px 15px;
- font-size:11px;
- font-weight:bold;
- text-transform:uppercase;
- cursor:pointer;
-
- transition:
-  transform .18s ease,
-  background .18s ease,
-  color .18s ease,
-  border-color .18s ease,
-  padding .18s ease;
-}
-
-.filter:hover{
- color:#fff;
- border-color:#555;
- transform:translateY(-1px)
-}
-
-.filter:active{
- transform:scale(.97)
-}
-
-.filter.active{
- background:#f4ca28;
- color:#111;
- border-color:#f4ca28;
- padding:13px 17px;
- margin:-2px 0;
- transform:scale(1)
-}
-
-.filter.active:hover{
- transform:scale(1.03)
-}
-
-
-/* ==========================================
-   GRID
-========================================== */
-
-.grid{
- display:grid;
- grid-template-columns:minmax(0,1fr) 345px;
- gap:22px
-}
-
-.news{
- display:flex;
- flex-direction:column;
- gap:12px
-}
-
-
-/* ==========================================
-   NEWS CARD
-========================================== */
-
-.card{
- display:grid;
- grid-template-columns:280px 1fr;
- min-height:200px;
- background:#111213;
- border:1px solid #292b2c;
- transition:.2s
-}
-
-.card:hover{
- border-color:#555;
- transform:translateY(-2px)
-}
-
-.pic{
- position:relative;
- overflow:hidden;
- background:
-  linear-gradient(
-   135deg,
-   #25292a,
-   #090a0b
-  )
-}
-
-.pic:before{
- content:"";
- position:absolute;
- inset:25px;
- border:1px solid rgba(255,255,255,.11)
-}
-
-.pic:after{
- content:"SCP";
- position:absolute;
- left:25px;
- bottom:17px;
- font-size:52px;
- font-weight:900;
- color:rgba(255,255,255,.08)
-}
-
-.tag{
- position:absolute;
- top:11px;
- left:11px;
- padding:5px 8px;
- color:white;
- font-size:9px;
- font-weight:bold;
- z-index:2
-}
-
-.purple{
- background:#964ce0
-}
-
-.blue{
- background:#397ecb
-}
-
-.green{
- background:#258b59
-}
-
-.orange{
- background:#bc7722
-}
-
-.body{
- padding:20px 21px;
- display:flex;
- flex-direction:column
-}
-
-.time{
- color:#747779;
- font-size:10px;
- margin-bottom:8px
-}
-
-.card h3{
- font-size:20px;
- line-height:1.13;
- margin:0 0 9px
-}
-
-.card p{
- color:#999b9d;
- font-size:11px;
- line-height:1.6;
- margin:0
-}
-
-.meta{
- margin-top:auto;
- padding-top:15px;
- color:#66696b;
- font-size:10px;
- display:flex;
- gap:16px
-}
-
-
-/* ==========================================
-   SIDEBAR
-========================================== */
-
-.side{
- display:flex;
- flex-direction:column;
- gap:14px
-}
-
-.panel{
- background:#111213;
- border:1px solid #292b2c
-}
-
-.panel h3{
- font-size:16px;
- text-transform:uppercase;
- margin:0
-}
-
-.panel-head{
- padding:16px;
- border-bottom:1px solid #222425;
- display:flex;
- gap:10px;
- align-items:center
-}
-
-.panel-head b{
- color:#f4ca28
-}
-
-
-/* ==========================================
-   CHANGES
-========================================== */
-
-.change{
- display:grid;
- grid-template-columns:34px 1fr auto;
- gap:10px;
- align-items:center;
- padding:13px 14px;
- border-bottom:1px solid #202223
-}
-
-.change:last-child{
- border:0
-}
-
-.change-icon{
- width:31px;
- height:31px;
- border:1px solid #414344;
- display:grid;
- place-items:center;
- color:#c4c5c6;
- overflow:hidden
-}
-
-.change-icon img{
- width:100%;
- height:100%;
- object-fit:contain;
- display:block
-}
-
-.change-title{
- font-size:11px;
- line-height:1.35
-}
-
-.change-time{
- font-size:9px;
- color:#686b6d;
- margin-top:3px
-}
-
-.dot{
- width:6px;
- height:6px;
- background:#f4ca28;
- border-radius:50%
-}
-
-
-/* ==========================================
-   ABOUT
-========================================== */
-
-.about{
- padding-bottom:17px
-}
-
-.about p{
- font-size:11px;
- line-height:1.7;
- color:#85888a;
- margin:15px 16px
-}
-
-.about a{
- font-size:10px;
- color:#f4ca28;
- font-weight:bold;
- margin:0 16px;
- text-transform:uppercase
-}
-
-
-/* ==========================================
-   FOOTER
-========================================== */
-
-footer{
- border-top:1px solid #1d1f20;
- background:#060707
-}
-
-.foot{
- display:grid;
- grid-template-columns:2fr 1fr 1fr;
- gap:60px;
- padding:38px 0
-}
-
-.foot p,
-.foot a{
- color:#686b6d;
- font-size:10px;
- line-height:1.7
-}
-
-.foot h4{
- font-size:10px;
- text-transform:uppercase;
- margin:0 0 10px;
- color:#b8b9ba
-}
-
-.footlinks{
- display:flex;
- flex-direction:column;
- gap:4px
-}
-
-.bottom{
- border-top:1px solid #17191a;
- color:#505355;
- text-align:center;
- padding:15px;
- font-size:9px
-}
-
-
-/* ==========================================
-   TABLET
-========================================== */
-
-@media(max-width:950px){
-
- nav a{
-  padding:0 7px;
-  font-size:11px
- }
-
- .grid{
-  grid-template-columns:1fr
- }
-
- .side{
-  display:grid;
-  grid-template-columns:1fr 1fr
- }
-
- .card{
-  grid-template-columns:245px 1fr
- }
-
-}
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media(max-width:700px){
-
- header{
-  height:68px
- }
-
- .wrap{
-  width:calc(100% - 28px)
- }
-
- .head{
-  gap:0
- }
-
- .logo{
-  min-width:0
- }
-
- .logo-text{
-  font-size:20px
- }
-
- .logo-symbol{
-  width:38px;
-  height:38px
- }
-
- .logo-symbol:after{
-  width:27px;
-  height:27px
- }
-
- nav,
- .search{
-  display:none
- }
-
- .hero{
-  height:390px
- }
-
- .hero .wrap{
-  padding-top:70px
- }
-
- h1{
-  font-size:41px
- }
-
- .news-heading{
-  margin-bottom:15px
- }
-
- .filters{
-  margin-top:0;
-  margin-bottom:15px;
-  gap:5px
- }
-
- .filter{
-  flex:1;
-  padding:9px 10px;
-  font-size:10px
- }
-
- .filter.active{
-  padding:11px 10px;
-  margin:-1px 0
- }
-
- .card{
-  grid-template-columns:1fr
- }
-
- .pic{
-  height:175px
- }
-
- .body{
-  min-height:200px
- }
-
- .side{
-  display:flex
- }
-
- .foot{
-  grid-template-columns:1fr 1fr
- }
-
- .foot>div:first-child{
-  grid-column:1/-1
- }
-
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCP: CB2 Multiplayer — Новости</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:#101111;
+      color:#d7d8d8;
+      font-family:Arial,Helvetica,sans-serif;
+      min-height:100vh;
+    }
+
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+      background-size:30px 30px;
+      z-index:-1;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button,
+    input,
+    textarea,
+    select{
+      font:inherit;
+    }
+
+    /* HEADER */
+
+    header{
+      height:72px;
+      background:#171818;
+      border-bottom:1px solid #303232;
+      display:flex;
+      align-items:center;
+      padding:0 34px;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .header-inner{
+      width:100%;
+      max-width:1450px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:30px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:220px;
+    }
+
+    .logo-symbol{
+      width:45px;
+      height:45px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      position:relative;
+      overflow:visible;
+    }
+
+    .logo-symbol:after{
+      display:none;
+    }
+
+    .logo-symbol img{
+      width:45px;
+      height:45px;
+      object-fit:contain;
+      border-radius:0;
+      position:relative;
+      z-index:2;
+      display:block;
+    }
+
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+
+    .brand-title{
+      color:#f1f1f1;
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:.4px;
+    }
+
+    .brand-subtitle{
+      color:#777a7b;
+      font-size:9px;
+      margin-top:5px;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+    }
+
+    nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    nav a{
+      color:#929596;
+      font-size:11px;
+      padding:11px 15px;
+      border:1px solid transparent;
+      transition:.2s;
+    }
+
+    nav a:hover{
+      color:#ddd;
+      border-color:#353737;
+      background:#1d1e1e;
+    }
+
+    nav a.active{
+      color:#e1e1e1;
+      border-color:#3a3b3b;
+      background:#202121;
+    }
+
+    /* PAGE */
+
+    .page{
+      max-width:1450px;
+      margin:0 auto;
+      padding:34px;
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:245px;
+      border:1px solid #303232;
+      background:
+        linear-gradient(90deg,rgba(15,16,16,.97),rgba(15,16,16,.72)),
+        url("") center/cover;
+      display:flex;
+      align-items:center;
+      padding:42px;
+      margin-bottom:25px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero:after{
+      content:"";
+      position:absolute;
+      right:-100px;
+      top:-100px;
+      width:400px;
+      height:400px;
+      border:1px solid rgba(255,255,255,.04);
+      transform:rotate(45deg);
+    }
+
+    .hero-content{
+      max-width:700px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-label{
+      color:#9b9d9d;
+      font-size:10px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      color:#f1f1f1;
+      font-size:34px;
+      line-height:1.1;
+      margin-bottom:13px;
+      font-weight:800;
+    }
+
+    .hero p{
+      color:#858889;
+      font-size:12px;
+      line-height:1.7;
+      max-width:610px;
+    }
+
+    /* CONTENT GRID */
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 330px;
+      gap:25px;
+      align-items:start;
+    }
+
+    /* NEWS */
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:15px;
+    }
+
+    .section-title h2{
+      color:#eee;
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .section-title span{
+      color:#646768;
+      font-size:9px;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      margin-bottom:15px;
+    }
+
+    .filter{
+      border:1px solid #303232;
+      background:#171818;
+      color:#858889;
+      padding:8px 12px;
+      cursor:pointer;
+      font-size:10px;
+      transition:.2s;
+    }
+
+    .filter:hover{
+      color:#ddd;
+      border-color:#4a4c4c;
+    }
+
+    .filter.active{
+      color:#e7e7e7;
+      border-color:#696b6b;
+      background:#242525;
+    }
+
+    .news-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .news-card{
+      display:grid;
+      grid-template-columns:190px minmax(0,1fr);
+      min-height:145px;
+      border:1px solid #303232;
+      background:#171818;
+      transition:.2s;
+      overflow:hidden;
+      cursor:pointer;
+    }
+
+    .news-card:hover{
+      border-color:#505252;
+      background:#1a1b1b;
+    }
+
+    .news-image{
+      width:100%;
+      height:100%;
+      min-height:145px;
+      background:#111;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .news-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transition:.3s;
+    }
+
+    .news-card:hover .news-image img{
+      transform:scale(1.03);
+    }
+
+    .news-info{
+      padding:19px 20px;
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+
+    .news-meta{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .news-tag{
+      font-size:8px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:#b8b9b9;
+      border:1px solid #454747;
+      padding:4px 7px;
+    }
+
+    .news-date{
+      color:#666869;
+      font-size:9px;
+    }
+
+    .news-title{
+      color:#eeeeee;
+      font-size:18px;
+      line-height:1.25;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .news-description{
+      color:#858889;
+      font-size:11px;
+      line-height:1.65;
+    }
+
+    .news-arrow{
+      margin-top:auto;
+      padding-top:13px;
+      color:#666869;
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .panel{
+      border:1px solid #303232;
+      background:#171818;
+    }
+
+    .panel-head{
+      min-height:51px;
+      padding:0 17px;
+      border-bottom:1px solid #292b2b;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .panel-head b{
+      color:#9b9d9d;
+      font-size:14px;
+      font-weight:400;
+    }
+
+    .panel-head h3{
+      color:#dedede;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    /* CHANGES */
+
+    #changesList{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .change{
+      min-height:67px;
+      padding:11px 14px;
+      border-bottom:1px solid #252727;
+      display:flex;
+      align-items:center;
+      gap:11px;
+      position:relative;
+    }
+
+    .change:last-child{
+      border-bottom:0;
+    }
+
+    .change-icon{
+      width:31px;
+      height:31px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#c4c5c6;
+      overflow:hidden;
+      border:0;
+      background:transparent;
+      flex-shrink:0;
+    }
+
+    .change-icon img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .change-info{
+      min-width:0;
+      flex:1;
+    }
+
+    .change-title{
+      color:#bfc1c1;
+      font-size:10px;
+      line-height:1.35;
+    }
+
+    .change-time{
+      color:#5f6262;
+      font-size:8px;
+      margin-top:4px;
+    }
+
+    .change-dot{
+      width:5px;
+      height:5px;
+      background:#c4a34a;
+      flex-shrink:0;
+    }
+
+    /* EMPTY / LOADING */
+
+    .empty{
+      border:1px dashed #303232;
+      background:#151616;
+      color:#686b6b;
+      padding:40px 20px;
+      text-align:center;
+      font-size:11px;
+    }
+
+    .loading{
+      padding:40px 20px;
+      text-align:center;
+      color:#686b6b;
+      font-size:10px;
+    }
+
+    /* FOOTER */
+
+    footer{
+      margin-top:45px;
+      padding:25px 0;
+      border-top:1px solid #292b2b;
+      color:#555858;
+      font-size:9px;
+      text-align:center;
+      letter-spacing:.5px;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width:950px){
+      .content-grid{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:700px){
+      header{
+        height:auto;
+        padding:14px 18px;
+      }
+
+      .header-inner{
+        flex-wrap:wrap;
+        gap:15px;
+      }
+
+      nav{
+        width:100%;
+        overflow-x:auto;
+      }
+
+      nav a{
+        white-space:nowrap;
+      }
+
+      .page{
+        padding:18px;
+      }
+
+      .hero{
+        padding:27px;
+        min-height:220px;
+      }
+
+      .hero h1{
+        font-size:27px;
+      }
+
+      .news-card{
+        grid-template-columns:1fr;
+      }
+
+      .news-image{
+        height:180px;
+        min-height:180px;
+      }
+
+      .sidebar{
+        grid-template-columns:1fr;
+      }
+
+      .logo-symbol{
+        width:38px;
+        height:38px;
+      }
+
+      .logo-symbol:after{
+        display:none;
+      }
+
+      .logo-symbol img{
+        width:38px;
+        height:38px;
+      }
+    }
+
+    @media(max-width:450px){
+      .brand-subtitle{
+        display:none;
+      }
+
+      .hero{
+        padding:22px;
+      }
+
+      .hero h1{
+        font-size:23px;
+      }
+
+      .news-info{
+        padding:16px;
+      }
+
+      .news-title{
+        font-size:16px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-
-<!-- ==========================================
-     HEADER
-========================================== -->
-
 <header>
+  <div class="header-inner">
 
-<div class="wrap head">
+    <a href="./" class="brand">
+      <div class="logo-symbol" id="siteLogo">☣</div>
 
-<a class="logo" href="#">
+      <div class="brand-text">
+        <div class="brand-title">SCP: CB2 MULTIPLAYER</div>
+        <div class="brand-subtitle">COMMUNITY NEWS</div>
+      </div>
+    </a>
 
-<div class="logo-symbol">
-☣
-</div>
+    <nav>
+      <a href="./" class="active">Новости</a>
+      <a href="#servers">Сервера</a>
+      <a href="#about">О проекте</a>
+    </nav>
 
-<div class="logo-text">
-SCP<br>
-CB2
-<small>MULTIPLAYER</small>
-</div>
-
-</a>
-
-
-<nav>
-
-<a class="active" href="#">
-Новости
-</a>
-
-<a href="#">
-Сервера
-</a>
-
-<a href="#">
-О проекте
-</a>
-
-</nav>
-
-
-<button
- class="search"
- aria-label="Поиск">
-</button>
-
-</div>
-
+  </div>
 </header>
 
 
-<!-- ==========================================
-     HERO
-========================================== -->
+<main class="page">
 
-<section class="hero">
+  <section class="hero" id="hero">
+    <div class="hero-content">
 
-<div class="wrap">
+      <div class="hero-label">
+        SCP: CB2 Multiplayer
+      </div>
 
-<div class="kicker">
-ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ
-</div>
+      <h1>
+        Новости проекта
+      </h1>
 
-<h1>
-НОВОСТИ SCP: CB2
-</h1>
+      <p>
+        Последние обновления, события и новости SCP: Containment Breach
+        Multiplayer.
+      </p>
 
-<p>
-Будьте в курсе изменений, обновлений и событий
-в мире SCP: CB2 Multiplayer.
-</p>
+    </div>
+  </section>
 
-<a
- class="yellow-btn"
- href="#news">
 
-Смотреть новости →
+  <div class="content-grid">
 
-</a>
+    <section>
 
-</div>
+      <div class="section-title">
+        <h2>Последние новости</h2>
+        <span>PROJECT NEWS</span>
+      </div>
 
-</section>
 
+      <div class="filters">
+        <button class="filter active" data-category="all">
+          Все
+        </button>
 
-<!-- ==========================================
-     MAIN
-========================================== -->
+        <button class="filter" data-category="Сервера">
+          Сервера
+        </button>
 
-<main id="news">
+        <button class="filter" data-category="Обновления">
+          Обновления
+        </button>
 
-<div class="wrap">
+        <button class="filter" data-category="События">
+          События
+        </button>
 
+        <button class="filter" data-category="Разработка">
+          Разработка
+        </button>
+      </div>
 
-<!-- ЗАГОЛОВОК -->
 
-<div class="news-heading">
+      <div id="newsList" class="news-list">
 
-<div class="section-label">
-ЦЕНТР ИНФОРМАЦИИ
-</div>
+        <div class="loading">
+          Загрузка новостей...
+        </div>
 
-<h2>
-Последние новости
-</h2>
+      </div>
 
-</div>
+    </section>
 
 
-<!-- ФИЛЬТРЫ -->
+    <aside class="sidebar">
 
-<div class="filters">
+      <section class="panel" id="xy29am">
 
-<button
- class="filter active"
- data-cat="all">
+        <div class="panel-head">
+          <b>◈</b>
+          <h3>Последние изменения</h3>
+        </div>
 
-Все новости
+        <div id="changesList">
 
-</button>
+          <div style="
+            padding:20px;
+            text-align:center;
+            color:#747779;
+            font-size:10px;
+          ">
+            Загрузка изменений...
+          </div>
 
+        </div>
 
-<button
- class="filter"
- data-cat="updates">
+      </section>
 
-Обновления
 
-</button>
+      <section class="panel" id="about">
 
+        <div class="panel-head">
+          <b>◈</b>
+          <h3>О проекте</h3>
+        </div>
 
-<button
- class="filter"
- data-cat="servers">
+        <div style="
+          padding:17px;
+          color:#777a7a;
+          font-size:10px;
+          line-height:1.7;
+        ">
+          SCP: CB2 Multiplayer — многопользовательский проект
+          по мотивам SCP: Containment Breach.
+        </div>
 
-Сервера
+      </section>
 
-</button>
 
+      <section class="panel" id="servers">
 
-<button
- class="filter"
- data-cat="dev">
+        <div class="panel-head">
+          <b>◈</b>
+          <h3>Сервера</h3>
+        </div>
 
-Разработка
+        <div style="
+          padding:17px;
+          color:#777a7a;
+          font-size:10px;
+          line-height:1.7;
+        ">
+          Информация о серверах проекта будет добавлена позже.
+        </div>
 
-</button>
+      </section>
 
+    </aside>
 
-<button
- class="filter"
- data-cat="events">
+  </div>
 
-События
 
-</button>
-
-</div>
-
-
-<!-- НОВОСТИ + SIDEBAR -->
-
-<div class="grid">
-
-
-<!-- НОВОСТИ -->
-
-<div
- class="news"
- id="newsList">
-
-<div style="
- padding:30px;
- text-align:center;
- color:#747779;
- font-size:11px;
-">
-
-Загрузка новостей...
-
-</div>
-
-</div>
-
-
-<!-- SIDEBAR -->
-
-<aside class="side">
-
-
-<!-- ==========================================
-     ПОСЛЕДНИЕ ИЗМЕНЕНИЯ
-========================================== -->
-
-<section class="panel">
-
-<div class="panel-head">
-
-<b>◈</b>
-
-<h3>
-Последние изменения
-</h3>
-
-</div>
-
-
-<div id="changesList">
-
-<div style="
- padding:20px;
- text-align:center;
- color:#747779;
- font-size:10px;
-">
-
-Загрузка изменений...
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ==========================================
-     О ПРОЕКТЕ
-========================================== -->
-
-<section class="panel about">
-
-<div class="panel-head">
-
-<b>◉</b>
-
-<h3>
-О проекте
-</h3>
-
-</div>
-
-
-<p>
-SCP: CB2 Multiplayer — новостной портал о серверах,
-разработке и событиях сообщества.
-</p>
-
-
-<a href="#">
-Подробнее о проекте →
-</a>
-
-</section>
-
-
-</aside>
-
-</div>
-
-</div>
+  <footer>
+    SCP: CB2 MULTIPLAYER · COMMUNITY NEWS
+  </footer>
 
 </main>
 
 
-<!-- ==========================================
-     FOOTER
-========================================== -->
-
-<footer>
-
-<div class="wrap foot">
-
-
-<div>
-
-<div class="logo">
-
-<div class="logo-symbol">
-☣
-</div>
-
-<div class="logo-text">
-SCP<br>
-CB2
-<small>MULTIPLAYER</small>
-</div>
-
-</div>
-
-
-<p>
-Официальный новостной портал<br>
-SCP: CB2 Multiplayer.
-</p>
-
-</div>
-
-
-<div>
-
-<h4>
-Навигация
-</h4>
-
-<div class="footlinks">
-
-<a href="#">
-Новости
-</a>
-
-<a href="#">
-Сервера
-</a>
-
-<a href="#">
-Разработка
-</a>
-
-<a href="#">
-Сообщество
-</a>
-
-</div>
-
-</div>
-
-
-<div>
-
-<h4>
-Сообщество
-</h4>
-
-<div class="footlinks">
-
-<a href="#">
-Discord
-</a>
-
-<a href="#">
-Steam
-</a>
-
-<a href="#">
-Поддержка
-</a>
-
-<a href="#">
-Предложить новость
-</a>
-
-</div>
-
-</div>
-
-
-</div>
-
-
-<div class="bottom">
-
-© 2026 SCP: CB2 Multiplayer.
-Не является официальным сайтом проекта.
-
-</div>
-
-</footer>
-
-
-<!-- ==========================================
-     SUPABASE
-========================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 
+  /*
+    SUPABASE
+  */
 
-/* ==========================================
-   SUPABASE
-========================================== */
+  const SUPABASE_URL =
+    "https://ajmavwxzakkjsfolijhp.supabase.co";
 
-const SUPABASE_URL =
-"https://ajmavwxzakkjsfolijhp.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
-
-const db =
-supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
+  const SUPABASE_KEY =
+    "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
 
-/* ==========================================
-   НАСТРОЙКИ САЙТА
-========================================== */
+  /*
+    SUPABASE REQUEST
+  */
 
-async function loadSiteSettings(){
+  async function supabaseRequest(path, options = {}){
 
- const {data,error} =
-  await db
-   .from("site_settings")
-   .select("key,value");
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/" + path,
+      {
+        ...options,
+
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + SUPABASE_KEY,
+          "Content-Type":"application/json",
+          ...(options.headers || {})
+        }
+      }
+    );
+
+    if(!response.ok){
+
+      const text = await response.text();
+
+      throw new Error(
+        "Supabase error " +
+        response.status +
+        ": " +
+        text
+      );
+    }
+
+    const text = await response.text();
+
+    return text ? JSON.parse(text) : null;
+  }
 
 
- if(error){
+  /*
+    SITE SETTINGS
+  */
 
-  console.error(
-   "Ошибка загрузки настроек:",
-   error
-  );
+  async function loadSiteSettings(){
 
-  return;
+    try{
 
- }
+      const settings =
+        await supabaseRequest(
+          "site_settings?select=key,value"
+        );
 
+      const map = {};
 
- const settings={};
-
-
- data.forEach(item=>{
-
-  settings[item.key]=
-   item.value;
-
- });
+      (settings || []).forEach(item => {
+        map[item.key] = item.value;
+      });
 
 
- /* ========================================
-    ЛОГО
- ======================================== */
+      /*
+        LOGO
+      */
 
- if(settings.logo){
+      if(map.logo){
+
+        const logo =
+          document.getElementById("siteLogo");
+
+        logo.innerHTML =
+          `<img
+            src="${escapeHtml(map.logo)}"
+            alt="Logo"
+          >`;
+      }
+
+
+      /*
+        BACKGROUND
+      */
+
+      if(map.background){
+
+        document.body.style.backgroundImage =
+          `linear-gradient(
+            rgba(16,17,17,.88),
+            rgba(16,17,17,.94)
+          ), url("${map.background}")`;
+
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundPosition = "center";
+      }
+
+
+      /*
+        BANNER
+      */
+
+      if(map.banner){
+
+        const hero =
+          document.getElementById("hero");
+
+        hero.style.backgroundImage =
+          `linear-gradient(
+            90deg,
+            rgba(15,16,16,.97),
+            rgba(15,16,16,.72)
+          ), url("${map.banner}")`;
+
+        hero.style.backgroundSize = "cover";
+        hero.style.backgroundPosition = "center";
+      }
+
+    }catch(error){
+
+      console.error(
+        "Ошибка загрузки настроек:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+    NEWS
+  */
+
+  let allNews = [];
+  let currentCategory = "all";
+
+
+  async function loadNews(){
+
+    const list =
+      document.getElementById("newsList");
+
+    try{
+
+      const news =
+        await supabaseRequest(
+          "news?select=id,created_at,title,description,content,image_url,category&order=created_at.desc"
+        );
+
+      allNews = news || [];
+
+      renderNews();
+
+    }catch(error){
+
+      console.error(error);
+
+      list.innerHTML = `
+        <div class="empty">
+          Не удалось загрузить новости.
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  function renderNews(){
+
+    const list =
+      document.getElementById("newsList");
+
+
+    let filtered = allNews;
+
+
+    if(currentCategory !== "all"){
+
+      filtered =
+        allNews.filter(
+          item =>
+            item.category === currentCategory
+        );
+
+    }
+
+
+    if(!filtered.length){
+
+      list.innerHTML = `
+        <div class="empty">
+          Новостей пока нет.
+        </div>
+      `;
+
+      return;
+    }
+
+
+    list.innerHTML =
+      filtered.map(news => {
+
+        const date =
+          formatDate(news.created_at);
+
+
+        const image =
+          news.image_url
+            ? `
+              <img
+                src="${escapeHtml(news.image_url)}"
+                alt=""
+              >
+            `
+            : "";
+
+
+        return `
+
+          <article
+            class="news-card"
+            onclick="openNews('${news.id}')"
+          >
+
+            <div class="news-image">
+              ${image}
+            </div>
+
+
+            <div class="news-info">
+
+              <div class="news-meta">
+
+                <span class="news-tag">
+                  ${escapeHtml(
+                    news.category || "Новости"
+                  )}
+                </span>
+
+                <span class="news-date">
+                  ${date}
+                </span>
+
+              </div>
+
+
+              <div class="news-title">
+                ${escapeHtml(news.title)}
+              </div>
+
+
+              <div class="news-description">
+                ${escapeHtml(
+                  news.description || ""
+                )}
+              </div>
+
+
+              <div class="news-arrow">
+                Читать новость →
+              </div>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }).join("");
+
+  }
+
+
+  /*
+    OPEN NEWS
+  */
+
+  function openNews(id){
+
+    window.location.href =
+      `news.html?id=${encodeURIComponent(id)}`;
+
+  }
+
+
+  /*
+    FILTERS
+  */
 
   document
-   .querySelectorAll(".logo-symbol")
-   .forEach(element=>{
+    .querySelectorAll(".filter")
+    .forEach(button => {
 
-    element.innerHTML=`
-     <img
-      src="${settings.logo}"
-      alt="SCP CB2"
-     >
-    `;
+      button.addEventListener(
+        "click",
+        () => {
 
-   });
+          document
+            .querySelectorAll(".filter")
+            .forEach(btn =>
+              btn.classList.remove("active")
+            );
 
- }
 
+          button.classList.add("active");
 
- /* ========================================
-    ФОН
- ======================================== */
 
- if(settings.background){
+          currentCategory =
+            button.dataset.category;
 
-  document.body.style.backgroundImage=
-   `url("${settings.background}")`;
 
-  document.body.style.backgroundSize=
-   "cover";
+          renderNews();
 
-  document.body.style.backgroundAttachment=
-   "fixed";
+        }
+      );
 
-  document.body.style.backgroundPosition=
-   "center";
+    });
 
- }
 
+  /*
+    CHANGES
+  */
 
- /* ========================================
-    БАННЕР
- ======================================== */
+  async function loadChanges(){
 
- if(settings.banner){
+    const list =
+      document.getElementById(
+        "changesList"
+      );
 
-  const hero=
-   document.querySelector(".hero");
 
+    try{
 
-  if(hero){
+      const changes =
+        await supabaseRequest(
+          "changes?select=id,created_at,title,icon_url&order=created_at.desc&limit=5"
+        );
 
-   hero.style.backgroundImage=
-    `linear-gradient(
-      90deg,
-      rgba(8,9,9,.9),
-      rgba(8,9,9,.35)
-    ),
-    url("${settings.banner}")`;
 
-   hero.style.backgroundSize=
-    "cover";
+      if(!changes || !changes.length){
 
-   hero.style.backgroundPosition=
-    "center";
+        list.innerHTML = `
+          <div style="
+            padding:20px;
+            text-align:center;
+            color:#747779;
+            font-size:10px;
+          ">
+            Изменений пока нет.
+          </div>
+        `;
 
-  }
+        return;
+      }
 
- }
 
-}
+      list.innerHTML =
+        changes.map(
+          (change,index) => {
 
+            const icon =
+              change.icon_url
+                ? `
+                  <img
+                    src="${escapeHtml(change.icon_url)}"
+                    alt=""
+                  >
+                `
+                : "◈";
 
-/* ==========================================
-   КАТЕГОРИИ
-========================================== */
 
-function categoryToFilter(category){
+            return `
 
- if(category==="Обновления")
-  return "updates";
+              <div class="change">
 
- if(category==="Сервера")
-  return "servers";
+                <div class="change-icon">
+                  ${icon}
+                </div>
 
- if(category==="Разработка")
-  return "dev";
 
- if(category==="События")
-  return "events";
+                <div class="change-info">
 
- return "all";
+                  <div class="change-title">
+                    ${escapeHtml(change.title)}
+                  </div>
 
-}
+                  <div class="change-time">
+                    ${formatDate(change.created_at)}
+                  </div>
 
+                </div>
 
-function categoryClass(category){
 
- if(category==="Обновления")
-  return "purple";
+                ${
+                  index === 0
+                    ? `<div class="change-dot"></div>`
+                    : ""
+                }
 
- if(category==="Сервера")
-  return "blue";
+              </div>
 
- if(category==="Разработка")
-  return "green";
+            `;
 
- if(category==="События")
-  return "orange";
+          }
+        ).join("");
 
- return "blue";
 
-}
+    }catch(error){
 
+      console.error(
+        "Ошибка загрузки изменений:",
+        error
+      );
 
-/* ==========================================
-   ВРЕМЯ
-========================================== */
 
-function formatTime(dateString){
+      list.innerHTML = `
+        <div style="
+          padding:20px;
+          text-align:center;
+          color:#747779;
+          font-size:10px;
+        ">
+          Не удалось загрузить изменения.
+        </div>
+      `;
 
- const date=
-  new Date(dateString);
-
-
- const now=
-  new Date();
-
-
- const seconds=
-  Math.floor(
-   (now-date)/1000
-  );
-
-
- if(seconds<60)
-  return "Только что";
-
-
- const minutes=
-  Math.floor(
-   seconds/60
-  );
-
-
- if(minutes<60){
-
-  if(minutes===1)
-   return "1 минуту назад";
-
-  return minutes+
-   " минут назад";
-
- }
-
-
- const hours=
-  Math.floor(
-   minutes/60
-  );
-
-
- if(hours<24){
-
-  if(hours===1)
-   return "1 час назад";
-
-  if(hours>=2 && hours<=4)
-   return hours+
-    " часа назад";
-
-  return hours+
-   " часов назад";
-
- }
-
-
- const days=
-  Math.floor(
-   hours/24
-  );
-
-
- if(days===1)
-  return "Вчера";
-
-
- if(days<7){
-
-  if(days>=2 && days<=4)
-   return days+
-    " дня назад";
-
-  return days+
-   " дней назад";
-
- }
-
-
- return date.toLocaleDateString(
-  "ru-RU",
-  {
-   day:"numeric",
-   month:"long",
-   year:"numeric"
-  }
- );
-
-}
-
-
-/* ==========================================
-   ПОСЛЕДНИЕ ИЗМЕНЕНИЯ
-========================================== */
-
-async function loadChanges(){
-
- const container =
-  document.getElementById(
-   "changesList"
-  );
-
-
- if(!container)
-  return;
-
-
- const {data,error} =
-  await db
-   .from("changes")
-   .select(`
-    id,
-    created_at,
-    title,
-    icon_url
-   `)
-   .order(
-    "created_at",
-    {
-     ascending:false
     }
-   )
-   .limit(5);
-
-
- /* ========================================
-    ОШИБКА
- ======================================== */
-
- if(error){
-
-  console.error(
-   "Ошибка загрузки изменений:",
-   error
-  );
-
-
-  container.innerHTML=`
-   <div style="
-    padding:20px;
-    text-align:center;
-    color:#e52b2b;
-    font-size:10px;
-   ">
-    Ошибка загрузки изменений.
-   </div>
-  `;
-
-
-  return;
-
- }
-
-
- /* ========================================
-    ОЧИЩАЕМ
- ======================================== */
-
- container.innerHTML="";
-
-
- /* ========================================
-    ЕСЛИ НЕТ ИЗМЕНЕНИЙ
- ======================================== */
-
- if(!data || data.length===0){
-
-  container.innerHTML=`
-   <div style="
-    padding:20px;
-    text-align:center;
-    color:#747779;
-    font-size:10px;
-   ">
-    Изменений пока нет.
-   </div>
-  `;
-
-
-  return;
-
- }
-
-
- /* ========================================
-    СОЗДАЁМ ИЗМЕНЕНИЯ
- ======================================== */
-
- data.forEach(
-  (change,index)=>{
-
-
-   const item =
-    document.createElement(
-     "div"
-    );
-
-
-   item.className=
-    "change";
-
-
-   /* =====================================
-      ИКОНКА
-   ===================================== */
-
-   const icon =
-    document.createElement(
-     "div"
-    );
-
-
-   icon.className=
-    "change-icon";
-
-
-   if(change.icon_url){
-
-    const img =
-     document.createElement(
-      "img"
-     );
-
-
-    img.src=
-     change.icon_url;
-
-
-    img.alt=
-     "";
-
-
-    img.loading=
-     "lazy";
-
-
-    icon.appendChild(
-     img
-    );
-
-   }else{
-
-    icon.textContent=
-     "◈";
-
-   }
-
-
-   /* =====================================
-      ТЕКСТ
-   ===================================== */
-
-   const text =
-    document.createElement(
-     "div"
-    );
-
-
-   const title =
-    document.createElement(
-     "div"
-    );
-
-
-   title.className=
-    "change-title";
-
-
-   title.textContent=
-    change.title ||
-    "Без названия";
-
-
-   const time =
-    document.createElement(
-     "div"
-    );
-
-
-   time.className=
-    "change-time";
-
-
-   time.textContent=
-    formatTime(
-     change.created_at
-    );
-
-
-   text.appendChild(
-    title
-   );
-
-
-   text.appendChild(
-    time
-   );
-
-
-   /* =====================================
-      ТОЧКА
-   ===================================== */
-
-   const dot =
-    document.createElement(
-     "span"
-    );
-
-
-   if(index===0){
-
-    dot.className=
-     "dot";
-
-   }
-
-
-   /* =====================================
-      СОБИРАЕМ
-   ===================================== */
-
-   item.appendChild(
-    icon
-   );
-
-
-   item.appendChild(
-    text
-   );
-
-
-   item.appendChild(
-    dot
-   );
-
-
-   container.appendChild(
-    item
-   );
 
   }
- );
 
-}
 
+  /*
+    DATE
+  */
 
-/* ==========================================
-   СОЗДАНИЕ КАРТОЧКИ НОВОСТИ
-========================================== */
+  function formatDate(dateString){
 
-function createNewsCard(news){
+    const date =
+      new Date(dateString);
 
- const card=
-  document.createElement(
-   "a"
-  );
 
+    const now =
+      new Date();
 
- card.className=
-  "card";
 
+    const diff =
+      Math.floor(
+        (now - date) / 1000
+      );
 
- card.dataset.cat=
-  categoryToFilter(
-   news.category
-  );
 
+    if(diff < 60){
 
- card.href=
-  "news.html?id="+
-  encodeURIComponent(
-   news.id
-  );
+      return "Только что";
 
-
- /* ========================================
-    КАРТИНКА
- ======================================== */
-
- const pic=
-  document.createElement(
-   "div"
-  );
-
-
- pic.className=
-  "pic";
-
-
- if(news.image_url){
-
-  pic.style.backgroundImage=
-   `linear-gradient(
-      180deg,
-      rgba(0,0,0,.05),
-      rgba(0,0,0,.25)
-    ),
-    url("${news.image_url}")`;
-
-
-  pic.style.backgroundSize=
-   "cover";
-
-
-  pic.style.backgroundPosition=
-   "center";
-
- }
-
-
- /* ========================================
-    ТЕГ
- ======================================== */
-
- const tag=
-  document.createElement(
-   "span"
-  );
-
-
- tag.className=
-  "tag "+
-  categoryClass(
-   news.category
-  );
-
-
- tag.textContent=
-  news.category ||
-  "Новости";
-
-
- pic.appendChild(
-  tag
- );
-
-
- /* ========================================
-    BODY
- ======================================== */
-
- const body=
-  document.createElement(
-   "div"
-  );
-
-
- body.className=
-  "body";
-
-
- /* ========================================
-    ВРЕМЯ
- ======================================== */
-
- const time=
-  document.createElement(
-   "div"
-  );
-
-
- time.className=
-  "time";
-
-
- time.textContent=
-  formatTime(
-   news.created_at
-  );
-
-
- /* ========================================
-    ЗАГОЛОВОК
- ======================================== */
-
- const title=
-  document.createElement(
-   "h3"
-  );
-
-
- title.textContent=
-  news.title ||
-  "Без названия";
-
-
- /* ========================================
-    ОПИСАНИЕ
- ======================================== */
-
- const description=
-  document.createElement(
-   "p"
-  );
-
-
- description.textContent=
-  news.description ||
-  "";
-
-
- /* ========================================
-    META
- ======================================== */
-
- const meta=
-  document.createElement(
-   "div"
-  );
-
-
- meta.className=
-  "meta";
-
-
- meta.innerHTML=
-  "◉ 0 &nbsp;&nbsp; ▢ 0";
-
-
- /* ========================================
-    СОБИРАЕМ BODY
- ======================================== */
-
- body.appendChild(
-  time
- );
-
-
- body.appendChild(
-  title
- );
-
-
- body.appendChild(
-  description
- );
-
-
- body.appendChild(
-  meta
- );
-
-
- card.appendChild(
-  pic
- );
-
-
- card.appendChild(
-  body
- );
-
-
- return card;
-
-}
-
-
-/* ==========================================
-   ЗАГРУЗКА НОВОСТЕЙ
-========================================== */
-
-let allNews=[];
-
-let currentCategory=
- "all";
-
-
-async function loadNews(){
-
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
-
-
- const {data,error}=
-  await db
-   .from("news")
-   .select(`
-    id,
-    created_at,
-    title,
-    description,
-    content,
-    image_url,
-    category
-   `)
-   .order(
-    "created_at",
-    {
-     ascending:false
     }
-   );
 
 
- /* ========================================
-    ОШИБКА
- ======================================== */
+    if(diff < 3600){
 
- if(error){
+      const minutes =
+        Math.floor(diff / 60);
 
-  console.error(
-   "Ошибка загрузки новостей:",
-   error
-  );
+      return minutes +
+        " " +
+        plural(
+          minutes,
+          "минуту",
+          "минуты",
+          "минут"
+        ) +
+        " назад";
 
-
-  newsList.innerHTML=`
-   <div style="
-    padding:30px;
-    text-align:center;
-    color:#e52b2b;
-    font-size:11px;
-   ">
-    Ошибка загрузки новостей.
-   </div>
-  `;
+    }
 
 
-  return;
+    if(diff < 86400){
 
- }
+      const hours =
+        Math.floor(diff / 3600);
 
+      return hours +
+        " " +
+        plural(
+          hours,
+          "час",
+          "часа",
+          "часов"
+        ) +
+        " назад";
 
- allNews=
-  data || [];
-
-
- renderNews();
-
-}
-
-
-/* ==========================================
-   ОТОБРАЖЕНИЕ НОВОСТЕЙ
-========================================== */
-
-function renderNews(){
-
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
+    }
 
 
- newsList.innerHTML="";
+    if(diff < 172800){
+
+      return "Вчера";
+
+    }
 
 
- const filtered=
-  currentCategory==="all"
-   ?allNews
-   :allNews.filter(
-    news=>
-     categoryToFilter(
-      news.category
-     )===
-     currentCategory
-   );
-
-
- /* ========================================
-    НЕТ НОВОСТЕЙ
- ======================================== */
-
- if(filtered.length===0){
-
-  newsList.innerHTML=`
-   <div style="
-    padding:30px;
-    text-align:center;
-    color:#747779;
-    font-size:11px;
-   ">
-    Новостей пока нет.
-   </div>
-  `;
-
-
-  return;
-
- }
-
-
- /* ========================================
-    ВЫВОДИМ
- ======================================== */
-
- filtered.forEach(
-  news=>{
-
-   newsList.appendChild(
-    createNewsCard(
-     news
-    )
-   );
-
-  }
- );
-
-}
-
-
-/* ==========================================
-   ФИЛЬТРЫ
-========================================== */
-
-document
- .querySelectorAll(
-  ".filter"
- )
- .forEach(
-  btn=>{
-
-   btn.onclick=()=>{
-
-
-    document
-     .querySelectorAll(
-      ".filter"
-     )
-     .forEach(
-      x=>
-       x.classList.remove(
-        "active"
-       )
-     );
-
-
-    btn.classList.add(
-     "active"
+    return date.toLocaleDateString(
+      "ru-RU",
+      {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric"
+      }
     );
 
-
-    currentCategory=
-     btn.dataset.cat;
+  }
 
 
-    renderNews();
+  function plural(
+    number,
+    one,
+    few,
+    many
+  ){
 
-   };
+    const n =
+      Math.abs(number) % 100;
+
+    const n1 =
+      n % 10;
+
+
+    if(n > 10 && n < 20){
+      return many;
+    }
+
+
+    if(n1 > 1 && n1 < 5){
+      return few;
+    }
+
+
+    if(n1 === 1){
+      return one;
+    }
+
+
+    return many;
 
   }
- );
 
 
-/* ==========================================
-   ЗАПУСК
-========================================== */
+  /*
+    HTML ESCAPE
+  */
 
-loadSiteSettings();
+  function escapeHtml(value){
 
-loadNews();
+    if(value === null ||
+       value === undefined){
 
-loadChanges();
+      return "";
+
+    }
+
+
+    return String(value)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+
+  }
+
+
+  /*
+    START
+  */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      loadSiteSettings();
+
+      loadNews();
+
+      loadChanges();
+
+    }
+  );
 
 </script>
 
