@@ -1,3234 +1,1409 @@
-\<!DOCTYPE html> 
-\<html lang="ru">
-\<head>
-\<meta charset="UTF-8">
-\<meta name="viewport" content="width=device-width,initial-scale=1.0">
-\<title>SCP: CB2 Multiplayer — Новости\</title>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-\<style>
-\*{box-sizing\:border-box}
-html{scroll-behavior\:smooth}
+<title>SCP: CB2 Multiplayer — Новости</title>
 
-body{
- margin:0;
- background:#080909;
- color:#eee;
- font-family\:Arial,Helvetica,sans-serif;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
 }
 
-body\:before{
- content:"";
- position\:fixed;
- inset:0;
- pointer-events\:none;
- opacity:.18;
- background:
- linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
- linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
- background-size:45px 45px;
+html{
+  scroll-behavior:smooth
+}
+
+body{
+  background:#080909;
+  color:#ddd;
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.5;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.035;
+  background-image:
+    linear-gradient(#fff 1px,transparent 1px),
+    linear-gradient(90deg,#fff 1px,transparent 1px);
+  background-size:40px 40px;
+  z-index:0;
 }
 
 a{
- text-decoration\:none;
- color\:inherit
+  color:inherit;
+  text-decoration:none
+}
+
+button{
+  font:inherit
 }
 
 .wrap{
- max-width:1220px;
- width\:calc(100% - 50px);
- margin\:auto
+  width:min(1220px,calc(100% - 40px));
+  margin:auto;
+  position:relative;
+  z-index:1
 }
+
+
+/* ================= HEADER ================= */
 
 header{
- height:82px;
- background:#050606;
- border-bottom:1px solid #202122;
- position\:relative;
- z-index:5
+  height:82px;
+  background:#050606;
+  border-bottom:1px solid #242526;
+  display:flex;
+  align-items:center;
+  position:relative;
+  z-index:10;
 }
 
-.head{
- height:100%;
- display\:flex;
- align-items\:center;
- gap:45px
+.header-inner{
+  width:min(1220px,calc(100% - 40px));
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
 }
 
 .logo{
- display\:flex;
- align-items\:center;
- gap:12px;
- min-width:205px
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:max-content;
 }
+
+/* ЛОГОТИП БЕЗ КРУГА */
 
 .logo-symbol{
- width:45px;
- height:45px;
- border:2px solid #ddd;
- border-radius:50%;
- display\:grid;
- place-items\:center;
- font-size:22px;
- position\:relative;
- overflow\:hidden
+  width:45px;
+  height:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  position:relative;
+  overflow:visible;
 }
 
-.logo-symbol\:after{
- content:"";
- position\:absolute;
- width:31px;
- height:31px;
- border:1px solid #aaa;
- border-radius:50%
+.logo-symbol:after{
+  display:none;
 }
 
 .logo-symbol img{
- width:100%;
- height:100%;
- object-fit\:contain;
- border-radius:50%;
- position\:relative;
- z-index:2
+  width:45px;
+  height:45px;
+  object-fit:contain;
+  border-radius:0;
+  position:relative;
+  z-index:2;
+  display:block;
 }
 
 .logo-text{
- line-height:.82;
- font-weight:800;
- font-size:25px;
- letter-spacing:-1px
+  display:flex;
+  flex-direction:column;
+  line-height:1;
 }
 
-.logo-text small{
- display\:block;
- color:#e52b2b;
- font-size:9px;
- letter-spacing:.7px;
- margin-top:7px
+.logo-text strong{
+  font-size:18px;
+  letter-spacing:2px;
+  color:#eee;
+}
+
+.logo-text span{
+  font-size:9px;
+  letter-spacing:3px;
+  color:#777;
+  margin-top:5px;
 }
 
 nav{
- display\:flex;
- height:100%;
- align-items\:stretch;
- margin-left\:auto
+  display:flex;
+  align-items:center;
+  gap:32px;
+  height:100%;
 }
 
 nav a{
- display\:flex;
- align-items\:center;
- padding:0 15px;
- color:#a4a5a6;
- font-size:13px;
- font-weight\:bold;
- text-transform\:uppercase;
- position\:relative
+  height:100%;
+  display:flex;
+  align-items:center;
+  position:relative;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  color:#888;
+  text-transform:uppercase;
+  transition:.2s;
 }
 
-nav a\:hover,
+nav a:hover{
+  color:#eee
+}
+
 nav a.active{
- color:#fff
+  color:#eee
 }
 
-nav a.active\:after{
- content:"";
- position\:absolute;
- height:2px;
- left:15px;
- right:15px;
- bottom:0;
- background:#f4ca28
+nav a.active:after{
+  content:"";
+  position:absolute;
+  height:2px;
+  background:#e3bd32;
+  left:0;
+  right:0;
+  bottom:0;
 }
 
 .search{
- width:40px;
- height:40px;
- border:0;
- background\:none;
- position\:relative;
- margin-left:5px
+  width:34px;
+  height:34px;
+  border:1px solid #303233;
+  display:grid;
+  place-items:center;
+  color:#aaa;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.search\:before{
- content:"";
- position\:absolute;
- width:14px;
- height:14px;
- border:2px solid #ddd;
- border-radius:50%;
- left:9px;
- top:8px
+.search:hover{
+  border-color:#777;
+  color:#fff;
 }
 
-.search\:after{
- content:"";
- position\:absolute;
- width:8px;
- height:2px;
- background:#ddd;
- transform\:rotate(45deg);
- left:23px;
- top:24px
-}
+
+/* ================= HERO ================= */
 
 .hero{
- height:345px;
- border-bottom:1px solid #222;
- position\:relative;
- overflow\:hidden;
- background:
- linear-gradient(90deg,#070809 0%,#0a0b0c 42%,#181a1b 100%);
+  height:345px;
+  position:relative;
+  overflow:hidden;
+  background:#101111;
+  border-bottom:1px solid #242526;
 }
 
-.hero\:before{
- content:"";
- position\:absolute;
- right:0;
- top:0;
- width:57%;
- height:100%;
- background:
- linear-gradient(90deg,rgba(8,9,9,1),rgba(8,9,9,.28)),
- linear-gradient(135deg,#272a2b,#0b0c0d 55%,#202324);
- clip-path\:polygon(23% 0,100% 0,100% 100%,0 100%)
+.hero:after{
+  content:"";
+  position:absolute;
+  right:-120px;
+  top:-80px;
+  width:62%;
+  height:520px;
+  transform:skewX(-18deg);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.025)
+    ),
+    url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1400&q=80")
+    center/cover;
+  opacity:.35;
 }
 
-.hero\:after{
- content:"SCP";
- position\:absolute;
- right:10%;
- top:45px;
- font-size:150px;
- font-weight:900;
- color\:rgba(255,255,255,.035);
- letter-spacing:5px
+.hero-inner{
+  height:100%;
+  display:flex;
+  align-items:center;
+  position:relative;
+  z-index:2;
 }
 
-.hero .wrap{
- position\:relative;
- z-index:2;
- padding-top:78px
+.hero-content{
+  max-width:650px;
 }
 
 .kicker{
- color:#f4ca28;
- font-size:10px;
- font-weight\:bold;
- letter-spacing:2px
+  color:#d6b62f;
+  font-size:11px;
+  letter-spacing:3px;
+  font-weight:700;
+  margin-bottom:12px;
+  text-transform:uppercase;
 }
 
-h1{
- font-size:57px;
- margin:12px 0 13px;
- line-height:.98;
- letter-spacing:-2px
+.hero h1{
+  font-size:57px;
+  line-height:.95;
+  letter-spacing:-2px;
+  color:#f2f2f2;
+  margin-bottom:20px;
 }
 
 .hero p{
- color:#a7a9aa;
- font-size:14px;
- max-width:570px;
- line-height:1.7
+  max-width:590px;
+  color:#858788;
+  font-size:14px;
+  line-height:1.7;
 }
 
-.yellow-btn{
- display\:inline-block;
- background:#f4ca28;
- color:#101010;
- padding:13px 20px;
- margin-top:12px;
- font-size:11px;
- font-weight:800;
- text-transform\:uppercase
+.hero-button{
+  display:inline-flex;
+  margin-top:25px;
+  padding:12px 22px;
+  background:#d5b42e;
+  color:#0a0a0a;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  transition:.2s;
 }
+
+.hero-button:hover{
+  background:#f0ce43;
+}
+
+
+/* ================= MAIN ================= */
 
 main{
- padding:40px 0 75px
+  padding:40px 0 75px;
 }
 
-/\* ==========================================
-   ЗАГОЛОВОК НОВОСТЕЙ
-\========================================== \*/
-
-.news-heading{
- margin-bottom:18px
+.section-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:25px;
 }
 
-.section-label{
- font-size:10px;
- color:#65686a;
- letter-spacing:2px;
- font-weight\:bold
+.section-kicker{
+  color:#777;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:7px;
 }
 
-h2{
- font-size:29px;
- margin:5px 0 0;
- text-transform\:uppercase
+.section-head h2{
+  font-size:26px;
+  color:#eee;
+  letter-spacing:.5px;
 }
-
-/\* ==========================================
-   ФИЛЬТРЫ
-\========================================== \*/
 
 .filters{
- display\:flex;
- gap:7px;
- flex-wrap\:wrap;
- align-items\:center;
- margin-bottom:18px
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
 }
 
 .filter{
- border:1px solid #2a2c2d;
- background:#111213;
- color:#9b9d9e;
- padding:11px 15px;
- font-size:11px;
- font-weight\:bold;
- text-transform\:uppercase;
- cursor\:pointer;
-
- transition:
-  transform .18s ease,
-  background .18s ease,
-  color .18s ease,
-  border-color .18s ease,
-  padding .18s ease;
+  border:1px solid #303233;
+  background:#0c0d0d;
+  color:#777;
+  padding:8px 13px;
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.filter\:hover{
- color:#fff;
- border-color:#555;
- transform\:translateY(-1px)
-}
-
-.filter\:active{
- transform\:scale(.97)
+.filter:hover{
+  color:#ddd;
+  border-color:#555;
 }
 
 .filter.active{
- background:#f4ca28;
- color:#111;
- border-color:#f4ca28;
-
- /\* выбранный пункт на 2 px больше \*/
- padding:13px 17px;
- margin:-2px 0;
-
- transform\:scale(1);
+  color:#111;
+  background:#d5b42e;
+  border-color:#d5b42e;
 }
 
-.filter.active\:hover{
- transform\:scale(1.03)
+.content-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 345px;
+  gap:30px;
 }
 
-/\* ==========================================
-   СЕТКА
-\========================================== \*/
 
-.grid{
- display\:grid;
- grid-template-columns\:minmax(0,1fr) 345px;
- gap:22px
+/* ================= NEWS ================= */
+
+.news-grid{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
 
-.news{
- display\:flex;
- flex-direction\:column;
- gap:12px
+.news-card{
+  min-height:200px;
+  border:1px solid #292a2b;
+  background:#0d0e0e;
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  transition:.25s;
+  overflow:hidden;
 }
 
-/\* ==========================================
-   КАРТОЧКА НОВОСТИ
-\========================================== \*/
-
-.card{
- display\:grid;
- grid-template-columns:280px 1fr;
- min-height:200px;
- background:#111213;
- border:1px solid #292b2c;
- transition:.2s
+.news-card:hover{
+  transform:translateY(-3px);
+  border-color:#454647;
 }
 
-.card\:hover{
- border-color:#555;
- transform\:translateY(-2px)
+.news-image{
+  width:100%;
+  height:100%;
+  min-height:200px;
+  object-fit:cover;
+  background:#151616;
 }
 
-.pic{
- position\:relative;
- overflow\:hidden;
- background\:linear-gradient(135deg,#25292a,#090a0b)
+.news-content{
+  padding:22px 24px;
+  display:flex;
+  flex-direction:column;
 }
 
-.pic\:before{
- content:"";
- position\:absolute;
- inset:25px;
- border:1px solid rgba(255,255,255,.11)
+.news-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:11px;
 }
 
-.pic\:after{
- content:"SCP";
- position\:absolute;
- left:25px;
- bottom:17px;
- font-size:52px;
- font-weight:900;
- color\:rgba(255,255,255,.08)
+.news-tag{
+  padding:4px 7px;
+  background:#d5b42e;
+  color:#111;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
 }
 
-.pic.one{
- background\:radial-gradient(circle at 50% 45%,#424849,#121516 48%,#060708)
+.news-date{
+  color:#666;
+  font-size:10px;
 }
 
-.pic.two{
- background\:linear-gradient(135deg,#353a3b,#0d0f10 60%)
+.news-content h3{
+  font-size:23px;
+  line-height:1.15;
+  color:#eee;
+  font-weight:800;
+  margin-bottom:10px;
 }
 
-.pic.three{
- background\:linear-gradient(135deg,#20282a,#08090a 65%)
+.news-content p{
+  color:#777;
+  font-size:13px;
+  line-height:1.65;
 }
 
-.pic.four{
- background\:linear-gradient(135deg,#343638,#101112)
+.news-more{
+  margin-top:auto;
+  padding-top:15px;
+  color:#c5a82c;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
 }
 
-.tag{
- position\:absolute;
- top:11px;
- left:11px;
- padding:5px 8px;
- color\:white;
- font-size:9px;
- font-weight\:bold;
- z-index:2
-}
 
-.purple{background:#964ce0}
-.blue{background:#397ecb}
-.green{background:#258b59}
-.orange{background:#bc7722}
+/* ================= SIDEBAR ================= */
 
-.body{
- padding:20px 21px;
- display\:flex;
- flex-direction\:column
-}
-
-.time{
- color:#747779;
- font-size:10px;
- margin-bottom:8px
-}
-
-.card h3{
- font-size:20px;
- line-height:1.13;
- margin:0 0 9px
-}
-
-.card p{
- color:#999b9d;
- font-size:11px;
- line-height:1.6;
- margin:0
-}
-
-.meta{
- margin-top\:auto;
- padding-top:15px;
- color:#66696b;
- font-size:10px;
- display\:flex;
- gap:16px
-}
-
-/\* ==========================================
-   БОКОВАЯ ПАНЕЛЬ
-\========================================== \*/
-
-.side{
- display\:flex;
- flex-direction\:column;
- gap:14px
+.sidebar{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
 
 .panel{
- background:#111213;
- border:1px solid #292b2c
-}
-
-.panel h3{
- font-size:16px;
- text-transform\:uppercase;
- margin:0
+  background:#0d0e0e;
+  border:1px solid #292a2b;
 }
 
 .panel-head{
- padding:16px;
- border-bottom:1px solid #222425;
- display\:flex;
- gap:10px;
- align-items\:center
+  padding:16px 18px;
+  border-bottom:1px solid #292a2b;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.panel-head b{
- color:#f4ca28
+.panel-head h3{
+  font-size:12px;
+  color:#ddd;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
 }
 
-.change{
- display\:grid;
- grid-template-columns:34px 1fr auto;
- gap:10px;
- align-items\:center;
- padding:13px 14px;
- border-bottom:1px solid #202223
+.panel-head span{
+  color:#555;
+  font-size:9px;
+  letter-spacing:1px;
 }
 
-.change\:last-child{
- border:0
+.panel-body{
+  padding:16px 18px;
+}
+
+
+/* ================= CHANGES ================= */
+
+.changes-list{
+  display:flex;
+  flex-direction:column;
+}
+
+.change-row{
+  display:grid;
+  grid-template-columns:38px 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:13px 0;
+  border-bottom:1px solid #202122;
+}
+
+.change-row:last-child{
+  border-bottom:0;
 }
 
 .change-icon{
- width:31px;
- height:31px;
- border:1px solid #414344;
- display\:grid;
- place-items\:center;
- color:#c4c5c6
+  width:31px;
+  height:31px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#c4c5c6;
+  overflow:hidden;
+  border:0;
+  background:transparent;
+}
+
+.change-icon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 
 .change-title{
- font-size:11px;
- line-height:1.35
+  color:#aaa;
+  font-size:11px;
+  line-height:1.35;
 }
 
 .change-time{
- font-size:9px;
- color:#686b6d;
- margin-top:3px
+  color:#555;
+  font-size:9px;
+  white-space:nowrap;
 }
 
-.dot{
- width:6px;
- height:6px;
- background:#f4ca28;
- border-radius:50%
+.change-dot{
+  width:5px;
+  height:5px;
+  background:#d5b42e;
+  border-radius:50%;
 }
 
-.about{
- padding-bottom:17px
+
+/* ================= ABOUT ================= */
+
+.about-text{
+  color:#777;
+  font-size:12px;
+  line-height:1.7;
 }
 
-.about p{
- font-size:11px;
- line-height:1.7;
- color:#85888a;
- margin:15px 16px
+.about-line{
+  height:1px;
+  background:#222;
+  margin:15px 0;
 }
 
-.about a{
- font-size:10px;
- color:#f4ca28;
- font-weight\:bold;
- margin:0 16px;
- text-transform\:uppercase
+.about-stat{
+  display:flex;
+  justify-content:space-between;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
 }
 
-/\* ==========================================
-   FOOTER
-\========================================== \*/
+.about-stat span:first-child{
+  color:#555;
+}
+
+.about-stat span:last-child{
+  color:#aaa;
+}
+
+
+/* ================= FOOTER ================= */
 
 footer{
- border-top:1px solid #1d1f20;
- background:#060707
+  border-top:1px solid #252627;
+  background:#050606;
+  padding:42px 0;
 }
 
-.foot{
- display\:grid;
- grid-template-columns:2fr 1fr 1fr;
- gap:60px;
- padding:38px 0
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:50px;
 }
 
-.foot p,
-.foot a{
- color:#686b6d;
- font-size:10px;
- line-height:1.7
+.footer-brand{
+  color:#777;
+  font-size:11px;
+  line-height:1.7;
+  max-width:430px;
 }
 
-.foot h4{
- font-size:10px;
- text-transform\:uppercase;
- margin:0 0 10px;
- color:#b8b9ba
+.footer-title{
+  color:#bbb;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:15px;
+  text-transform:uppercase;
 }
 
-.footlinks{
- display\:flex;
- flex-direction\:column;
- gap:4px
+.footer-links{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
 }
 
-.bottom{
- border-top:1px solid #17191a;
- color:#505355;
- text-align\:center;
- padding:15px;
- font-size:9px
+.footer-links a{
+  color:#666;
+  font-size:11px;
+  transition:.2s;
 }
 
-/\* ==========================================
-   ПЛАНШЕТ
-\========================================== \*/
+.footer-links a:hover{
+  color:#ddd;
+}
+
+.footer-bottom{
+  margin-top:35px;
+  padding-top:18px;
+  border-top:1px solid #1e1f20;
+  display:flex;
+  justify-content:space-between;
+  color:#444;
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+
+/* ================= LOADING ================= */
+
+.loading{
+  padding:40px;
+  text-align:center;
+  color:#555;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.empty{
+  padding:35px;
+  border:1px solid #292a2b;
+  color:#555;
+  text-align:center;
+  font-size:12px;
+}
+
+
+/* ================= RESPONSIVE ================= */
 
 @media(max-width:950px){
 
- nav a{
-  padding:0 7px;
-  font-size:11px
- }
+  .content-grid{
+    grid-template-columns:1fr;
+  }
 
- .grid{
-  grid-template-columns:1fr
- }
+  .sidebar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
 
- .side{
-  display\:grid;
-  grid-template-columns:1fr 1fr
- }
+  .hero h1{
+    font-size:47px;
+  }
 
- .card{
-  grid-template-columns:245px 1fr
- }
 }
-
-/\* ==========================================
-   МОБИЛЬНАЯ ВЕРСИЯ
-\========================================== \*/
 
 @media(max-width:700px){
 
- header{
-  height:68px
- }
+  .wrap,
+  .header-inner{
+    width:min(100% - 25px,1220px);
+  }
 
- .wrap{
-  width\:calc(100% - 28px)
- }
+  header{
+    height:70px;
+  }
 
- .head{
-  gap:0
- }
+  nav{
+    display:none;
+  }
 
- .logo{
-  min-width:0
- }
+  .logo-symbol{
+    width:38px;
+    height:38px;
+  }
 
- .logo-text{
-  font-size:20px
- }
+  .logo-symbol:after{
+    display:none;
+  }
 
- .logo-symbol{
-  width:38px;
-  height:38px
- }
+  .logo-symbol img{
+    width:38px;
+    height:38px;
+  }
 
- .logo-symbol\:after{
-  width:27px;
-  height:27px
- }
+  .hero{
+    height:390px;
+  }
 
- nav,
- .search{
-  display\:none
- }
+  .hero h1{
+    font-size:40px;
+  }
 
- .hero{
-  height:390px
- }
+  .hero:after{
+    opacity:.18;
+  }
 
- .hero .wrap{
-  padding-top:70px
- }
+  .section-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:18px;
+  }
 
- h1{
-  font-size:41px
- }
+  .news-card{
+    grid-template-columns:1fr;
+  }
 
- /\* На телефоне заголовок и фильтры остаются вертикально \*/
- .news-heading{
-  margin-bottom:15px
- }
+  .news-image{
+    height:190px;
+    min-height:0;
+  }
 
- .filters{
-  margin-top:0;
-  margin-bottom:15px;
-  gap:5px
- }
+  .sidebar{
+    display:flex;
+  }
 
- .filter{
-  flex:1;
-  padding:9px 10px;
-  font-size:10px
- }
+  .footer-grid{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
 
- .filter.active{
-  padding:11px 10px;
-  margin:-1px 0
- }
-
- .card{
-  grid-template-columns:1fr
- }
-
- .pic{
-  height:175px
- }
-
- .body{
-  min-height:200px
- }
-
- .side{
-  display\:flex
- }
-
- .foot{
-  grid-template-columns:1fr 1fr
- }
-
- .foot>div\:first-child{
-  grid-column:1/-1
- }
+  .footer-bottom{
+    flex-direction:column;
+    gap:8px;
+  }
 }
-\</style>
-\</head>
+</style>
+</head>
 
-\<body>
+<body>
 
-\<header>
+<header>
+  <div class="header-inner">
 
-\<div class="wrap head">
+    <a href="./" class="logo">
 
-\<a class="logo" href="#">
+      <div class="logo-symbol">
+        <img id="siteLogo" src="" alt="SCP">
+      </div>
 
-\<div class="logo-symbol">☣\</div>
+      <div class="logo-text">
+        <strong>SCP: CB2</strong>
+        <span>MULTIPLAYER</span>
+      </div>
 
-\<div class="logo-text">
-SCP\<br>
-CB2
-\<small>MULTIPLAYER\</small>
-\</div>
+    </a>
 
-\</a>
+    <nav>
+      <a href="./" class="active">Новости</a>
+      <a href="#changes">Изменения</a>
+      <a href="#about">О проекте</a>
+    </nav>
 
-\<nav>
+    <div class="search">
+      ⌕
+    </div>
 
-\<a class="active" href="#">
-Новости
-\</a>
+  </div>
+</header>
 
-\<a href="#">
-Сервера
-\</a>
 
-\<a href="#">
-О проекте
-\</a>
+<section class="hero">
 
-\</nav>
+  <div class="wrap hero-inner">
 
-\<button class="search" aria-label="Поиск">\</button>
+    <div class="hero-content">
 
-\</div>
+      <div class="kicker">
+        SCP: CONTAINMENT BREACH 2 MULTIPLAYER
+      </div>
 
-\</header>
+      <h1>
+        ЦЕНТР<br>
+        ИНФОРМАЦИИ
+      </h1>
 
+      <p>
+        Последние новости, обновления и события проекта SCP: CB2 Multiplayer.
+        Следите за развитием игры и всеми изменениями проекта.
+      </p>
 
-\<section class="hero">
+      <a href="#news" class="hero-button">
+        Смотреть новости
+      </a>
 
-\<div class="wrap">
+    </div>
 
-\<div class="kicker">
-ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ
-\</div>
+  </div>
 
-\<h1>
-НОВОСТИ SCP: CB2
-\</h1>
+</section>
 
-\<p>
-Будьте в курсе изменений, обновлений и событий
-в мире SCP: CB2 Multiplayer.
-\</p>
 
-\<a class="yellow-btn" href="#news">
-Смотреть новости →
-\</a>
+<main id="news">
 
-\</div>
+  <div class="wrap">
 
-\</section>
+    <div class="section-head">
 
+      <div>
+        <div class="section-kicker">
+          Новости проекта
+        </div>
 
-\<main id="news">
+        <h2>
+          Последние новости
+        </h2>
+      </div>
 
-\<div class="wrap">
+      <div class="filters">
 
+        <button class="filter active" data-category="all">
+          Все
+        </button>
 
-\<!-- ЗАГОЛОВОК -->
+        <button class="filter" data-category="Сервера">
+          Сервера
+        </button>
 
-\<div class="news-heading">
+        <button class="filter" data-category="Обновления">
+          Обновления
+        </button>
 
-\<div class="section-label">
-ЦЕНТР ИНФОРМАЦИИ
-\</div>
+        <button class="filter" data-category="События">
+          События
+        </button>
 
-\<h2>
-Последние новости
-\</h2>
+        <button class="filter" data-category="Разработка">
+          Разработка
+        </button>
 
-\</div>
+      </div>
 
+    </div>
 
-\<!-- ФИЛЬТРЫ ОТДЕЛЬНОЙ СТРОКОЙ -->
 
-\<div class="filters">
+    <div class="content-grid">
 
-\<button class="filter active" data-cat="all">
-Все новости
-\</button>
+      <section>
 
-\<button class="filter" data-cat="updates">
-Обновления
-\</button>
+        <div id="newsList" class="news-grid">
+          <div class="loading">
+            Загрузка новостей...
+          </div>
+        </div>
 
-\<button class="filter" data-cat="servers">
-Сервера
-\</button>
+      </section>
 
-\<button class="filter" data-cat="dev">
-Разработка
-\</button>
 
-\<button class="filter" data-cat="events">
-События
-\</button>
+      <aside class="sidebar">
 
-\</div>
 
+        <div class="panel" id="changes">
 
-\<!-- НОВОСТИ + САЙДБАР -->
+          <div class="panel-head">
 
-\<div class="grid">
+            <h3>
+              Последние изменения
+            </h3>
 
+            <span>
+              LAST 5
+            </span>
 
-\<div class="news" id="newsList">
+          </div>
 
-\<div style="
- padding:30px;
- text-align\:center;
- color:#747779;
- font-size:11px;
-">
-Загрузка новостей...
-\</div>
+          <div class="panel-body">
 
-\</div>
+            <div id="changesList" class="changes-list">
 
+              <div class="loading">
+                Загрузка изменений...
+              </div>
 
-\<aside class="side">
+            </div>
 
+          </div>
 
-\<section class="panel">
+        </div>
 
-\<div class="panel-head">
 
-\<b>◈\</b>
+        <div class="panel" id="about">
 
-\<h3>
-Последние изменения
-\</h3>
+          <div class="panel-head">
 
-\</div>
+            <h3>
+              О проекте
+            </h3>
 
+          </div>
 
-\<div class="change">
+          <div class="panel-body">
 
-\<div class="change-icon">
-◈
-\</div>
+            <div class="about-text">
 
-\<div>
+              SCP: CB2 Multiplayer — многопользовательский
+              проект во вселенной SCP: Containment Breach.
 
-\<div class="change-title">
-Изменён баланс класса SCP-049
-\</div>
+              <div class="about-line"></div>
 
-\<div class="change-time">
-1 час назад
-\</div>
+              Здесь публикуются новости, обновления,
+              события и информация о разработке проекта.
 
-\</div>
+            </div>
 
-\<span class="dot">\</span>
+            <div class="about-line"></div>
 
-\</div>
+            <div class="about-stat">
 
+              <span>
+                Проект
+              </span>
 
-\<div class="change">
+              <span>
+                SCP: CB2
+              </span>
 
-\<div class="change-icon">
-▣
-\</div>
+            </div>
 
-\<div>
+            <div style="height:10px"></div>
 
-\<div class="change-title">
-Добавлена карта «Site-65» (Beta)
-\</div>
+            <div class="about-stat">
 
-\<div class="change-time">
-4 часа назад
-\</div>
+              <span>
+                Статус
+              </span>
 
-\</div>
+              <span>
+                Development
+              </span>
 
-\<span>\</span>
+            </div>
 
-\</div>
+          </div>
 
+        </div>
 
-\<div class="change">
 
-\<div class="change-icon">
-◫
-\</div>
+      </aside>
 
-\<div>
+    </div>
 
-\<div class="change-title">
-Обновлены модели оружия МОГ
-\</div>
+  </div>
 
-\<div class="change-time">
-7 часов назад
-\</div>
+</main>
 
-\</div>
 
-\<span>\</span>
+<footer>
 
-\</div>
+  <div class="wrap">
 
+    <div class="footer-grid">
 
-\<div class="change">
+      <div>
 
-\<div class="change-icon">
-◌
-\</div>
+        <div class="footer-title">
+          SCP: CB2 MULTIPLAYER
+        </div>
 
-\<div>
+        <div class="footer-brand">
 
-\<div class="change-title">
-Изменена система возрождения
-\</div>
+          Фанатский многопользовательский проект,
+          вдохновлённый SCP: Containment Breach.
 
-\<div class="change-time">
-Вчера
-\</div>
+          <br><br>
 
-\</div>
+          Все новости и обновления проекта
+          публикуются на данном сайте.
 
-\<span>\</span>
+        </div>
 
-\</div>
+      </div>
 
-\</section>
 
+      <div>
 
-\<section class="panel about">
+        <div class="footer-title">
+          Навигация
+        </div>
 
-\<div class="panel-head">
+        <div class="footer-links">
 
-\<b>◉\</b>
+          <a href="./">
+            Новости
+          </a>
 
-\<h3>
-О проекте
-\</h3>
+          <a href="#changes">
+            Изменения
+          </a>
 
-\</div>
+          <a href="#about">
+            О проекте
+          </a>
 
-\<p>
-SCP: CB2 Multiplayer — новостной портал о серверах,
-разработке и событиях сообщества.
-\</p>
+        </div>
 
-\<a href="#">
-Подробнее о проекте →
-\</a>
+      </div>
 
-\</section>
 
+      <div>
 
-\</aside>
+        <div class="footer-title">
+          Проект
+        </div>
 
-\</div>
+        <div class="footer-links">
 
-\</div>
+          <a href="#">
+            Discord
+          </a>
 
-\</main>
+          <a href="#">
+            GitHub
+          </a>
 
+        </div>
 
-\<footer>
+      </div>
 
-\<div class="wrap foot">
+    </div>
 
 
-\<div>
+    <div class="footer-bottom">
 
-\<div class="logo">
+      <span>
+        SCP: CB2 MULTIPLAYER
+      </span>
 
-\<div class="logo-symbol">
-☣
-\</div>
+      <span>
+        NOT AFFILIATED WITH SCP FOUNDATION
+      </span>
 
-\<div class="logo-text">
-SCP\<br>
-CB2
-\<small>MULTIPLAYER\</small>
-\</div>
+    </div>
 
-\</div>
+  </div>
 
-\<p>
-Официальный новостной портал\<br>
-SCP: CB2 Multiplayer.
-\</p>
+</footer>
 
-\</div>
 
+<script>
 
-\<div>
+const SUPABASE_URL =
+  "https://ajmavwxzakkjsfolijhp.supabase.co";
 
-\<h4>
-Навигация
-\</h4>
+const SUPABASE_KEY =
+  "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
-\<div class="footlinks">
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-\<a href="#">
-Новости
-\</a>
 
-\<a href="#">
-Сервера
-\</a>
-
-\<a href="#">
-Разработка
-\</a>
-
-\<a href="#">
-Сообщество
-\</a>
-
-\</div>
-
-\</div>
-
-
-\<div>
-
-\<h4>
-Сообщество
-\</h4>
-
-\<div class="footlinks">
-
-\<a href="#">
-Discord
-\</a>
-
-\<a href="#">
-Steam
-\</a>
-
-\<a href="#">
-Поддержка
-\</a>
-
-\<a href="#">
-Предложить новость
-\</a>
-
-\</div>
-
-\</div>
-
-
-\</div>
-
-
-\<div class="bottom">
-© 2026 SCP: CB2 Multiplayer.
-Не является официальным сайтом проекта.
-\</div>
-
-\</footer>
-
-
-\<!-- SUPABASE -->
-
-\<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)">\</script>
-
-\<script>
-
-const SUPABASE\_URL =
-"[https://ajmavwxzakkjsfolijhp.supabase.co](https://ajmavwxzakkjsfolijhp.supabase.co)";
-
-const SUPABASE\_KEY =
-"sb\_publishable\_jUamyU0\_NP-oyYyUSayJKQ\_IqDpn7EP";
-
-const db =
-supabase.createClient(
- SUPABASE\_URL,
- SUPABASE\_KEY
-);
-
-
-/\* ==========================================
-   НАСТРОЙКИ САЙТА
-\========================================== \*/
+/* ================= SITE SETTINGS ================= */
 
 async function loadSiteSettings(){
 
- const {data,error} =
-  await db
-   .from("site\_settings")
-   .select("key,value");
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("site_settings")
+    .select("*");
 
- if(error){
+  if(error){
+    console.error("Ошибка site_settings:", error);
+    return;
+  }
 
-  console.error(
-   "Ошибка загрузки настроек:",
-   error
-  );
+  if(!data) return;
 
-  return;
+  const settings = {};
 
- }
-
- const settings={};
-
- data.forEach(item=>{
-  settings[item.key]=item.value;
- });
+  data.forEach(item => {
+    settings[item.key] = item.value;
+  });
 
 
- /\* ЛОГО \*/
+  if(settings.logo_url){
 
- if(settings.logo){
+    const logo =
+      document.getElementById("siteLogo");
 
-  document
-   .querySelectorAll(".logo-symbol")
-   .forEach(element=>{
-
-    element.innerHTML=\`
-     \<img
-      src="${settings.logo}"
-      alt="SCP CB2"
-     \>
-    \`;
-
-   });
-
- }
-
-
- /\* ФОН \*/
-
- if(settings.background){
-
-  document.body.style.backgroundImage=
-   \`url("${settings.background}")\`;
-
-  document.body.style.backgroundSize=
-   "cover";
-
-  document.body.style.backgroundAttachment=
-   "fixed";
-
-  document.body.style.backgroundPosition=
-   "center";
-
- }
-
-
- /\* БАННЕР \*/
-
- if(settings.banner){
-
-  const hero=
-   document.querySelector(".hero");
-
-  if(hero){
-
-   hero.style.backgroundImage=
-    \`linear-gradient(
-      90deg,
-      rgba(8,9,9,.9),
-      rgba(8,9,9,.35)
-    ),
-    url("${settings.banner}")\`;
-
-   hero.style.backgroundSize=
-    "cover";
-
-   hero.style.backgroundPosition=
-    "center";
+    if(logo){
+      logo.src = settings.logo_url;
+    }
 
   }
 
- }
+}
+
+
+/* ================= TIME ================= */
+
+function formatDate(date){
+
+  const d = new Date(date);
+
+  const day =
+    String(d.getDate()).padStart(2,"0");
+
+  const month =
+    String(d.getMonth()+1).padStart(2,"0");
+
+  const year =
+    d.getFullYear();
+
+  return `${day}.${month}.${year}`;
 
 }
 
 
-/\* ==========================================
-   КАТЕГОРИИ
-\========================================== \*/
+/* ================= NEWS ================= */
 
-function categoryToFilter(category){
-
- if(category==="Обновления")
-  return "updates";
-
- if(category==="Сервера")
-  return "servers";
-
- if(category==="Разработка")
-  return "dev";
-
- if(category==="События")
-  return "events";
-
- return "all";
-
-}
-
+let allNews = [];
 
 function categoryClass(category){
 
- if(category==="Обновления")
-  return "purple";
-
- if(category==="Сервера")
-  return "blue";
-
- if(category==="Разработка")
-  return "green";
-
- if(category==="События")
-  return "orange";
-
- return "blue";
+  return category || "Новости";
 
 }
 
-
-/\* ==========================================
-   ВРЕМЯ
-\========================================== \*/
-
-function formatTime(dateString){
-
- const date=
-  new Date(dateString);
-
- const now=
-  new Date();
-
- const seconds=
-  Math.floor(
-   (now-date)/1000
-  );
-
- if(seconds<60)
-  return "Только что";
-
- const minutes=
-  Math.floor(seconds/60);
-
- if(minutes<60)
-  return minutes+
-   " "+
-   (minutes===1
-    ?"минуту"
-    :"минут"
-   )+
-   " назад";
-
- const hours=
-  Math.floor(minutes/60);
-
- if(hours<24)
-  return hours+
-   " "+
-   (hours===1
-    ?"час"
-    :"часов"
-   )+
-   " назад";
-
- const days=
-  Math.floor(hours/24);
-
- if(days===1)
-  return "Вчера";
-
- if(days<7)
-  return days+
-   " "+
-   (days<5
-    ?"дня"
-    :"дней"
-   )+
-   " назад";
-
- return date.toLocaleDateString(
-  "ru-RU",
-  {
-   day:"numeric",
-   month:"long",
-   year:"numeric"
-  }
- );
-
-}
-
-
-/\* ==========================================
-   СОЗДАНИЕ КАРТОЧКИ
-\========================================== \*/
 
 function createNewsCard(news){
 
- const card=
-  document.createElement("a");
+  const card =
+    document.createElement("article");
 
- card.className=
-  "card";
+  card.className = "news-card";
 
- card.dataset.cat=
-  categoryToFilter(
-   news.category
-  );
-
- card.href=
-  "news.html?id="+
-  encodeURIComponent(
-   news.id
-  );
+  const image =
+    news.image_url ||
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80";
 
 
- /\* КАРТИНКА \*/
+  card.innerHTML = `
 
- const pic=
-  document.createElement("div");
+    <img
+      class="news-image"
+      src="${escapeHtml(image)}"
+      alt=""
+    >
 
- pic.className=
-  "pic";
+    <div class="news-content">
 
- if(news.image\_url){
+      <div class="news-meta">
 
-  pic.style.backgroundImage=
-   \`linear-gradient(
-      180deg,
-      rgba(0,0,0,.05),
-      rgba(0,0,0,.25)
-    ),
-    url("${news.image\_url}")\`;
+        <span class="news-tag">
+          ${escapeHtml(categoryClass(news.category))}
+        </span>
 
-  pic.style.backgroundSize=
-   "cover";
+        <span class="news-date">
+          ${formatDate(news.created_at)}
+        </span>
 
-  pic.style.backgroundPosition=
-   "center";
+      </div>
 
- }
+      <h3>
+        ${escapeHtml(news.title)}
+      </h3>
 
+      <p>
+        ${escapeHtml(news.description || "")}
+      </p>
 
- /\* ТЕГ \*/
+      <a
+        class="news-more"
+        href="./news.html?id=${encodeURIComponent(news.id)}"
+      >
+        Читать далее →
+      </a>
 
- const tag=
-  document.createElement("span");
+    </div>
 
- tag.className=
-  "tag "+
-  categoryClass(
-   news.category
-  );
+  `;
 
- tag.textContent=
-  news.category ||
-  "Новости";
-
- pic.appendChild(tag);
-
-
- /\* BODY \*/
-
- const body=
-  document.createElement("div");
-
- body.className=
-  "body";
-
-
- /\* ВРЕМЯ \*/
-
- const time=
-  document.createElement("div");
-
- time.className=
-  "time";
-
- time.textContent=
-  formatTime(
-   news.created\_at
-  );
-
-
- /\* ЗАГОЛОВОК \*/
-
- const title=
-  document.createElement("h3");
-
- title.textContent=
-  news.title ||
-  "Без названия";
-
-
- /\* ОПИСАНИЕ \*/
-
- const description=
-  document.createElement("p");
-
- description.textContent=
-  news.description ||
-  "";
-
-
- /\* META \*/
-
- const meta=
-  document.createElement("div");
-
- meta.className=
-  "meta";
-
- meta.innerHTML=
-  "◉ 0 &nbsp;&nbsp; ▢ 0";
-
-
- body.appendChild(time);
- body.appendChild(title);
- body.appendChild(description);
- body.appendChild(meta);
-
- card.appendChild(pic);
- card.appendChild(body);
-
- return card;
+  return card;
 
 }
 
 
-/\* ==========================================
-   ЗАГРУЗКА НОВОСТЕЙ
-\========================================== \*/
+function renderNews(category="all"){
 
-let allNews=[];
+  const list =
+    document.getElementById("newsList");
 
-let currentCategory=
- "all";
+  list.innerHTML = "";
+
+  let filtered =
+    allNews;
+
+  if(category !== "all"){
+
+    filtered =
+      allNews.filter(
+        item => item.category === category
+      );
+
+  }
+
+  if(!filtered.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        Новостей пока нет
+      </div>
+    `;
+
+    return;
+
+  }
+
+  filtered.forEach(news => {
+
+    list.appendChild(
+      createNewsCard(news)
+    );
+
+  });
+
+}
 
 
 async function loadNews(){
 
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
-
- const {data,error}=
-  await db
-   .from("news")
-   .select(\`
-    id,
-    created\_at,
-    title,
-    description,
-    content,
-    image\_url,
-    category
-   \`)
-   .order(
-    "created\_at",
-    {
-     ascending\:false
-    }
-   );
-
-
- if(error){
-
-  console.error(
-   "Ошибка загрузки новостей:",
-   error
-  );
-
-  newsList.innerHTML=\`
-   \<div style="
-    padding:30px;
-    text-align\:center;
-    color:#e52b2b;
-    font-size:11px;
-   ">
-    Ошибка загрузки новостей.
-   \</div>
-  \`;
-
-  return;
-
- }
-
- allNews=
-  data || [];
-
- renderNews();
-
-}
-
-
-/\* ==========================================
-   ОТОБРАЖЕНИЕ НОВОСТЕЙ
-\========================================== \*/
-
-function renderNews(){
-
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
-
- newsList.innerHTML="";
-
-
- const filtered=
-  currentCategory==="all"
-   ?allNews
-   \:allNews.filter(
-    news=>
-     categoryToFilter(
-      news.category
-     )===
-     currentCategory
-   );
-
-
- if(filtered.length===0){
-
-  newsList.innerHTML=\`
-   \<div style="
-    padding:30px;
-    text-align\:center;
-    color:#747779;
-    font-size:11px;
-   ">
-    Новостей пока нет.
-   \</div>
-  \`;
-
-  return;
-
- }
-
-
- filtered.forEach(news=>{
-
-  newsList.appendChild(
-   createNewsCard(news)
-  );
-
- });
-
-}
-
-
-/\* ==========================================
-   ФИЛЬТРЫ
-\========================================== \*/
-
-document
- .querySelectorAll(".filter")
- .forEach(btn=>{
-
-  btn.onclick=()=>{
-
-   document
-    .querySelectorAll(".filter")
-    .forEach(x=>
-     x.classList.remove(
-      "active"
-     )
-    );
-
-   btn.classList.add(
-    "active"
-   );
-
-   currentCategory=
-    btn.dataset.cat;
-
-   renderNews();
-
-  };
-
- });
-
-
-/\* ==========================================
-   ЗАПУСК
-\========================================== \*/
-
-loadSiteSettings();
-
-loadNews();
-
-\</script>
-
-\</body>
-\</html>
-\<!DOCTYPE html>
-\<html lang="ru">
-\<head>
-\<meta charset="UTF-8">
-\<meta name="viewport" content="width=device-width,initial-scale=1.0">
-\<title>SCP: CB2 Multiplayer — Новости\</title>
-
-\<style>
-\*{box-sizing\:border-box}
-html{scroll-behavior\:smooth}
-
-body{
- margin:0;
- background:#080909;
- color:#eee;
- font-family\:Arial,Helvetica,sans-serif;
-}
-
-body\:before{
- content:"";
- position\:fixed;
- inset:0;
- pointer-events\:none;
- opacity:.18;
- background:
- linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
- linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
- background-size:45px 45px;
-}
-
-a{
- text-decoration\:none;
- color\:inherit
-}
-
-.wrap{
- max-width:1220px;
- width\:calc(100% - 50px);
- margin\:auto
-}
-
-header{
- height:82px;
- background:#050606;
- border-bottom:1px solid #202122;
- position\:relative;
- z-index:5
-}
-
-.head{
- height:100%;
- display\:flex;
- align-items\:center;
- gap:45px
-}
-
-.logo{
- display\:flex;
- align-items\:center;
- gap:12px;
- min-width:205px
-}
-
-.logo-symbol{
- width:45px;
- height:45px;
- border:2px solid #ddd;
- border-radius:50%;
- display\:grid;
- place-items\:center;
- font-size:22px;
- position\:relative;
- overflow\:hidden
-}
-
-.logo-symbol\:after{
- content:"";
- position\:absolute;
- width:31px;
- height:31px;
- border:1px solid #aaa;
- border-radius:50%
-}
-
-.logo-symbol img{
- width:100%;
- height:100%;
- object-fit\:contain;
- border-radius:50%;
- position\:relative;
- z-index:2
-}
-
-.logo-text{
- line-height:.82;
- font-weight:800;
- font-size:25px;
- letter-spacing:-1px
-}
-
-.logo-text small{
- display\:block;
- color:#e52b2b;
- font-size:9px;
- letter-spacing:.7px;
- margin-top:7px
-}
-
-nav{
- display\:flex;
- height:100%;
- align-items\:stretch;
- margin-left\:auto
-}
-
-nav a{
- display\:flex;
- align-items\:center;
- padding:0 15px;
- color:#a4a5a6;
- font-size:13px;
- font-weight\:bold;
- text-transform\:uppercase;
- position\:relative
-}
-
-nav a\:hover,
-nav a.active{
- color:#fff
-}
-
-nav a.active\:after{
- content:"";
- position\:absolute;
- height:2px;
- left:15px;
- right:15px;
- bottom:0;
- background:#f4ca28
-}
-
-.search{
- width:40px;
- height:40px;
- border:0;
- background\:none;
- position\:relative;
- margin-left:5px
-}
-
-.search\:before{
- content:"";
- position\:absolute;
- width:14px;
- height:14px;
- border:2px solid #ddd;
- border-radius:50%;
- left:9px;
- top:8px
-}
-
-.search\:after{
- content:"";
- position\:absolute;
- width:8px;
- height:2px;
- background:#ddd;
- transform\:rotate(45deg);
- left:23px;
- top:24px
-}
-
-.hero{
- height:345px;
- border-bottom:1px solid #222;
- position\:relative;
- overflow\:hidden;
- background:
- linear-gradient(90deg,#070809 0%,#0a0b0c 42%,#181a1b 100%);
-}
-
-.hero\:before{
- content:"";
- position\:absolute;
- right:0;
- top:0;
- width:57%;
- height:100%;
- background:
- linear-gradient(90deg,rgba(8,9,9,1),rgba(8,9,9,.28)),
- linear-gradient(135deg,#272a2b,#0b0c0d 55%,#202324);
- clip-path\:polygon(23% 0,100% 0,100% 100%,0 100%)
-}
-
-.hero\:after{
- content:"SCP";
- position\:absolute;
- right:10%;
- top:45px;
- font-size:150px;
- font-weight:900;
- color\:rgba(255,255,255,.035);
- letter-spacing:5px
-}
-
-.hero .wrap{
- position\:relative;
- z-index:2;
- padding-top:78px
-}
-
-.kicker{
- color:#f4ca28;
- font-size:10px;
- font-weight\:bold;
- letter-spacing:2px
-}
-
-h1{
- font-size:57px;
- margin:12px 0 13px;
- line-height:.98;
- letter-spacing:-2px
-}
-
-.hero p{
- color:#a7a9aa;
- font-size:14px;
- max-width:570px;
- line-height:1.7
-}
-
-.yellow-btn{
- display\:inline-block;
- background:#f4ca28;
- color:#101010;
- padding:13px 20px;
- margin-top:12px;
- font-size:11px;
- font-weight:800;
- text-transform\:uppercase
-}
-
-main{
- padding:40px 0 75px
-}
-
-/\* ==========================================
-   ЗАГОЛОВОК НОВОСТЕЙ
-\========================================== \*/
-
-.news-heading{
- margin-bottom:18px
-}
-
-.section-label{
- font-size:10px;
- color:#65686a;
- letter-spacing:2px;
- font-weight\:bold
-}
-
-h2{
- font-size:29px;
- margin:5px 0 0;
- text-transform\:uppercase
-}
-
-/\* ==========================================
-   ФИЛЬТРЫ
-\========================================== \*/
-
-.filters{
- display\:flex;
- gap:7px;
- flex-wrap\:wrap;
- align-items\:center;
- margin-bottom:18px
-}
-
-.filter{
- border:1px solid #2a2c2d;
- background:#111213;
- color:#9b9d9e;
- padding:11px 15px;
- font-size:11px;
- font-weight\:bold;
- text-transform\:uppercase;
- cursor\:pointer;
-
- transition:
-  transform .18s ease,
-  background .18s ease,
-  color .18s ease,
-  border-color .18s ease,
-  padding .18s ease;
-}
-
-.filter\:hover{
- color:#fff;
- border-color:#555;
- transform\:translateY(-1px)
-}
-
-.filter\:active{
- transform\:scale(.97)
-}
-
-.filter.active{
- background:#f4ca28;
- color:#111;
- border-color:#f4ca28;
-
- /\* выбранный пункт на 2 px больше \*/
- padding:13px 17px;
- margin:-2px 0;
-
- transform\:scale(1);
-}
-
-.filter.active\:hover{
- transform\:scale(1.03)
-}
-
-/\* ==========================================
-   СЕТКА
-\========================================== \*/
-
-.grid{
- display\:grid;
- grid-template-columns\:minmax(0,1fr) 345px;
- gap:22px
-}
-
-.news{
- display\:flex;
- flex-direction\:column;
- gap:12px
-}
-
-/\* ==========================================
-   КАРТОЧКА НОВОСТИ
-\========================================== \*/
-
-.card{
- display\:grid;
- grid-template-columns:280px 1fr;
- min-height:200px;
- background:#111213;
- border:1px solid #292b2c;
- transition:.2s
-}
-
-.card\:hover{
- border-color:#555;
- transform\:translateY(-2px)
-}
-
-.pic{
- position\:relative;
- overflow\:hidden;
- background\:linear-gradient(135deg,#25292a,#090a0b)
-}
-
-.pic\:before{
- content:"";
- position\:absolute;
- inset:25px;
- border:1px solid rgba(255,255,255,.11)
-}
-
-.pic\:after{
- content:"SCP";
- position\:absolute;
- left:25px;
- bottom:17px;
- font-size:52px;
- font-weight:900;
- color\:rgba(255,255,255,.08)
-}
-
-.pic.one{
- background\:radial-gradient(circle at 50% 45%,#424849,#121516 48%,#060708)
-}
-
-.pic.two{
- background\:linear-gradient(135deg,#353a3b,#0d0f10 60%)
-}
-
-.pic.three{
- background\:linear-gradient(135deg,#20282a,#08090a 65%)
-}
-
-.pic.four{
- background\:linear-gradient(135deg,#343638,#101112)
-}
-
-.tag{
- position\:absolute;
- top:11px;
- left:11px;
- padding:5px 8px;
- color\:white;
- font-size:9px;
- font-weight\:bold;
- z-index:2
-}
-
-.purple{background:#964ce0}
-.blue{background:#397ecb}
-.green{background:#258b59}
-.orange{background:#bc7722}
-
-.body{
- padding:20px 21px;
- display\:flex;
- flex-direction\:column
-}
-
-.time{
- color:#747779;
- font-size:10px;
- margin-bottom:8px
-}
-
-.card h3{
- font-size:20px;
- line-height:1.13;
- margin:0 0 9px
-}
-
-.card p{
- color:#999b9d;
- font-size:11px;
- line-height:1.6;
- margin:0
-}
-
-.meta{
- margin-top\:auto;
- padding-top:15px;
- color:#66696b;
- font-size:10px;
- display\:flex;
- gap:16px
-}
-
-/\* ==========================================
-   БОКОВАЯ ПАНЕЛЬ
-\========================================== \*/
-
-.side{
- display\:flex;
- flex-direction\:column;
- gap:14px
-}
-
-.panel{
- background:#111213;
- border:1px solid #292b2c
-}
-
-.panel h3{
- font-size:16px;
- text-transform\:uppercase;
- margin:0
-}
-
-.panel-head{
- padding:16px;
- border-bottom:1px solid #222425;
- display\:flex;
- gap:10px;
- align-items\:center
-}
-
-.panel-head b{
- color:#f4ca28
-}
-
-.change{
- display\:grid;
- grid-template-columns:34px 1fr auto;
- gap:10px;
- align-items\:center;
- padding:13px 14px;
- border-bottom:1px solid #202223
-}
-
-.change\:last-child{
- border:0
-}
-
-.change-icon{
- width:31px;
- height:31px;
- border:1px solid #414344;
- display\:grid;
- place-items\:center;
- color:#c4c5c6
-}
-
-.change-title{
- font-size:11px;
- line-height:1.35
-}
-
-.change-time{
- font-size:9px;
- color:#686b6d;
- margin-top:3px
-}
-
-.dot{
- width:6px;
- height:6px;
- background:#f4ca28;
- border-radius:50%
-}
-
-.about{
- padding-bottom:17px
-}
-
-.about p{
- font-size:11px;
- line-height:1.7;
- color:#85888a;
- margin:15px 16px
-}
-
-.about a{
- font-size:10px;
- color:#f4ca28;
- font-weight\:bold;
- margin:0 16px;
- text-transform\:uppercase
-}
-
-/\* ==========================================
-   FOOTER
-\========================================== \*/
-
-footer{
- border-top:1px solid #1d1f20;
- background:#060707
-}
-
-.foot{
- display\:grid;
- grid-template-columns:2fr 1fr 1fr;
- gap:60px;
- padding:38px 0
-}
-
-.foot p,
-.foot a{
- color:#686b6d;
- font-size:10px;
- line-height:1.7
-}
-
-.foot h4{
- font-size:10px;
- text-transform\:uppercase;
- margin:0 0 10px;
- color:#b8b9ba
-}
-
-.footlinks{
- display\:flex;
- flex-direction\:column;
- gap:4px
-}
-
-.bottom{
- border-top:1px solid #17191a;
- color:#505355;
- text-align\:center;
- padding:15px;
- font-size:9px
-}
-
-/\* ==========================================
-   ПЛАНШЕТ
-\========================================== \*/
-
-@media(max-width:950px){
-
- nav a{
-  padding:0 7px;
-  font-size:11px
- }
-
- .grid{
-  grid-template-columns:1fr
- }
-
- .side{
-  display\:grid;
-  grid-template-columns:1fr 1fr
- }
-
- .card{
-  grid-template-columns:245px 1fr
- }
-}
-
-/\* ==========================================
-   МОБИЛЬНАЯ ВЕРСИЯ
-\========================================== \*/
-
-@media(max-width:700px){
-
- header{
-  height:68px
- }
-
- .wrap{
-  width\:calc(100% - 28px)
- }
-
- .head{
-  gap:0
- }
-
- .logo{
-  min-width:0
- }
-
- .logo-text{
-  font-size:20px
- }
-
- .logo-symbol{
-  width:38px;
-  height:38px
- }
-
- .logo-symbol\:after{
-  width:27px;
-  height:27px
- }
-
- nav,
- .search{
-  display\:none
- }
-
- .hero{
-  height:390px
- }
-
- .hero .wrap{
-  padding-top:70px
- }
-
- h1{
-  font-size:41px
- }
-
- /\* На телефоне заголовок и фильтры остаются вертикально \*/
- .news-heading{
-  margin-bottom:15px
- }
-
- .filters{
-  margin-top:0;
-  margin-bottom:15px;
-  gap:5px
- }
-
- .filter{
-  flex:1;
-  padding:9px 10px;
-  font-size:10px
- }
-
- .filter.active{
-  padding:11px 10px;
-  margin:-1px 0
- }
-
- .card{
-  grid-template-columns:1fr
- }
-
- .pic{
-  height:175px
- }
-
- .body{
-  min-height:200px
- }
-
- .side{
-  display\:flex
- }
-
- .foot{
-  grid-template-columns:1fr 1fr
- }
-
- .foot>div\:first-child{
-  grid-column:1/-1
- }
-}
-\</style>
-\</head>
-
-\<body>
-
-\<header>
-
-\<div class="wrap head">
-
-\<a class="logo" href="#">
-
-\<div class="logo-symbol">☣\</div>
-
-\<div class="logo-text">
-SCP\<br>
-CB2
-\<small>MULTIPLAYER\</small>
-\</div>
-
-\</a>
-
-\<nav>
-
-\<a class="active" href="#">
-Новости
-\</a>
-
-\<a href="#">
-Сервера
-\</a>
-
-\<a href="#">
-О проекте
-\</a>
-
-\</nav>
-
-\<button class="search" aria-label="Поиск">\</button>
-
-\</div>
-
-\</header>
-
-
-\<section class="hero">
-
-\<div class="wrap">
-
-\<div class="kicker">
-ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ
-\</div>
-
-\<h1>
-НОВОСТИ SCP: CB2
-\</h1>
-
-\<p>
-Будьте в курсе изменений, обновлений и событий
-в мире SCP: CB2 Multiplayer.
-\</p>
-
-\<a class="yellow-btn" href="#news">
-Смотреть новости →
-\</a>
-
-\</div>
-
-\</section>
-
-
-\<main id="news">
-
-\<div class="wrap">
-
-
-\<!-- ЗАГОЛОВОК -->
-
-\<div class="news-heading">
-
-\<div class="section-label">
-ЦЕНТР ИНФОРМАЦИИ
-\</div>
-
-\<h2>
-Последние новости
-\</h2>
-
-\</div>
-
-
-\<!-- ФИЛЬТРЫ ОТДЕЛЬНОЙ СТРОКОЙ -->
-
-\<div class="filters">
-
-\<button class="filter active" data-cat="all">
-Все новости
-\</button>
-
-\<button class="filter" data-cat="updates">
-Обновления
-\</button>
-
-\<button class="filter" data-cat="servers">
-Сервера
-\</button>
-
-\<button class="filter" data-cat="dev">
-Разработка
-\</button>
-
-\<button class="filter" data-cat="events">
-События
-\</button>
-
-\</div>
-
-
-\<!-- НОВОСТИ + САЙДБАР -->
-
-\<div class="grid">
-
-
-\<div class="news" id="newsList">
-
-\<div style="
- padding:30px;
- text-align\:center;
- color:#747779;
- font-size:11px;
-">
-Загрузка новостей...
-\</div>
-
-\</div>
-
-
-\<aside class="side">
-
-
-\<section class="panel">
-
-\<div class="panel-head">
-
-\<b>◈\</b>
-
-\<h3>
-Последние изменения
-\</h3>
-
-\</div>
-
-
-\<div class="change">
-
-\<div class="change-icon">
-◈
-\</div>
-
-\<div>
-
-\<div class="change-title">
-Изменён баланс класса SCP-049
-\</div>
-
-\<div class="change-time">
-1 час назад
-\</div>
-
-\</div>
-
-\<span class="dot">\</span>
-
-\</div>
-
-
-\<div class="change">
-
-\<div class="change-icon">
-▣
-\</div>
-
-\<div>
-
-\<div class="change-title">
-Добавлена карта «Site-65» (Beta)
-\</div>
-
-\<div class="change-time">
-4 часа назад
-\</div>
-
-\</div>
-
-\<span>\</span>
-
-\</div>
-
-
-\<div class="change">
-
-\<div class="change-icon">
-◫
-\</div>
-
-\<div>
-
-\<div class="change-title">
-Обновлены модели оружия МОГ
-\</div>
-
-\<div class="change-time">
-7 часов назад
-\</div>
-
-\</div>
-
-\<span>\</span>
-
-\</div>
-
-
-\<div class="change">
-
-\<div class="change-icon">
-◌
-\</div>
-
-\<div>
-
-\<div class="change-title">
-Изменена система возрождения
-\</div>
-
-\<div class="change-time">
-Вчера
-\</div>
-
-\</div>
-
-\<span>\</span>
-
-\</div>
-
-\</section>
-
-
-\<section class="panel about">
-
-\<div class="panel-head">
-
-\<b>◉\</b>
-
-\<h3>
-О проекте
-\</h3>
-
-\</div>
-
-\<p>
-SCP: CB2 Multiplayer — новостной портал о серверах,
-разработке и событиях сообщества.
-\</p>
-
-\<a href="#">
-Подробнее о проекте →
-\</a>
-
-\</section>
-
-
-\</aside>
-
-\</div>
-
-\</div>
-
-\</main>
-
-
-\<footer>
-
-\<div class="wrap foot">
-
-
-\<div>
-
-\<div class="logo">
-
-\<div class="logo-symbol">
-☣
-\</div>
-
-\<div class="logo-text">
-SCP\<br>
-CB2
-\<small>MULTIPLAYER\</small>
-\</div>
-
-\</div>
-
-\<p>
-Официальный новостной портал\<br>
-SCP: CB2 Multiplayer.
-\</p>
-
-\</div>
-
-
-\<div>
-
-\<h4>
-Навигация
-\</h4>
-
-\<div class="footlinks">
-
-\<a href="#">
-Новости
-\</a>
-
-\<a href="#">
-Сервера
-\</a>
-
-\<a href="#">
-Разработка
-\</a>
-
-\<a href="#">
-Сообщество
-\</a>
-
-\</div>
-
-\</div>
-
-
-\<div>
-
-\<h4>
-Сообщество
-\</h4>
-
-\<div class="footlinks">
-
-\<a href="#">
-Discord
-\</a>
-
-\<a href="#">
-Steam
-\</a>
-
-\<a href="#">
-Поддержка
-\</a>
-
-\<a href="#">
-Предложить новость
-\</a>
-
-\</div>
-
-\</div>
-
-
-\</div>
-
-
-\<div class="bottom">
-© 2026 SCP: CB2 Multiplayer.
-Не является официальным сайтом проекта.
-\</div>
-
-\</footer>
-
-
-\<!-- SUPABASE -->
-
-\<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)">\</script>
-
-\<script>
-
-const SUPABASE\_URL =
-"[https://ajmavwxzakkjsfolijhp.supabase.co](https://ajmavwxzakkjsfolijhp.supabase.co)";
-
-const SUPABASE\_KEY =
-"sb\_publishable\_jUamyU0\_NP-oyYyUSayJKQ\_IqDpn7EP";
-
-const db =
-supabase.createClient(
- SUPABASE\_URL,
- SUPABASE\_KEY
-);
-
-
-/\* ==========================================
-   НАСТРОЙКИ САЙТА
-\========================================== \*/
-
-async function loadSiteSettings(){
-
- const {data,error} =
-  await db
-   .from("site\_settings")
-   .select("key,value");
-
- if(error){
-
-  console.error(
-   "Ошибка загрузки настроек:",
-   error
-  );
-
-  return;
-
- }
-
- const settings={};
-
- data.forEach(item=>{
-  settings[item.key]=item.value;
- });
-
-
- /\* ЛОГО \*/
-
- if(settings.logo){
-
-  document
-   .querySelectorAll(".logo-symbol")
-   .forEach(element=>{
-
-    element.innerHTML=\`
-     \<img
-      src="${settings.logo}"
-      alt="SCP CB2"
-     \>
-    \`;
-
-   });
-
- }
-
-
- /\* ФОН \*/
-
- if(settings.background){
-
-  document.body.style.backgroundImage=
-   \`url("${settings.background}")\`;
-
-  document.body.style.backgroundSize=
-   "cover";
-
-  document.body.style.backgroundAttachment=
-   "fixed";
-
-  document.body.style.backgroundPosition=
-   "center";
-
- }
-
-
- /\* БАННЕР \*/
-
- if(settings.banner){
-
-  const hero=
-   document.querySelector(".hero");
-
-  if(hero){
-
-   hero.style.backgroundImage=
-    \`linear-gradient(
-      90deg,
-      rgba(8,9,9,.9),
-      rgba(8,9,9,.35)
-    ),
-    url("${settings.banner}")\`;
-
-   hero.style.backgroundSize=
-    "cover";
-
-   hero.style.backgroundPosition=
-    "center";
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("news")
+    .select("*")
+    .order("created_at", {
+      ascending:false
+    });
+
+  if(error){
+
+    console.error("Ошибка news:", error);
+
+    document.getElementById("newsList").innerHTML = `
+      <div class="empty">
+        Не удалось загрузить новости
+      </div>
+    `;
+
+    return;
 
   }
 
- }
+  allNews =
+    data || [];
+
+  renderNews();
 
 }
 
 
-/\* ==========================================
-   КАТЕГОРИИ
-\========================================== \*/
-
-function categoryToFilter(category){
-
- if(category==="Обновления")
-  return "updates";
-
- if(category==="Сервера")
-  return "servers";
-
- if(category==="Разработка")
-  return "dev";
-
- if(category==="События")
-  return "events";
-
- return "all";
-
-}
-
-
-function categoryClass(category){
-
- if(category==="Обновления")
-  return "purple";
-
- if(category==="Сервера")
-  return "blue";
-
- if(category==="Разработка")
-  return "green";
-
- if(category==="События")
-  return "orange";
-
- return "blue";
-
-}
-
-
-/\* ==========================================
-   ВРЕМЯ
-\========================================== \*/
-
-function formatTime(dateString){
-
- const date=
-  new Date(dateString);
-
- const now=
-  new Date();
-
- const seconds=
-  Math.floor(
-   (now-date)/1000
-  );
-
- if(seconds<60)
-  return "Только что";
-
- const minutes=
-  Math.floor(seconds/60);
-
- if(minutes<60)
-  return minutes+
-   " "+
-   (minutes===1
-    ?"минуту"
-    :"минут"
-   )+
-   " назад";
-
- const hours=
-  Math.floor(minutes/60);
-
- if(hours<24)
-  return hours+
-   " "+
-   (hours===1
-    ?"час"
-    :"часов"
-   )+
-   " назад";
-
- const days=
-  Math.floor(hours/24);
-
- if(days===1)
-  return "Вчера";
-
- if(days<7)
-  return days+
-   " "+
-   (days<5
-    ?"дня"
-    :"дней"
-   )+
-   " назад";
-
- return date.toLocaleDateString(
-  "ru-RU",
-  {
-   day:"numeric",
-   month:"long",
-   year:"numeric"
-  }
- );
-
-}
-
-
-/\* ==========================================
-   СОЗДАНИЕ КАРТОЧКИ
-\========================================== \*/
-
-function createNewsCard(news){
-
- const card=
-  document.createElement("a");
-
- card.className=
-  "card";
-
- card.dataset.cat=
-  categoryToFilter(
-   news.category
-  );
-
- card.href=
-  "news.html?id="+
-  encodeURIComponent(
-   news.id
-  );
-
-
- /\* КАРТИНКА \*/
-
- const pic=
-  document.createElement("div");
-
- pic.className=
-  "pic";
-
- if(news.image\_url){
-
-  pic.style.backgroundImage=
-   \`linear-gradient(
-      180deg,
-      rgba(0,0,0,.05),
-      rgba(0,0,0,.25)
-    ),
-    url("${news.image\_url}")\`;
-
-  pic.style.backgroundSize=
-   "cover";
-
-  pic.style.backgroundPosition=
-   "center";
-
- }
-
-
- /\* ТЕГ \*/
-
- const tag=
-  document.createElement("span");
-
- tag.className=
-  "tag "+
-  categoryClass(
-   news.category
-  );
-
- tag.textContent=
-  news.category ||
-  "Новости";
-
- pic.appendChild(tag);
-
-
- /\* BODY \*/
-
- const body=
-  document.createElement("div");
-
- body.className=
-  "body";
-
-
- /\* ВРЕМЯ \*/
-
- const time=
-  document.createElement("div");
-
- time.className=
-  "time";
-
- time.textContent=
-  formatTime(
-   news.created\_at
-  );
-
-
- /\* ЗАГОЛОВОК \*/
-
- const title=
-  document.createElement("h3");
-
- title.textContent=
-  news.title ||
-  "Без названия";
-
-
- /\* ОПИСАНИЕ \*/
-
- const description=
-  document.createElement("p");
-
- description.textContent=
-  news.description ||
-  "";
-
-
- /\* META \*/
-
- const meta=
-  document.createElement("div");
-
- meta.className=
-  "meta";
-
- meta.innerHTML=
-  "◉ 0 &nbsp;&nbsp; ▢ 0";
-
-
- body.appendChild(time);
- body.appendChild(title);
- body.appendChild(description);
- body.appendChild(meta);
-
- card.appendChild(pic);
- card.appendChild(body);
-
- return card;
-
-}
-
-
-/\* ==========================================
-   ЗАГРУЗКА НОВОСТЕЙ
-\========================================== \*/
-
-let allNews=[];
-
-let currentCategory=
- "all";
-
-
-async function loadNews(){
-
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
-
- const {data,error}=
-  await db
-   .from("news")
-   .select(\`
-    id,
-    created\_at,
-    title,
-    description,
-    content,
-    image\_url,
-    category
-   \`)
-   .order(
-    "created\_at",
-    {
-     ascending\:false
-    }
-   );
-
-
- if(error){
-
-  console.error(
-   "Ошибка загрузки новостей:",
-   error
-  );
-
-  newsList.innerHTML=\`
-   \<div style="
-    padding:30px;
-    text-align\:center;
-    color:#e52b2b;
-    font-size:11px;
-   ">
-    Ошибка загрузки новостей.
-   \</div>
-  \`;
-
-  return;
-
- }
-
- allNews=
-  data || [];
-
- renderNews();
-
-}
-
-
-/\* ==========================================
-   ОТОБРАЖЕНИЕ НОВОСТЕЙ
-\========================================== \*/
-
-function renderNews(){
-
- const newsList=
-  document.getElementById(
-   "newsList"
-  );
-
- newsList.innerHTML="";
-
-
- const filtered=
-  currentCategory==="all"
-   ?allNews
-   \:allNews.filter(
-    news=>
-     categoryToFilter(
-      news.category
-     )===
-     currentCategory
-   );
-
-
- if(filtered.length===0){
-
-  newsList.innerHTML=\`
-   \<div style="
-    padding:30px;
-    text-align\:center;
-    color:#747779;
-    font-size:11px;
-   ">
-    Новостей пока нет.
-   \</div>
-  \`;
-
-  return;
-
- }
-
-
- filtered.forEach(news=>{
-
-  newsList.appendChild(
-   createNewsCard(news)
-  );
-
- });
-
-}
-
-
-/\* ==========================================
-   ФИЛЬТРЫ
-\========================================== \*/
+/* ================= FILTERS ================= */
 
 document
- .querySelectorAll(".filter")
- .forEach(btn=>{
+  .querySelectorAll(".filter")
+  .forEach(button => {
 
-  btn.onclick=()=>{
+    button.addEventListener(
+      "click",
+      () => {
 
-   document
-    .querySelectorAll(".filter")
-    .forEach(x=>
-     x.classList.remove(
-      "active"
-     )
+        document
+          .querySelectorAll(".filter")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        renderNews(
+          button.dataset.category
+        );
+
+      }
     );
 
-   btn.classList.add(
-    "active"
-   );
-
-   currentCategory=
-    btn.dataset.cat;
-
-   renderNews();
-
-  };
-
- });
+  });
 
 
-/\* ==========================================
-   ЗАПУСК
-\========================================== \*/
+/* ================= CHANGES ================= */
+
+function createChange(change){
+
+  const row =
+    document.createElement("div");
+
+  row.className =
+    "change-row";
+
+
+  const icon =
+    change.icon_url
+      ? `
+        <img
+          src="${escapeHtml(change.icon_url)}"
+          alt=""
+        >
+      `
+      : "";
+
+
+  row.innerHTML = `
+
+    <div class="change-icon">
+      ${icon}
+    </div>
+
+    <div class="change-title">
+      ${escapeHtml(change.title)}
+    </div>
+
+    <div class="change-time">
+      ${formatDate(change.created_at)}
+    </div>
+
+  `;
+
+  return row;
+
+}
+
+
+async function loadChanges(){
+
+  const list =
+    document.getElementById("changesList");
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("changes")
+    .select("*")
+    .order("created_at", {
+      ascending:false
+    })
+    .limit(5);
+
+
+  if(error){
+
+    console.error(
+      "Ошибка changes:",
+      error
+    );
+
+    list.innerHTML = `
+      <div class="loading">
+        Не удалось загрузить изменения
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML = "";
+
+
+  if(!data || !data.length){
+
+    list.innerHTML = `
+      <div class="loading">
+        Изменений пока нет
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  data.forEach(change => {
+
+    list.appendChild(
+      createChange(change)
+    );
+
+  });
+
+}
+
+
+/* ================= ESCAPE ================= */
+
+function escapeHtml(value){
+
+  if(value === null ||
+     value === undefined){
+
+    return "";
+
+  }
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* ================= START ================= */
 
 loadSiteSettings();
-
 loadNews();
+loadChanges();
 
-\</script>
+</script>
 
-\</body>
-\</html>
+</body>
+</html>
