@@ -7,7 +7,6 @@
 <title>SCP: CB2 Multiplayer — Архив</title>
 
 <style>
-
 *{
   box-sizing:border-box;
 }
@@ -268,6 +267,7 @@ nav a.active::after{
   content:"";
   position:absolute;
   inset:0;
+
   background:
     linear-gradient(
       90deg,
@@ -614,7 +614,7 @@ nav a.active::after{
 }
 
 /* =========================
-   SIDEBAR PANELS
+   SIDEBAR
 ========================= */
 
 .sidebar{
@@ -966,6 +966,7 @@ footer{
 
     </a>
 
+
     <nav>
 
       <a href="./index.html">
@@ -982,9 +983,13 @@ footer{
 
     </nav>
 
+
     <details class="search-wrap">
 
-      <summary class="search-toggle" aria-label="Поиск">
+      <summary
+        class="search-toggle"
+        aria-label="Поиск"
+      >
 
         <svg
           viewBox="0 0 24 24"
@@ -994,11 +999,20 @@ footer{
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m20 20-3.5-3.5"></path>
+          <circle
+            cx="11"
+            cy="11"
+            r="7"
+          ></circle>
+
+          <path
+            d="m20 20-3.5-3.5"
+          ></path>
+
         </svg>
 
       </summary>
+
 
       <div class="search-box">
 
@@ -1020,7 +1034,11 @@ footer{
 
 <main class="container">
 
-  <section class="hero" id="hero">
+
+  <section
+    class="hero"
+    id="hero"
+  >
 
     <div class="hero-content">
 
@@ -1044,7 +1062,9 @@ footer{
 
   <div class="main-layout">
 
+
     <section class="section">
+
 
       <div class="section-title">
 
@@ -1059,16 +1079,10 @@ footer{
       </div>
 
 
-      <div class="filters" id="yearFilters">
-
-        <button
-          class="filter active"
-          data-year="all"
-        >
-          Все новости
-        </button>
-
-      </div>
+      <div
+        class="filters"
+        id="yearFilters"
+      ></div>
 
 
       <div
@@ -1104,6 +1118,7 @@ footer{
 
       </div>
 
+
     </section>
 
 
@@ -1126,6 +1141,7 @@ footer{
           </span>
 
         </div>
+
 
         <div
           class="panel-body"
@@ -1153,6 +1169,7 @@ footer{
           </h3>
 
         </div>
+
 
         <div class="panel-body">
 
@@ -1184,6 +1201,7 @@ footer{
       © SCP: CB2 Multiplayer
     </div>
 
+
     <div class="footer-nav">
 
       <a href="./index.html">
@@ -1205,7 +1223,16 @@ footer{
 </footer>
 
 
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
   "https://ajmavwxzakkjsfolijhp.supabase.co";
@@ -1225,9 +1252,11 @@ const supabaseClient =
 ========================= */
 
 let allNews = [];
+
 let filteredNews = [];
 
 let currentYear = "all";
+
 let searchQuery = "";
 
 let visibleCount = 6;
@@ -1280,16 +1309,21 @@ async function loadSiteSettings(){
         .from("site_settings")
         .select("*");
 
+
     if(error){
+
       console.error(
         "Ошибка загрузки настроек:",
         error
       );
 
       return;
+
     }
 
+
     const settings = {};
+
 
     (data || []).forEach(item => {
 
@@ -1343,7 +1377,7 @@ async function loadSiteSettings(){
 
 
 /* =========================
-   CATEGORY
+   CATEGORY CLASS
 ========================= */
 
 function categoryClass(category){
@@ -1366,7 +1400,7 @@ function categoryClass(category){
 
 
 /* =========================
-   DATE
+   FORMAT DATE
 ========================= */
 
 function formatDate(dateString){
@@ -1374,8 +1408,10 @@ function formatDate(dateString){
   if(!dateString)
     return "";
 
+
   const date =
     new Date(dateString);
+
 
   return date.toLocaleDateString(
     "ru-RU",
@@ -1401,6 +1437,7 @@ async function loadNews(){
     </div>
   `;
 
+
   try{
 
     const { data, error } =
@@ -1414,12 +1451,14 @@ async function loadNews(){
           }
         );
 
+
     if(error)
       throw error;
 
 
     allNews =
       data || [];
+
 
     createYearFilters();
 
@@ -1432,16 +1471,25 @@ async function loadNews(){
       error
     );
 
+
     newsGrid.innerHTML = `
       <div class="empty">
+
         <strong>
           Не удалось загрузить архив
         </strong>
+
         Проверьте подключение к Supabase.
+
       </div>
     `;
 
+
     newsCount.textContent = "";
+
+    loadMore.classList.add(
+      "hidden"
+    );
 
   }
 
@@ -1463,6 +1511,7 @@ function createYearFilters(){
             if(!news.created_at)
               return null;
 
+
             return new Date(
               news.created_at
             ).getFullYear();
@@ -1482,14 +1531,18 @@ function createYearFilters(){
   const allButton =
     document.createElement("button");
 
+
   allButton.className =
     "filter active";
+
 
   allButton.dataset.year =
     "all";
 
+
   allButton.textContent =
     "Все новости";
+
 
   yearFilters.appendChild(
     allButton
@@ -1501,14 +1554,18 @@ function createYearFilters(){
     const button =
       document.createElement("button");
 
+
     button.className =
       "filter";
+
 
     button.dataset.year =
       year;
 
+
     button.textContent =
       year;
+
 
     yearFilters.appendChild(
       button
@@ -1544,8 +1601,10 @@ function createYearFilters(){
           currentYear =
             button.dataset.year;
 
+
           visibleCount =
             6;
+
 
           applyFilters();
 
@@ -1568,17 +1627,31 @@ function matchesSearch(news){
 
 
   const title =
-    String(news.title || "")
-      .toLowerCase();
+    String(
+      news.title || ""
+    ).toLowerCase();
+
 
   const description =
-    String(news.description || "")
-      .toLowerCase();
+    String(
+      news.description || ""
+    ).toLowerCase();
+
 
   const content =
-    String(news.content || "")
-      .toLowerCase();
+    String(
+      news.content || ""
+    ).toLowerCase();
 
+
+  /*
+    ВАЖНО:
+    category здесь НЕ используется.
+    Поиск идёт только по:
+    title
+    description
+    content
+  */
 
   return (
     title.includes(searchQuery) ||
@@ -1590,7 +1663,7 @@ function matchesSearch(news){
 
 
 /* =========================
-   FILTER
+   APPLY FILTERS
 ========================= */
 
 function applyFilters(){
@@ -1606,11 +1679,14 @@ function applyFilters(){
         if(!news.created_at)
           return false;
 
+
         const year =
           new Date(
             news.created_at
-          ).getFullYear()
+          )
+          .getFullYear()
           .toString();
+
 
         yearMatch =
           year === currentYear;
@@ -1652,12 +1728,15 @@ function renderNews(){
     emptyState.style.display =
       "block";
 
+
     loadMore.classList.add(
       "hidden"
     );
 
+
     newsCount.textContent =
       "0 публикаций";
+
 
     return;
 
@@ -1671,7 +1750,10 @@ function renderNews(){
   visibleNews.forEach(news => {
 
     const card =
-      document.createElement("article");
+      document.createElement(
+        "article"
+      );
+
 
     card.className =
       "news-card";
@@ -1700,7 +1782,7 @@ function renderNews(){
       image
         ? `
           <img
-            src="${image}"
+            src="${escapeHTML(image)}"
             alt=""
             loading="lazy"
           >
@@ -1776,6 +1858,7 @@ function renderNews(){
             )}
           </div>
 
+
           <div class="read-more">
             Читать →
           </div>
@@ -1796,11 +1879,16 @@ function renderNews(){
 
   newsCount.textContent =
     `${filteredNews.length} ${
-      getNewsWord(filteredNews.length)
+      getNewsWord(
+        filteredNews.length
+      )
     }`;
 
 
-  if(visibleCount < filteredNews.length){
+  if(
+    visibleCount <
+    filteredNews.length
+  ){
 
     loadMore.classList.remove(
       "hidden"
@@ -1847,8 +1935,10 @@ searchInput.addEventListener(
         .trim()
         .toLowerCase();
 
+
     visibleCount =
       6;
+
 
     applyFilters();
 
@@ -1869,18 +1959,23 @@ document.addEventListener(
       searchInput.value =
         "";
 
+
       searchQuery =
         "";
+
 
       visibleCount =
         6;
 
+
       applyFilters();
+
 
       const searchWrap =
         document.querySelector(
           ".search-wrap"
         );
+
 
       searchWrap.removeAttribute(
         "open"
@@ -1917,9 +2012,13 @@ async function loadChanges(){
       throw error;
 
 
-    if(!data || data.length === 0){
+    if(
+      !data ||
+      data.length === 0
+    ){
 
       changesList.innerHTML = `
+
         <div
           style="
             color:#666;
@@ -1928,6 +2027,7 @@ async function loadChanges(){
         >
           Изменений пока нет.
         </div>
+
       `;
 
       return;
@@ -1945,6 +2045,7 @@ async function loadChanges(){
           "div"
         );
 
+
       item.className =
         "change-item";
 
@@ -1954,7 +2055,9 @@ async function loadChanges(){
           ? `
             <img
               class="change-icon"
-              src="${change.icon_url}"
+              src="${escapeHTML(
+                change.icon_url
+              )}"
               alt=""
             >
           `
@@ -2002,7 +2105,9 @@ async function loadChanges(){
       error
     );
 
+
     changesList.innerHTML = `
+
       <div
         style="
           color:#666;
@@ -2011,6 +2116,7 @@ async function loadChanges(){
       >
         Не удалось загрузить изменения.
       </div>
+
     `;
 
   }
@@ -2027,11 +2133,14 @@ function relativeTime(dateString){
   if(!dateString)
     return "";
 
+
   const date =
     new Date(dateString);
 
+
   const now =
     new Date();
+
 
   const diff =
     Math.floor(
@@ -2048,10 +2157,14 @@ function relativeTime(dateString){
       diff / 60
     );
 
-  if(minutes < 60)
+
+  if(minutes < 60){
+
     return `${minutes} ${
       getMinuteWord(minutes)
     } назад`;
+
+  }
 
 
   const hours =
@@ -2059,10 +2172,14 @@ function relativeTime(dateString){
       minutes / 60
     );
 
-  if(hours < 24)
+
+  if(hours < 24){
+
     return `${hours} ${
       getHourWord(hours)
     } назад`;
+
+  }
 
 
   const days =
@@ -2070,10 +2187,14 @@ function relativeTime(dateString){
       hours / 24
     );
 
-  if(days < 30)
+
+  if(days < 30){
+
     return `${days} ${
       getDayWord(days)
     } назад`;
+
+  }
 
 
   return formatDate(
@@ -2083,6 +2204,10 @@ function relativeTime(dateString){
 }
 
 
+/* =========================
+   WORD FORMS
+========================= */
+
 function getMinuteWord(number){
 
   const n =
@@ -2091,11 +2216,13 @@ function getMinuteWord(number){
   const n100 =
     number % 100;
 
+
   if(
     n === 1 &&
     n100 !== 11
   )
     return "минуту";
+
 
   if(
     n >= 2 &&
@@ -2106,6 +2233,7 @@ function getMinuteWord(number){
     )
   )
     return "минуты";
+
 
   return "минут";
 
@@ -2120,11 +2248,13 @@ function getHourWord(number){
   const n100 =
     number % 100;
 
+
   if(
     n === 1 &&
     n100 !== 11
   )
     return "час";
+
 
   if(
     n >= 2 &&
@@ -2135,6 +2265,7 @@ function getHourWord(number){
     )
   )
     return "часа";
+
 
   return "часов";
 
@@ -2149,11 +2280,13 @@ function getDayWord(number){
   const n100 =
     number % 100;
 
+
   if(
     n === 1 &&
     n100 !== 11
   )
     return "день";
+
 
   if(
     n >= 2 &&
@@ -2164,6 +2297,7 @@ function getDayWord(number){
     )
   )
     return "дня";
+
 
   return "дней";
 
@@ -2178,11 +2312,13 @@ function getNewsWord(number){
   const n100 =
     number % 100;
 
+
   if(
     n === 1 &&
     n100 !== 11
   )
     return "публикация";
+
 
   if(
     n >= 2 &&
@@ -2193,6 +2329,7 @@ function getNewsWord(number){
     )
   )
     return "публикации";
+
 
   return "публикаций";
 
@@ -2206,17 +2343,32 @@ function getNewsWord(number){
 function escapeHTML(value){
 
   return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
 /* =========================
-   START
+   INIT
 ========================= */
 
 async function init(){
@@ -2233,13 +2385,6 @@ async function init(){
 init();
 
 </script>
-
-
-<!-- Supabase JS -->
-
-<script
-  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-></script>
 
 </body>
 </html>
