@@ -28,7 +28,10 @@ body:before{
  background-size:45px 45px;
 }
 
-a{text-decoration:none;color:inherit}
+a{
+ text-decoration:none;
+ color:inherit
+}
 
 .wrap{
  max-width:1220px;
@@ -242,11 +245,11 @@ main{
  padding:40px 0 75px
 }
 
-.topline{
- display:flex;
- justify-content:space-between;
- align-items:end;
- gap:20px;
+/* ==========================================
+   ЗАГОЛОВОК НОВОСТЕЙ
+========================================== */
+
+.news-heading{
  margin-bottom:18px
 }
 
@@ -263,31 +266,65 @@ h2{
  text-transform:uppercase
 }
 
+/* ==========================================
+   ФИЛЬТРЫ
+========================================== */
+
 .filters{
  display:flex;
- gap:5px;
+ gap:7px;
  flex-wrap:wrap;
- align-items:center
+ align-items:center;
+ margin-bottom:18px
 }
 
 .filter{
  border:1px solid #2a2c2d;
  background:#111213;
  color:#9b9d9e;
- padding:9px 13px;
- font-size:10px;
+ padding:11px 15px;
+ font-size:11px;
  font-weight:bold;
  text-transform:uppercase;
- cursor:pointer
+ cursor:pointer;
+
+ transition:
+  transform .18s ease,
+  background .18s ease,
+  color .18s ease,
+  border-color .18s ease,
+  padding .18s ease;
+}
+
+.filter:hover{
+ color:#fff;
+ border-color:#555;
+ transform:translateY(-1px)
+}
+
+.filter:active{
+ transform:scale(.97)
 }
 
 .filter.active{
  background:#f4ca28;
  color:#111;
  border-color:#f4ca28;
- padding:10px 14px;
- margin:-1px
+
+ /* выбранный пункт на 2 px больше */
+ padding:13px 17px;
+ margin:-2px 0;
+
+ transform:scale(1);
 }
+
+.filter.active:hover{
+ transform:scale(1.03)
+}
+
+/* ==========================================
+   СЕТКА
+========================================== */
 
 .grid{
  display:grid;
@@ -300,6 +337,10 @@ h2{
  flex-direction:column;
  gap:12px
 }
+
+/* ==========================================
+   КАРТОЧКА НОВОСТИ
+========================================== */
 
 .card{
  display:grid;
@@ -404,6 +445,10 @@ h2{
  gap:16px
 }
 
+/* ==========================================
+   БОКОВАЯ ПАНЕЛЬ
+========================================== */
+
 .side{
  display:flex;
  flex-direction:column;
@@ -492,6 +537,10 @@ h2{
  text-transform:uppercase
 }
 
+/* ==========================================
+   FOOTER
+========================================== */
+
 footer{
  border-top:1px solid #1d1f20;
  background:#060707
@@ -532,7 +581,12 @@ footer{
  font-size:9px
 }
 
+/* ==========================================
+   ПЛАНШЕТ
+========================================== */
+
 @media(max-width:950px){
+
  nav a{
   padding:0 7px;
   font-size:11px
@@ -552,7 +606,12 @@ footer{
  }
 }
 
+/* ==========================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+========================================== */
+
 @media(max-width:700px){
+
  header{
   height:68px
  }
@@ -600,16 +659,26 @@ footer{
   font-size:41px
  }
 
- .topline{
-  display:block
+ /* На телефоне заголовок и фильтры остаются вертикально */
+ .news-heading{
+  margin-bottom:15px
  }
 
  .filters{
-  margin-top:15px
+  margin-top:0;
+  margin-bottom:15px;
+  gap:5px
  }
 
  .filter{
-  flex:1
+  flex:1;
+  padding:9px 10px;
+  font-size:10px
+ }
+
+ .filter.active{
+  padding:11px 10px;
+  margin:-1px 0
  }
 
  .card{
@@ -642,9 +711,11 @@ footer{
 <body>
 
 <header>
+
 <div class="wrap head">
 
 <a class="logo" href="#">
+
 <div class="logo-symbol">☣</div>
 
 <div class="logo-text">
@@ -652,25 +723,43 @@ SCP<br>
 CB2
 <small>MULTIPLAYER</small>
 </div>
+
 </a>
 
 <nav>
-<a class="active" href="#">Новости</a>
-<a href="#">Сервера</a>
-<a href="#">О проекте</a>
+
+<a class="active" href="#">
+Новости
+</a>
+
+<a href="#">
+Сервера
+</a>
+
+<a href="#">
+О проекте
+</a>
+
 </nav>
 
 <button class="search" aria-label="Поиск"></button>
 
 </div>
+
 </header>
 
+
 <section class="hero">
+
 <div class="wrap">
 
-<div class="kicker">ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ</div>
+<div class="kicker">
+ОФИЦИАЛЬНЫЙ НОВОСТНОЙ ПОРТАЛ
+</div>
 
-<h1>НОВОСТИ SCP: CB2</h1>
+<h1>
+НОВОСТИ SCP: CB2
+</h1>
 
 <p>
 Будьте в курсе изменений, обновлений и событий
@@ -682,18 +771,31 @@ CB2
 </a>
 
 </div>
+
 </section>
+
 
 <main id="news">
 
 <div class="wrap">
 
-<div class="topline">
 
-<div>
-<div class="section-label">ЦЕНТР ИНФОРМАЦИИ</div>
-<h2>Последние новости</h2>
+<!-- ЗАГОЛОВОК -->
+
+<div class="news-heading">
+
+<div class="section-label">
+ЦЕНТР ИНФОРМАЦИИ
 </div>
+
+<h2>
+Последние новости
+</h2>
+
+</div>
+
+
+<!-- ФИЛЬТРЫ ОТДЕЛЬНОЙ СТРОКОЙ -->
 
 <div class="filters">
 
@@ -718,9 +820,12 @@ CB2
 </button>
 
 </div>
-</div>
+
+
+<!-- НОВОСТИ + САЙДБАР -->
 
 <div class="grid">
+
 
 <div class="news" id="newsList">
 
@@ -735,74 +840,127 @@ CB2
 
 </div>
 
+
 <aside class="side">
+
 
 <section class="panel">
 
 <div class="panel-head">
+
 <b>◈</b>
-<h3>Последние изменения</h3>
+
+<h3>
+Последние изменения
+</h3>
+
 </div>
 
+
 <div class="change">
-<div class="change-icon">◈</div>
+
+<div class="change-icon">
+◈
+</div>
+
 <div>
+
 <div class="change-title">
 Изменён баланс класса SCP-049
 </div>
+
 <div class="change-time">
 1 час назад
 </div>
-</div>
-<span class="dot"></span>
+
 </div>
 
+<span class="dot"></span>
+
+</div>
+
+
 <div class="change">
-<div class="change-icon">▣</div>
+
+<div class="change-icon">
+▣
+</div>
+
 <div>
+
 <div class="change-title">
 Добавлена карта «Site-65» (Beta)
 </div>
+
 <div class="change-time">
 4 часа назад
 </div>
-</div>
-<span></span>
+
 </div>
 
+<span></span>
+
+</div>
+
+
 <div class="change">
-<div class="change-icon">◫</div>
+
+<div class="change-icon">
+◫
+</div>
+
 <div>
+
 <div class="change-title">
 Обновлены модели оружия МОГ
 </div>
+
 <div class="change-time">
 7 часов назад
 </div>
-</div>
-<span></span>
+
 </div>
 
+<span></span>
+
+</div>
+
+
 <div class="change">
-<div class="change-icon">◌</div>
+
+<div class="change-icon">
+◌
+</div>
+
 <div>
+
 <div class="change-title">
 Изменена система возрождения
 </div>
+
 <div class="change-time">
 Вчера
 </div>
+
 </div>
+
 <span></span>
+
 </div>
 
 </section>
 
+
 <section class="panel about">
 
 <div class="panel-head">
+
 <b>◉</b>
-<h3>О проекте</h3>
+
+<h3>
+О проекте
+</h3>
+
 </div>
 
 <p>
@@ -816,21 +974,28 @@ SCP: CB2 Multiplayer — новостной портал о серверах,
 
 </section>
 
+
 </aside>
 
 </div>
+
 </div>
+
 </main>
+
 
 <footer>
 
 <div class="wrap foot">
 
+
 <div>
 
 <div class="logo">
 
-<div class="logo-symbol">☣</div>
+<div class="logo-symbol">
+☣
+</div>
 
 <div class="logo-text">
 SCP<br>
@@ -847,33 +1012,67 @@ SCP: CB2 Multiplayer.
 
 </div>
 
-<div>
-
-<h4>Навигация</h4>
-
-<div class="footlinks">
-<a href="#">Новости</a>
-<a href="#">Сервера</a>
-<a href="#">Разработка</a>
-<a href="#">Сообщество</a>
-</div>
-
-</div>
 
 <div>
 
-<h4>Сообщество</h4>
+<h4>
+Навигация
+</h4>
 
 <div class="footlinks">
-<a href="#">Discord</a>
-<a href="#">Steam</a>
-<a href="#">Поддержка</a>
-<a href="#">Предложить новость</a>
-</div>
+
+<a href="#">
+Новости
+</a>
+
+<a href="#">
+Сервера
+</a>
+
+<a href="#">
+Разработка
+</a>
+
+<a href="#">
+Сообщество
+</a>
 
 </div>
 
 </div>
+
+
+<div>
+
+<h4>
+Сообщество
+</h4>
+
+<div class="footlinks">
+
+<a href="#">
+Discord
+</a>
+
+<a href="#">
+Steam
+</a>
+
+<a href="#">
+Поддержка
+</a>
+
+<a href="#">
+Предложить новость
+</a>
+
+</div>
+
+</div>
+
+
+</div>
+
 
 <div class="bottom">
 © 2026 SCP: CB2 Multiplayer.
@@ -882,7 +1081,8 @@ SCP: CB2 Multiplayer.
 
 </footer>
 
-<!-- Supabase -->
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -905,13 +1105,14 @@ supabase.createClient(
    НАСТРОЙКИ САЙТА
 ========================================== */
 
-async function loadSiteSettings() {
+async function loadSiteSettings(){
 
- const { data, error } = await db
-  .from("site_settings")
-  .select("key,value");
+ const {data,error} =
+  await db
+   .from("site_settings")
+   .select("key,value");
 
- if (error) {
+ if(error){
 
   console.error(
    "Ошибка загрузки настроек:",
@@ -919,25 +1120,25 @@ async function loadSiteSettings() {
   );
 
   return;
+
  }
 
- const settings = {};
+ const settings={};
 
- data.forEach(item => {
-  settings[item.key] = item.value;
+ data.forEach(item=>{
+  settings[item.key]=item.value;
  });
 
- /*
-  * ЛОГОТИП
-  */
 
- if (settings.logo) {
+ /* ЛОГО */
+
+ if(settings.logo){
 
   document
    .querySelectorAll(".logo-symbol")
-   .forEach(element => {
+   .forEach(element=>{
 
-    element.innerHTML = `
+    element.innerHTML=`
      <img
       src="${settings.logo}"
       alt="SCP CB2"
@@ -948,38 +1149,36 @@ async function loadSiteSettings() {
 
  }
 
- /*
-  * ФОН САЙТА
-  */
 
- if (settings.background) {
+ /* ФОН */
 
-  document.body.style.backgroundImage =
+ if(settings.background){
+
+  document.body.style.backgroundImage=
    `url("${settings.background}")`;
 
-  document.body.style.backgroundSize =
+  document.body.style.backgroundSize=
    "cover";
 
-  document.body.style.backgroundAttachment =
+  document.body.style.backgroundAttachment=
    "fixed";
 
-  document.body.style.backgroundPosition =
+  document.body.style.backgroundPosition=
    "center";
 
  }
 
- /*
-  * БАННЕР
-  */
 
- if (settings.banner) {
+ /* БАННЕР */
 
-  const hero =
+ if(settings.banner){
+
+  const hero=
    document.querySelector(".hero");
 
-  if (hero) {
+  if(hero){
 
-   hero.style.backgroundImage =
+   hero.style.backgroundImage=
     `linear-gradient(
       90deg,
       rgba(8,9,9,.9),
@@ -987,10 +1186,10 @@ async function loadSiteSettings() {
     ),
     url("${settings.banner}")`;
 
-   hero.style.backgroundSize =
+   hero.style.backgroundSize=
     "cover";
 
-   hero.style.backgroundPosition =
+   hero.style.backgroundPosition=
     "center";
 
   }
@@ -1004,18 +1203,18 @@ async function loadSiteSettings() {
    КАТЕГОРИИ
 ========================================== */
 
-function categoryToFilter(category) {
+function categoryToFilter(category){
 
- if (category === "Обновления")
+ if(category==="Обновления")
   return "updates";
 
- if (category === "Сервера")
+ if(category==="Сервера")
   return "servers";
 
- if (category === "Разработка")
+ if(category==="Разработка")
   return "dev";
 
- if (category === "События")
+ if(category==="События")
   return "events";
 
  return "all";
@@ -1023,18 +1222,18 @@ function categoryToFilter(category) {
 }
 
 
-function categoryClass(category) {
+function categoryClass(category){
 
- if (category === "Обновления")
+ if(category==="Обновления")
   return "purple";
 
- if (category === "Сервера")
+ if(category==="Сервера")
   return "blue";
 
- if (category === "Разработка")
+ if(category==="Разработка")
   return "green";
 
- if (category === "События")
+ if(category==="События")
   return "orange";
 
  return "blue";
@@ -1046,50 +1245,59 @@ function categoryClass(category) {
    ВРЕМЯ
 ========================================== */
 
-function formatTime(dateString) {
+function formatTime(dateString){
 
- const date =
+ const date=
   new Date(dateString);
 
- const now =
+ const now=
   new Date();
 
- const seconds =
+ const seconds=
   Math.floor(
-   (now - date) / 1000
+   (now-date)/1000
   );
 
- if (seconds < 60)
+ if(seconds<60)
   return "Только что";
 
- const minutes =
-  Math.floor(seconds / 60);
+ const minutes=
+  Math.floor(seconds/60);
 
- if (minutes < 60)
-  return minutes +
-   " " +
-   (minutes === 1 ? "минуту" : "минут") +
+ if(minutes<60)
+  return minutes+
+   " "+
+   (minutes===1
+    ?"минуту"
+    :"минут"
+   )+
    " назад";
 
- const hours =
-  Math.floor(minutes / 60);
+ const hours=
+  Math.floor(minutes/60);
 
- if (hours < 24)
-  return hours +
-   " " +
-   (hours === 1 ? "час" : "часов") +
+ if(hours<24)
+  return hours+
+   " "+
+   (hours===1
+    ?"час"
+    :"часов"
+   )+
    " назад";
 
- const days =
-  Math.floor(hours / 24);
+ const days=
+  Math.floor(hours/24);
 
- if (days === 1)
+ if(days===1)
   return "Вчера";
 
- if (days < 7)
-  return days +
-   " " +
-   (days < 5 ? "дня" : "дней") +
+ if(days<7)
+  return days+
+   " "+
+   (days<5
+    ?"дня"
+    :"дней"
+   )+
    " назад";
 
  return date.toLocaleDateString(
@@ -1108,34 +1316,37 @@ function formatTime(dateString) {
    СОЗДАНИЕ КАРТОЧКИ
 ========================================== */
 
-function createNewsCard(news) {
+function createNewsCard(news){
 
- const card =
+ const card=
   document.createElement("a");
 
- card.className =
+ card.className=
   "card";
 
- card.dataset.cat =
-  categoryToFilter(news.category);
+ card.dataset.cat=
+  categoryToFilter(
+   news.category
+  );
 
- card.href =
-  "news.html?id=" +
-  encodeURIComponent(news.id);
+ card.href=
+  "news.html?id="+
+  encodeURIComponent(
+   news.id
+  );
 
- /*
-  * КАРТИНКА
-  */
 
- const pic =
+ /* КАРТИНКА */
+
+ const pic=
   document.createElement("div");
 
- pic.className =
+ pic.className=
   "pic";
 
- if (news.image_url) {
+ if(news.image_url){
 
-  pic.style.backgroundImage =
+  pic.style.backgroundImage=
    `linear-gradient(
       180deg,
       rgba(0,0,0,.05),
@@ -1143,85 +1354,87 @@ function createNewsCard(news) {
     ),
     url("${news.image_url}")`;
 
-  pic.style.backgroundSize =
+  pic.style.backgroundSize=
    "cover";
 
-  pic.style.backgroundPosition =
+  pic.style.backgroundPosition=
    "center";
 
  }
 
- /*
-  * ТЕГ
-  */
 
- const tag =
+ /* ТЕГ */
+
+ const tag=
   document.createElement("span");
 
- tag.className =
-  "tag " +
-  categoryClass(news.category);
+ tag.className=
+  "tag "+
+  categoryClass(
+   news.category
+  );
 
- tag.textContent =
-  news.category || "Новости";
+ tag.textContent=
+  news.category ||
+  "Новости";
 
  pic.appendChild(tag);
 
- /*
-  * BODY
-  */
 
- const body =
+ /* BODY */
+
+ const body=
   document.createElement("div");
 
- body.className =
+ body.className=
   "body";
 
- /*
-  * ВРЕМЯ
-  */
 
- const time =
+ /* ВРЕМЯ */
+
+ const time=
   document.createElement("div");
 
- time.className =
+ time.className=
   "time";
 
- time.textContent =
-  formatTime(news.created_at);
+ time.textContent=
+  formatTime(
+   news.created_at
+  );
 
- /*
-  * ЗАГОЛОВОК
-  */
 
- const title =
+ /* ЗАГОЛОВОК */
+
+ const title=
   document.createElement("h3");
 
- title.textContent =
-  news.title || "Без названия";
+ title.textContent=
+  news.title ||
+  "Без названия";
 
- /*
-  * ОПИСАНИЕ
-  */
 
- const description =
+ /* ОПИСАНИЕ */
+
+ const description=
   document.createElement("p");
 
- description.textContent =
-  news.description || "";
+ description.textContent=
+  news.description ||
+  "";
 
- /*
-  * META
-  */
 
- const meta =
+ /* META */
+
+ const meta=
   document.createElement("div");
 
- meta.className =
+ meta.className=
   "meta";
 
- meta.innerHTML =
+ meta.innerHTML=
   "◉ 0 &nbsp;&nbsp; ▢ 0";
+
 
  body.appendChild(time);
  body.appendChild(title);
@@ -1240,18 +1453,20 @@ function createNewsCard(news) {
    ЗАГРУЗКА НОВОСТЕЙ
 ========================================== */
 
-let allNews = [];
+let allNews=[];
 
-let currentCategory =
+let currentCategory=
  "all";
 
 
-async function loadNews() {
+async function loadNews(){
 
- const newsList =
-  document.getElementById("newsList");
+ const newsList=
+  document.getElementById(
+   "newsList"
+  );
 
- const { data, error } =
+ const {data,error}=
   await db
    .from("news")
    .select(`
@@ -1270,14 +1485,15 @@ async function loadNews() {
     }
    );
 
- if (error) {
+
+ if(error){
 
   console.error(
    "Ошибка загрузки новостей:",
    error
   );
 
-  newsList.innerHTML = `
+  newsList.innerHTML=`
    <div style="
     padding:30px;
     text-align:center;
@@ -1292,7 +1508,7 @@ async function loadNews() {
 
  }
 
- allNews =
+ allNews=
   data || [];
 
  renderNews();
@@ -1304,26 +1520,31 @@ async function loadNews() {
    ОТОБРАЖЕНИЕ НОВОСТЕЙ
 ========================================== */
 
-function renderNews() {
+function renderNews(){
 
- const newsList =
-  document.getElementById("newsList");
+ const newsList=
+  document.getElementById(
+   "newsList"
+  );
 
- newsList.innerHTML = "";
+ newsList.innerHTML="";
 
- const filtered =
-  currentCategory === "all"
-   ? allNews
-   : allNews.filter(
-      news =>
-       categoryToFilter(
-        news.category
-       ) === currentCategory
-     );
 
- if (filtered.length === 0) {
+ const filtered=
+  currentCategory==="all"
+   ?allNews
+   :allNews.filter(
+    news=>
+     categoryToFilter(
+      news.category
+     )===
+     currentCategory
+   );
 
-  newsList.innerHTML = `
+
+ if(filtered.length===0){
+
+  newsList.innerHTML=`
    <div style="
     padding:30px;
     text-align:center;
@@ -1338,7 +1559,8 @@ function renderNews() {
 
  }
 
- filtered.forEach(news => {
+
+ filtered.forEach(news=>{
 
   newsList.appendChild(
    createNewsCard(news)
@@ -1350,24 +1572,28 @@ function renderNews() {
 
 
 /* ==========================================
-   ФИЛЬТР
+   ФИЛЬТРЫ
 ========================================== */
 
 document
  .querySelectorAll(".filter")
- .forEach(btn => {
+ .forEach(btn=>{
 
-  btn.onclick = () => {
+  btn.onclick=()=>{
 
    document
     .querySelectorAll(".filter")
-    .forEach(x =>
-     x.classList.remove("active")
+    .forEach(x=>
+     x.classList.remove(
+      "active"
+     )
     );
 
-   btn.classList.add("active");
+   btn.classList.add(
+    "active"
+   );
 
-   currentCategory =
+   currentCategory=
     btn.dataset.cat;
 
    renderNews();
