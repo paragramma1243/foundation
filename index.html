@@ -475,6 +475,57 @@ main{
   box-shadow:0 9px 25px rgba(0,0,0,.2);
 }
 
+
+/* ================= FEATURED NEWS ================= */
+
+.news-card.featured{
+  min-height:255px;
+  grid-template-columns:340px minmax(0,1fr);
+  border-color:#343536;
+}
+
+.news-card.featured .news-image-area,
+.news-card.featured .news-image{
+  min-height:255px;
+}
+
+.news-card.featured .news-content{
+  padding:27px 29px;
+}
+
+.news-card.featured .news-content h3{
+  font-size:29px;
+  line-height:1.08;
+}
+
+.news-card.featured .news-content p{
+  font-size:14px;
+}
+
+.featured-label{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:13px;
+  color:#d5b42e;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.featured-label:before{
+  content:"";
+  width:6px;
+  height:6px;
+  background:#d5b42e;
+  border-radius:50%;
+  box-shadow:0 0 9px rgba(213,180,46,.35);
+}
+
+
+/* ================= NEWS IMAGE ================= */
+
 .news-image-area{
   width:100%;
   height:100%;
@@ -558,11 +609,20 @@ main{
   align-items:center;
   gap:10px;
   margin-bottom:11px;
+  flex-wrap:wrap;
 }
 
 .news-date{
   color:#666;
   font-size:10px;
+}
+
+.news-id{
+  color:#4e5051;
+  font-size:8px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  font-family:monospace;
 }
 
 .news-content h3{
@@ -772,6 +832,142 @@ main{
   color:#555;
   font-size:9px;
   white-space:nowrap;
+}
+
+
+/* ================= SCP SYSTEM MESSAGE ================= */
+
+.system-message{
+  padding:3px 0;
+}
+
+.system-status{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:12px;
+}
+
+.system-dot{
+  width:7px;
+  height:7px;
+  background:#d5b42e;
+  border-radius:50%;
+  box-shadow:0 0 9px rgba(213,180,46,.35);
+  flex-shrink:0;
+}
+
+.system-status span{
+  color:#d5b42e;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1.5px;
+}
+
+.system-message p{
+  color:#777;
+  font-size:11px;
+  line-height:1.65;
+}
+
+.system-code{
+  margin-top:13px;
+  padding-top:11px;
+  border-top:1px solid #202122;
+  color:#4f5152;
+  font-size:8px;
+  font-family:monospace;
+  letter-spacing:1px;
+  line-height:1.7;
+}
+
+
+/* ================= SYSTEM MONITORING ================= */
+
+.monitor-list{
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+}
+
+.monitor-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.monitor-name{
+  color:#777;
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.monitor-state{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#7b8a7e;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.monitor-state:before{
+  content:"";
+  width:5px;
+  height:5px;
+  background:#5f8c6a;
+  border-radius:50%;
+  box-shadow:0 0 7px rgba(95,140,106,.3);
+}
+
+
+/* ================= IN FOCUS ================= */
+
+.focus-panel{
+  position:relative;
+}
+
+.focus-body{
+  padding:18px;
+}
+
+.focus-kicker{
+  color:#d5b42e;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.focus-title{
+  color:#ddd;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.45;
+  margin-bottom:9px;
+}
+
+.focus-text{
+  color:#666;
+  font-size:10px;
+  line-height:1.6;
+}
+
+.focus-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:15px;
+  padding-top:11px;
+  border-top:1px solid #202122;
+  color:#4e5051;
+  font-size:8px;
+  letter-spacing:1px;
+  text-transform:uppercase;
 }
 
 
@@ -1008,10 +1204,30 @@ footer{
     transform:scale(1.05);
   }
 
-  /* На телефоне карточка становится вертикальной */
-
   .news-card{
     grid-template-columns:1fr;
+  }
+
+  .news-card.featured{
+    grid-template-columns:1fr;
+  }
+
+  .news-card.featured .news-image-area{
+    height:220px;
+    min-height:0;
+  }
+
+  .news-card.featured .news-image{
+    height:220px;
+    min-height:0;
+  }
+
+  .news-card.featured .news-content{
+    padding:22px 24px;
+  }
+
+  .news-card.featured .news-content h3{
+    font-size:25px;
   }
 
   .news-image-area{
@@ -1054,6 +1270,14 @@ footer{
   }
 
   .news-image{
+    height:180px;
+  }
+
+  .news-card.featured .news-image-area{
+    height:180px;
+  }
+
+  .news-card.featured .news-image{
     height:180px;
   }
 
@@ -1112,8 +1336,6 @@ footer{
 
     </nav>
 
-
-    <!-- ПОИСК -->
 
     <details class="search-dropdown">
 
@@ -1308,6 +1530,162 @@ footer{
                 Загрузка изменений...
               </div>
 
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- SCP-СИСТЕМНОЕ СООБЩЕНИЕ -->
+
+        <div class="panel">
+
+          <div class="panel-head">
+
+            <h3>
+              Системное сообщение
+            </h3>
+
+            <span>
+              SCP SYS
+            </span>
+
+          </div>
+
+          <div class="panel-body">
+
+            <div class="system-message">
+
+              <div class="system-status">
+
+                <div class="system-dot"></div>
+
+                <span>
+                  SYSTEM ONLINE
+                </span>
+
+              </div>
+
+              <p>
+                Информационная система Фонда функционирует
+                в штатном режиме. Новостная база доступна.
+              </p>
+
+              <div class="system-code">
+                FOUNDATION DATABASE // CB2<br>
+                TRANSMISSION STATUS: STABLE<br>
+                ACCESS: PUBLIC
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- МОНИТОРИНГ СИСТЕМЫ -->
+
+        <div class="panel">
+
+          <div class="panel-head">
+
+            <h3>
+              Мониторинг системы
+            </h3>
+
+            <span>
+              STATUS
+            </span>
+
+          </div>
+
+          <div class="panel-body">
+
+            <div class="monitor-list">
+
+              <div class="monitor-row">
+
+                <span class="monitor-name">
+                  News Database
+                </span>
+
+                <span class="monitor-state">
+                  ONLINE
+                </span>
+
+              </div>
+
+              <div class="monitor-row">
+
+                <span class="monitor-name">
+                  News Feed
+                </span>
+
+                <span class="monitor-state">
+                  ACTIVE
+                </span>
+
+              </div>
+
+              <div class="monitor-row">
+
+                <span class="monitor-name">
+                  Media Storage
+                </span>
+
+                <span class="monitor-state">
+                  ONLINE
+                </span>
+
+              </div>
+
+              <div class="monitor-row">
+
+                <span class="monitor-name">
+                  Transmission
+                </span>
+
+                <span class="monitor-state">
+                  STABLE
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- В ЦЕНТРЕ ВНИМАНИЯ -->
+
+        <div
+          class="panel focus-panel"
+          id="focusPanel"
+        >
+
+          <div class="panel-head">
+
+            <h3>
+              В центре внимания
+            </h3>
+
+            <span>
+              CURRENT
+            </span>
+
+          </div>
+
+          <div
+            id="focusBody"
+            class="focus-body"
+          >
+
+            <div class="loading">
+              Анализ публикаций...
             </div>
 
           </div>
@@ -1751,6 +2129,42 @@ function formatRelativeTime(date){
 }
 
 
+/* ================= NEWS ID ================= */
+
+/*
+  Уникальный ID строится из существующего
+  Supabase ID новости.
+
+  Поэтому при обновлении страницы
+  ID остаётся тем же.
+*/
+
+function generateNewsId(newsId){
+
+  const raw =
+    String(
+      newsId || ""
+    );
+
+  if(!raw){
+    return "CB2/NEWS/UNKNOWN";
+  }
+
+  const clean =
+    raw
+      .replace(/[^a-zA-Z0-9]/g,"")
+      .toUpperCase();
+
+  const shortId =
+    clean.length > 8
+      ? clean.slice(-8)
+      : clean;
+
+  return `CB2/NEWS/${shortId}`;
+
+}
+
+
 /* ================= CATEGORY COLORS ================= */
 
 function categoryClass(category){
@@ -1793,7 +2207,12 @@ const NEWS_PER_LOAD =
   6;
 
 
-function createNewsCard(news){
+/* ================= CREATE NEWS CARD ================= */
+
+function createNewsCard(
+  news,
+  featured=false
+){
 
   const card =
     document.createElement(
@@ -1801,7 +2220,12 @@ function createNewsCard(news){
     );
 
   card.className =
-    "news-card";
+    "news-card" +
+    (
+      featured
+        ? " featured"
+        : ""
+    );
 
   const image =
     news.image_url ||
@@ -1811,6 +2235,19 @@ function createNewsCard(news){
     categoryClass(
       news.category
     );
+
+
+  const featuredLabel =
+    featured
+      ?
+      `
+      <div class="featured-label">
+        Главная новость
+      </div>
+      `
+      :
+      "";
+
 
   card.innerHTML = `
 
@@ -1846,11 +2283,21 @@ function createNewsCard(news){
 
     <div class="news-content">
 
+      ${featuredLabel}
+
       <div class="news-meta">
 
         <span class="news-date">
           ${formatDate(
             news.created_at
+          )}
+        </span>
+
+        <span class="news-id">
+          ${escapeHtml(
+            generateNewsId(
+              news.id
+            )
           )}
         </span>
 
@@ -1882,6 +2329,7 @@ function createNewsCard(news){
 
   `;
 
+
   return card;
 
 }
@@ -1911,16 +2359,6 @@ function newsMatchesSearch(news){
       currentSearch
     );
 
-
-  /*
-    ПОИСК ТОЛЬКО ПО:
-
-    title
-    description
-    content
-
-    category НЕ ИСПОЛЬЗУЕТСЯ.
-  */
 
   const title =
     normalizeSearchText(
@@ -1973,6 +2411,190 @@ function getFilteredNews(){
     );
 
   return filtered;
+
+}
+
+
+/* ================= FOCUS PANEL ================= */
+
+function renderFocusPanel(){
+
+  const focusBody =
+    document.getElementById(
+      "focusBody"
+    );
+
+  if(!focusBody){
+    return;
+  }
+
+
+  if(!allNews.length){
+
+    focusBody.innerHTML = `
+
+      <div class="loading">
+        Нет данных
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+    Не дублируем карточку главной новости.
+    Вместо этого показываем общую картину
+    активности новостной ленты.
+  */
+
+  const last7Days =
+    Date.now() -
+    (
+      7 *
+      24 *
+      60 *
+      60 *
+      1000
+    );
+
+
+  const weekNews =
+    allNews.filter(
+      news =>
+        new Date(
+          news.created_at
+        ).getTime() >=
+        last7Days
+    );
+
+
+  const categories =
+    {};
+
+
+  weekNews.forEach(
+    news => {
+
+      const category =
+        news.category ||
+        "Новости";
+
+      categories[category] =
+        (
+          categories[category] ||
+          0
+        ) + 1;
+
+    }
+  );
+
+
+  let topCategory =
+    "Новости";
+
+  let topCount =
+    0;
+
+
+  Object.entries(
+    categories
+  ).forEach(
+    ([category,count]) => {
+
+      if(count > topCount){
+
+        topCategory =
+          category;
+
+        topCount =
+          count;
+
+      }
+
+    }
+  );
+
+
+  focusBody.innerHTML = `
+
+    <div class="focus-kicker">
+      АКТИВНОСТЬ НОВОСТНОЙ ЛЕНТЫ
+    </div>
+
+    <div class="focus-title">
+      ${
+        weekNews.length
+          ? "На этой неделе в центре внимания — " +
+            escapeHtml(topCategory)
+          : "Новых публикаций за последние 7 дней нет"
+      }
+    </div>
+
+    <div class="focus-text">
+      ${
+        weekNews.length
+          ? `За последние 7 дней опубликовано
+             ${weekNews.length} ${getNewsWord(weekNews.length)}.
+             Основная категория: ${escapeHtml(topCategory)}.`
+          : "Информационная база ожидает новых публикаций."
+      }
+    </div>
+
+    <div class="focus-meta">
+
+      <span>
+        LAST 7 DAYS
+      </span>
+
+      <span>
+        ${weekNews.length} POSTS
+      </span>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================= NEWS WORD ================= */
+
+function getNewsWord(number){
+
+  const n =
+    Math.abs(
+      number
+    ) % 100;
+
+  const n1 =
+    n % 10;
+
+  if(
+    n >= 11 &&
+    n <= 19
+  ){
+
+    return "публикаций";
+
+  }
+
+  if(n1 === 1){
+    return "публикация";
+  }
+
+  if(
+    n1 >= 2 &&
+    n1 <= 4
+  ){
+
+    return "публикации";
+
+  }
+
+  return "публикаций";
 
 }
 
@@ -2057,15 +2679,29 @@ function renderNews(
     );
 
 
-  visible.forEach(news => {
+  visible.forEach(
+    (
+      news,
+      index
+    ) => {
 
-    list.appendChild(
-      createNewsCard(
-        news
-      )
-    );
+      /*
+        Главной становится только первая
+        новость общей ленты.
 
-  });
+        При использовании фильтра она становится
+        главной среди результатов фильтра.
+      */
+
+      list.appendChild(
+        createNewsCard(
+          news,
+          index === 0
+        )
+      );
+
+    }
+  );
 
 
   if(loadMoreWrap){
@@ -2160,7 +2796,10 @@ async function loadNews(){
   allNews =
     data || [];
 
+
   renderNews();
+
+  renderFocusPanel();
 
 }
 
