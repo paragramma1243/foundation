@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,11 +13,11 @@
 *{
   box-sizing:border-box;
   margin:0;
-  padding:0
+  padding:0;
 }
 
 html{
-  scroll-behavior:smooth
+  scroll-behavior:smooth;
 }
 
 body{
@@ -26,33 +27,20 @@ body{
   line-height:1.5;
 }
 
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.035;
-  background-image:
-    linear-gradient(#fff 1px,transparent 1px),
-    linear-gradient(90deg,#fff 1px,transparent 1px);
-  background-size:40px 40px;
-  z-index:0;
-}
-
 a{
   color:inherit;
-  text-decoration:none
+  text-decoration:none;
 }
 
 button{
-  font:inherit
+  font:inherit;
 }
 
 .wrap{
   width:min(1220px,calc(100% - 40px));
   margin:auto;
   position:relative;
-  z-index:1
+  z-index:1;
 }
 
 
@@ -84,8 +72,6 @@ header{
   min-width:max-content;
 }
 
-/* ЛОГОТИП БЕЗ КРУГА */
-
 .logo-symbol{
   width:45px;
   height:45px;
@@ -95,10 +81,6 @@ header{
   font-size:22px;
   position:relative;
   overflow:visible;
-}
-
-.logo-symbol:after{
-  display:none;
 }
 
 .logo-symbol img{
@@ -151,11 +133,11 @@ nav a{
 }
 
 nav a:hover{
-  color:#eee
+  color:#eee;
 }
 
 nav a.active{
-  color:#eee
+  color:#eee;
 }
 
 nav a.active:after{
@@ -208,9 +190,7 @@ nav a.active:after{
       90deg,
       transparent,
       rgba(255,255,255,.025)
-    ),
-    url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1400&q=80")
-    center/cover;
+    );
   opacity:.35;
 }
 
@@ -295,9 +275,14 @@ main{
   letter-spacing:.5px;
 }
 
+
+/* ================= FILTERS ================= */
+
 .filters{
   display:flex;
-  gap:7px;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
   flex-wrap:wrap;
 }
 
@@ -310,19 +295,34 @@ main{
   letter-spacing:1px;
   text-transform:uppercase;
   cursor:pointer;
-  transition:.2s;
+
+  transform:scale(1);
+  transform-origin:center;
+
+  transition:
+    transform .25s ease,
+    color .25s ease,
+    border-color .25s ease,
+    background .25s ease,
+    box-shadow .25s ease;
 }
 
 .filter:hover{
   color:#ddd;
   border-color:#555;
+  transform:scale(1.03);
 }
 
 .filter.active{
   color:#111;
   background:#d5b42e;
   border-color:#d5b42e;
+  transform:scale(1.08);
+  box-shadow:0 0 14px rgba(213,180,46,.10);
 }
+
+
+/* ================= CONTENT GRID ================= */
 
 .content-grid{
   display:grid;
@@ -360,6 +360,7 @@ main{
   min-height:200px;
   object-fit:cover;
   background:#151616;
+  display:block;
 }
 
 .news-content{
@@ -412,6 +413,11 @@ main{
   font-weight:700;
   letter-spacing:1.5px;
   text-transform:uppercase;
+  transition:.2s;
+}
+
+.news-more:hover{
+  color:#f0ce43;
 }
 
 
@@ -503,13 +509,6 @@ main{
   color:#555;
   font-size:9px;
   white-space:nowrap;
-}
-
-.change-dot{
-  width:5px;
-  height:5px;
-  background:#d5b42e;
-  border-radius:50%;
 }
 
 
@@ -640,7 +639,17 @@ footer{
     font-size:47px;
   }
 
+  .section-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:18px;
+  }
+
+  .filters{
+    justify-content:flex-start;
+  }
 }
+
 
 @media(max-width:700px){
 
@@ -660,10 +669,6 @@ footer{
   .logo-symbol{
     width:38px;
     height:38px;
-  }
-
-  .logo-symbol:after{
-    display:none;
   }
 
   .logo-symbol img{
@@ -687,6 +692,15 @@ footer{
     align-items:flex-start;
     flex-direction:column;
     gap:18px;
+  }
+
+  .filters{
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .filter.active{
+    transform:scale(1.05);
   }
 
   .news-card{
@@ -826,9 +840,11 @@ footer{
       <section>
 
         <div id="newsList" class="news-grid">
+
           <div class="loading">
             Загрузка новостей...
           </div>
+
         </div>
 
       </section>
@@ -1051,11 +1067,18 @@ async function loadSiteSettings(){
     .select("*");
 
   if(error){
-    console.error("Ошибка site_settings:", error);
+
+    console.error(
+      "Ошибка site_settings:",
+      error
+    );
+
     return;
   }
 
-  if(!data) return;
+  if(!data){
+    return;
+  }
 
   const settings = {};
 
@@ -1102,6 +1125,7 @@ function formatDate(date){
 
 let allNews = [];
 
+
 function categoryClass(category){
 
   return category || "Новости";
@@ -1114,20 +1138,40 @@ function createNewsCard(news){
   const card =
     document.createElement("article");
 
-  card.className = "news-card";
+  card.className =
+    "news-card";
+
+
+  /*
+    ВАЖНО:
+    Здесь больше НЕТ Unsplash.
+    Если image_url отсутствует,
+    остаётся обычный тёмный блок.
+  */
 
   const image =
-    news.image_url ||
-    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80";
+    news.image_url || "";
 
 
   card.innerHTML = `
 
-    <img
-      class="news-image"
-      src="${escapeHtml(image)}"
-      alt=""
-    >
+    <div class="news-image-wrap">
+
+      ${
+        image
+          ? `
+            <img
+              class="news-image"
+              src="${escapeHtml(image)}"
+              alt=""
+              loading="lazy"
+              onerror="this.style.display='none'"
+            >
+          `
+          : ""
+      }
+
+    </div>
 
     <div class="news-content">
 
@@ -1162,6 +1206,7 @@ function createNewsCard(news){
 
   `;
 
+
   return card;
 
 }
@@ -1174,17 +1219,21 @@ function renderNews(category="all"){
 
   list.innerHTML = "";
 
+
   let filtered =
     allNews;
+
 
   if(category !== "all"){
 
     filtered =
       allNews.filter(
-        item => item.category === category
+        item =>
+          item.category === category
       );
 
   }
+
 
   if(!filtered.length){
 
@@ -1197,6 +1246,7 @@ function renderNews(category="all"){
     return;
 
   }
+
 
   filtered.forEach(news => {
 
@@ -1221,22 +1271,33 @@ async function loadNews(){
       ascending:false
     });
 
+
   if(error){
 
-    console.error("Ошибка news:", error);
+    console.error(
+      "Ошибка news:",
+      error
+    );
 
-    document.getElementById("newsList").innerHTML = `
+
+    document.getElementById(
+      "newsList"
+    ).innerHTML = `
+
       <div class="empty">
         Не удалось загрузить новости
       </div>
+
     `;
 
     return;
 
   }
 
+
   allNews =
     data || [];
+
 
   renderNews();
 
@@ -1255,11 +1316,19 @@ document
 
         document
           .querySelectorAll(".filter")
-          .forEach(btn =>
-            btn.classList.remove("active")
-          );
+          .forEach(btn => {
 
-        button.classList.add("active");
+            btn.classList.remove(
+              "active"
+            );
+
+          });
+
+
+        button.classList.add(
+          "active"
+        );
+
 
         renderNews(
           button.dataset.category
@@ -1288,6 +1357,7 @@ function createChange(change){
         <img
           src="${escapeHtml(change.icon_url)}"
           alt=""
+          loading="lazy"
         >
       `
       : "";
@@ -1309,6 +1379,7 @@ function createChange(change){
 
   `;
 
+
   return row;
 
 }
@@ -1317,7 +1388,10 @@ function createChange(change){
 async function loadChanges(){
 
   const list =
-    document.getElementById("changesList");
+    document.getElementById(
+      "changesList"
+    );
+
 
   const {
     data,
@@ -1338,10 +1412,13 @@ async function loadChanges(){
       error
     );
 
+
     list.innerHTML = `
+
       <div class="loading">
         Не удалось загрузить изменения
       </div>
+
     `;
 
     return;
@@ -1355,9 +1432,11 @@ async function loadChanges(){
   if(!data || !data.length){
 
     list.innerHTML = `
+
       <div class="loading">
         Изменений пока нет
       </div>
+
     `;
 
     return;
@@ -1380,19 +1459,37 @@ async function loadChanges(){
 
 function escapeHtml(value){
 
-  if(value === null ||
-     value === undefined){
+  if(
+    value === null ||
+    value === undefined
+  ){
 
     return "";
 
   }
 
+
   return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -1407,3 +1504,4 @@ loadChanges();
 
 </body>
 </html>
+```
