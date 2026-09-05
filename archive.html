@@ -110,9 +110,12 @@ nav{
 nav a{
   position:relative;
   padding:11px 13px;
+
   color:#999;
+
   font-size:13px;
   font-weight:700;
+
   border-radius:6px;
 
   transition:
@@ -127,19 +130,27 @@ nav a:hover{
   transform:translateY(-1px);
 }
 
+/* АКТИВНЫЙ РАЗДЕЛ */
+
 nav a.active{
-  color:#d5b42e;
-  background:#151515;
+  color:#eee;
+  background:transparent;
 }
 
 nav a.active::after{
   content:"";
+
   position:absolute;
+
   left:12px;
   right:12px;
   bottom:3px;
+
   height:2px;
+
   background:#d5b42e;
+
+  border-radius:2px;
 }
 
 /* =========================
@@ -164,6 +175,7 @@ nav a.active::after{
   border:1px solid #292a2b;
   background:#101111;
   color:#aaa;
+
   border-radius:6px;
 
   transition:
@@ -191,6 +203,7 @@ nav a.active::after{
 
 .search-box{
   position:absolute;
+
   top:50px;
   right:0;
 
@@ -244,6 +257,7 @@ nav a.active::after{
 
 .hero{
   position:relative;
+
   min-height:250px;
 
   margin-top:25px;
@@ -265,6 +279,7 @@ nav a.active::after{
 
 .hero::before{
   content:"";
+
   position:absolute;
   inset:0;
 
@@ -323,9 +338,7 @@ nav a.active::after{
 ========================= */
 
 .main-layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 320px;
-  gap:20px;
+  display:block;
 
   margin-top:20px;
 }
@@ -391,11 +404,13 @@ nav a.active::after{
   color:#ddd;
   background:#161717;
   border-color:#3a3b3c;
+
   transform:translateY(-1px);
 }
 
 .filter.active{
   color:#111;
+
   background:#d5b42e;
   border-color:#d5b42e;
 
@@ -416,9 +431,13 @@ nav a.active::after{
   min-height:200px;
 
   display:grid;
-  grid-template-columns:280px minmax(0,1fr);
+
+  grid-template-columns:
+    280px
+    minmax(0,1fr);
 
   background:#0d0e0e;
+
   border:1px solid #292a2b;
   border-radius:7px;
 
@@ -439,11 +458,13 @@ nav a.active::after{
 
   transform:translateY(-2px);
 
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25);
 }
 
 .news-image{
   position:relative;
+
   min-height:200px;
 
   overflow:hidden;
@@ -459,15 +480,18 @@ nav a.active::after{
 
   object-fit:cover;
 
-  transition:transform .35s ease;
+  transition:
+    transform .35s ease;
 }
 
-.news-card:hover .news-image img{
+.news-card:hover
+.news-image img{
   transform:scale(1.035);
 }
 
 .news-tag{
   position:absolute;
+
   top:10px;
   left:10px;
 
@@ -481,7 +505,8 @@ nav a.active::after{
   font-weight:900;
   letter-spacing:.4px;
 
-  box-shadow:0 3px 10px rgba(0,0,0,.25);
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.25);
 }
 
 .tag-updates{
@@ -519,6 +544,7 @@ nav a.active::after{
   color:#666;
 
   font-size:10px;
+
   text-transform:uppercase;
   letter-spacing:.7px;
 }
@@ -541,16 +567,19 @@ nav a.active::after{
   display:-webkit-box;
   -webkit-line-clamp:3;
   -webkit-box-orient:vertical;
+
   overflow:hidden;
 }
 
 .news-bottom{
   margin-top:auto;
+
   padding-top:15px;
 
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   gap:15px;
 }
 
@@ -565,10 +594,12 @@ nav a.active::after{
   font-size:11px;
   font-weight:800;
 
-  transition:transform .2s ease;
+  transition:
+    transform .2s ease;
 }
 
-.news-card:hover .read-more{
+.news-card:hover
+.read-more{
   transform:translateX(3px);
 }
 
@@ -587,7 +618,9 @@ nav a.active::after{
   padding:11px 20px;
 
   background:#111212;
+
   border:1px solid #39392e;
+
   color:#d5b42e;
 
   border-radius:6px;
@@ -606,137 +639,12 @@ nav a.active::after{
 .load-more:hover{
   background:#191917;
   border-color:#665d27;
+
   transform:translateY(-1px);
 }
 
 .load-more.hidden{
   display:none;
-}
-
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar{
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-
-.panel{
-  background:#0d0e0e;
-  border:1px solid #292a2b;
-  border-radius:7px;
-  overflow:hidden;
-}
-
-.panel-head{
-  min-height:48px;
-
-  padding:0 15px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  background:#151616;
-  border-bottom:1px solid #292a2b;
-}
-
-.panel-head h3{
-  margin:0;
-
-  font-size:13px;
-  letter-spacing:.7px;
-}
-
-.panel-head span{
-  color:#666;
-  font-size:10px;
-}
-
-.panel-body{
-  padding:15px;
-}
-
-/* yellow header only */
-
-.panel#changes .panel-head,
-.panel#about .panel-head{
-  background:#d5b42e;
-  border-bottom-color:#d5b42e;
-}
-
-.panel#changes .panel-head h3,
-.panel#about .panel-head h3{
-  color:#111;
-}
-
-.panel#changes .panel-head span{
-  color:rgba(17,17,17,.55);
-}
-
-.change-item{
-  display:flex;
-  align-items:center;
-  gap:11px;
-
-  padding:10px 0;
-
-  border-bottom:1px solid #1e1f1f;
-}
-
-.change-item:first-child{
-  padding-top:0;
-}
-
-.change-item:last-child{
-  padding-bottom:0;
-  border-bottom:0;
-}
-
-.change-icon{
-  width:32px;
-  height:32px;
-
-  flex:0 0 32px;
-
-  object-fit:cover;
-
-  border-radius:4px;
-
-  background:#151616;
-}
-
-.change-info{
-  min-width:0;
-}
-
-.change-title{
-  margin-bottom:3px;
-
-  color:#ccc;
-
-  font-size:11px;
-  font-weight:700;
-
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.change-date{
-  color:#666;
-  font-size:10px;
-}
-
-.about-text{
-  margin:0;
-
-  color:#999;
-
-  font-size:12px;
-  line-height:1.65;
 }
 
 /* =========================
@@ -749,10 +657,12 @@ nav a.active::after{
   text-align:center;
 
   background:#0d0e0e;
+
   border:1px solid #292a2b;
   border-radius:7px;
 
   color:#666;
+
   font-size:13px;
 }
 
@@ -780,11 +690,13 @@ footer{
 
 .footer-inner{
   width:min(1200px,calc(100% - 40px));
+
   margin:auto;
 
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   gap:20px;
 }
 
@@ -802,7 +714,8 @@ footer{
   color:#666;
   font-size:10px;
 
-  transition:color .2s ease;
+  transition:
+    color .2s ease;
 }
 
 .footer-nav a:hover{
@@ -813,23 +726,11 @@ footer{
    RESPONSIVE
 ========================= */
 
-@media(max-width:900px){
-
-  .main-layout{
-    grid-template-columns:1fr;
-  }
-
-  .sidebar{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-  }
-
-}
-
 @media(max-width:700px){
 
   .header-inner{
     min-height:auto;
+
     padding-top:10px;
     padding-bottom:10px;
 
@@ -866,11 +767,17 @@ footer{
 
   .search-box{
     right:0;
-    width:min(310px,calc(100vw - 40px));
+
+    width:
+      min(
+        310px,
+        calc(100vw - 40px)
+      );
   }
 
   .hero{
     min-height:220px;
+
     padding:30px 25px;
   }
 
@@ -892,10 +799,6 @@ footer{
     padding:18px;
   }
 
-  .sidebar{
-    display:flex;
-  }
-
   .footer-inner{
     flex-direction:column;
     align-items:flex-start;
@@ -906,7 +809,11 @@ footer{
 @media(max-width:450px){
 
   .container{
-    width:min(100% - 24px,1200px);
+    width:
+      min(
+        100% - 24px,
+        1200px
+      );
   }
 
   .hero{
@@ -944,7 +851,10 @@ footer{
 
   <div class="header-inner">
 
-    <a href="./index.html" class="brand">
+    <a
+      href="./index.html"
+      class="brand"
+    >
 
       <img
         id="siteLogo"
@@ -973,7 +883,10 @@ footer{
         Новости
       </a>
 
-      <a href="./archive.html" class="active">
+      <a
+        href="./archive.html"
+        class="active"
+      >
         Архив
       </a>
 
@@ -999,6 +912,7 @@ footer{
           stroke-linecap="round"
           stroke-linejoin="round"
         >
+
           <circle
             cx="11"
             cy="11"
@@ -1034,7 +948,6 @@ footer{
 
 <main class="container">
 
-
   <section
     class="hero"
     id="hero"
@@ -1062,9 +975,7 @@ footer{
 
   <div class="main-layout">
 
-
     <section class="section">
-
 
       <div class="section-title">
 
@@ -1118,75 +1029,7 @@ footer{
 
       </div>
 
-
     </section>
-
-
-    <aside class="sidebar">
-
-
-      <div
-        class="panel"
-        id="changes"
-      >
-
-        <div class="panel-head">
-
-          <h3>
-            Последние изменения
-          </h3>
-
-          <span>
-            CB2
-          </span>
-
-        </div>
-
-
-        <div
-          class="panel-body"
-          id="changesList"
-        >
-
-          <div class="empty">
-            Загрузка...
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="panel"
-        id="about"
-      >
-
-        <div class="panel-head">
-
-          <h3>
-            О проекте
-          </h3>
-
-        </div>
-
-
-        <div class="panel-body">
-
-          <p class="about-text">
-            SCP:CB2 Multiplayer — игровой проект,
-            посвящённый многопользовательской версии
-            SCP: Containment Breach.
-            Здесь публикуются новости, обновления
-            и события проекта.
-          </p>
-
-        </div>
-
-      </div>
-
-
-    </aside>
 
   </div>
 
@@ -1269,31 +1112,44 @@ const newsPerLoad = 6;
 ========================= */
 
 const newsGrid =
-  document.getElementById("newsGrid");
+  document.getElementById(
+    "newsGrid"
+  );
 
 const emptyState =
-  document.getElementById("emptyState");
+  document.getElementById(
+    "emptyState"
+  );
 
 const loadMore =
-  document.getElementById("loadMore");
+  document.getElementById(
+    "loadMore"
+  );
 
 const newsCount =
-  document.getElementById("newsCount");
+  document.getElementById(
+    "newsCount"
+  );
 
 const yearFilters =
-  document.getElementById("yearFilters");
+  document.getElementById(
+    "yearFilters"
+  );
 
 const searchInput =
-  document.getElementById("searchInput");
+  document.getElementById(
+    "searchInput"
+  );
 
 const siteLogo =
-  document.getElementById("siteLogo");
+  document.getElementById(
+    "siteLogo"
+  );
 
 const hero =
-  document.getElementById("hero");
-
-const changesList =
-  document.getElementById("changesList");
+  document.getElementById(
+    "hero"
+  );
 
 
 /* =========================
@@ -1325,12 +1181,14 @@ async function loadSiteSettings(){
     const settings = {};
 
 
-    (data || []).forEach(item => {
+    (data || []).forEach(
+      item => {
 
-      settings[item.key] =
-        item.value;
+        settings[item.key] =
+          item.value;
 
-    });
+      }
+    );
 
 
     /* LOGO */
@@ -1382,17 +1240,29 @@ async function loadSiteSettings(){
 
 function categoryClass(category){
 
-  if(category === "Обновления")
+  if(
+    category === "Обновления"
+  )
     return "tag-updates";
 
-  if(category === "Сервера")
+
+  if(
+    category === "Сервера"
+  )
     return "tag-servers";
 
-  if(category === "Разработка")
+
+  if(
+    category === "Разработка"
+  )
     return "tag-development";
 
-  if(category === "События")
+
+  if(
+    category === "События"
+  )
     return "tag-events";
+
 
   return "tag-default";
 
@@ -1403,14 +1273,18 @@ function categoryClass(category){
    FORMAT DATE
 ========================= */
 
-function formatDate(dateString){
+function formatDate(
+  dateString
+){
 
   if(!dateString)
     return "";
 
 
   const date =
-    new Date(dateString);
+    new Date(
+      dateString
+    );
 
 
   return date.toLocaleDateString(
@@ -1485,7 +1359,9 @@ async function loadNews(){
     `;
 
 
-    newsCount.textContent = "";
+    newsCount.textContent =
+      "";
+
 
     loadMore.classList.add(
       "hidden"
@@ -1505,10 +1381,13 @@ function createYearFilters(){
   const years =
     [
       ...new Set(
+
         allNews
           .map(news => {
 
-            if(!news.created_at)
+            if(
+              !news.created_at
+            )
               return null;
 
 
@@ -1517,19 +1396,25 @@ function createYearFilters(){
             ).getFullYear();
 
           })
+
           .filter(Boolean)
+
       )
     ]
+
     .sort(
       (a,b) => b-a
     );
 
 
-  yearFilters.innerHTML = "";
+  yearFilters.innerHTML =
+    "";
 
 
   const allButton =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
 
   allButton.className =
@@ -1549,69 +1434,81 @@ function createYearFilters(){
   );
 
 
-  years.forEach(year => {
+  years.forEach(
+    year => {
 
-    const button =
-      document.createElement("button");
-
-
-    button.className =
-      "filter";
-
-
-    button.dataset.year =
-      year;
+      const button =
+        document.createElement(
+          "button"
+        );
 
 
-    button.textContent =
-      year;
+      button.className =
+        "filter";
 
 
-    yearFilters.appendChild(
-      button
-    );
+      button.dataset.year =
+        year;
 
-  });
+
+      button.textContent =
+        year;
+
+
+      yearFilters.appendChild(
+        button
+      );
+
+    }
+  );
 
 
   yearFilters
-    .querySelectorAll(".filter")
-    .forEach(button => {
+    .querySelectorAll(
+      ".filter"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+        button.addEventListener(
+          "click",
+          () => {
 
-          yearFilters
-            .querySelectorAll(".filter")
-            .forEach(item => {
+            yearFilters
+              .querySelectorAll(
+                ".filter"
+              )
+              .forEach(
+                item => {
 
-              item.classList.remove(
-                "active"
+                  item.classList.remove(
+                    "active"
+                  );
+
+                }
               );
 
-            });
+
+            button.classList.add(
+              "active"
+            );
 
 
-          button.classList.add(
-            "active"
-          );
+            currentYear =
+              button.dataset.year;
 
 
-          currentYear =
-            button.dataset.year;
+            visibleCount =
+              6;
 
 
-          visibleCount =
-            6;
+            applyFilters();
 
+          }
+        );
 
-          applyFilters();
-
-        }
-      );
-
-    });
+      }
+    );
 
 }
 
@@ -1644,19 +1541,18 @@ function matchesSearch(news){
     ).toLowerCase();
 
 
-  /*
-    ВАЖНО:
-    category здесь НЕ используется.
-    Поиск идёт только по:
-    title
-    description
-    content
-  */
-
   return (
-    title.includes(searchQuery) ||
-    description.includes(searchQuery) ||
-    content.includes(searchQuery)
+    title.includes(
+      searchQuery
+    ) ||
+
+    description.includes(
+      searchQuery
+    ) ||
+
+    content.includes(
+      searchQuery
+    )
   );
 
 }
@@ -1669,37 +1565,44 @@ function matchesSearch(news){
 function applyFilters(){
 
   filteredNews =
-    allNews.filter(news => {
+    allNews.filter(
+      news => {
 
-      let yearMatch = true;
-
-
-      if(currentYear !== "all"){
-
-        if(!news.created_at)
-          return false;
+        let yearMatch =
+          true;
 
 
-        const year =
-          new Date(
-            news.created_at
+        if(
+          currentYear !== "all"
+        ){
+
+          if(
+            !news.created_at
           )
-          .getFullYear()
-          .toString();
+            return false;
 
 
-        yearMatch =
-          year === currentYear;
+          const year =
+            new Date(
+              news.created_at
+            )
+            .getFullYear()
+            .toString();
+
+
+          yearMatch =
+            year === currentYear;
+
+        }
+
+
+        return (
+          yearMatch &&
+          matchesSearch(news)
+        );
 
       }
-
-
-      return (
-        yearMatch &&
-        matchesSearch(news)
-      );
-
-    });
+    );
 
 
   renderNews();
@@ -1720,10 +1623,13 @@ function renderNews(){
     );
 
 
-  newsGrid.innerHTML = "";
+  newsGrid.innerHTML =
+    "";
 
 
-  if(filteredNews.length === 0){
+  if(
+    filteredNews.length === 0
+  ){
 
     emptyState.style.display =
       "block";
@@ -1747,134 +1653,147 @@ function renderNews(){
     "none";
 
 
-  visibleNews.forEach(news => {
+  visibleNews.forEach(
+    news => {
 
-    const card =
-      document.createElement(
-        "article"
+      const card =
+        document.createElement(
+          "article"
+        );
+
+
+      card.className =
+        "news-card";
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          window.location.href =
+            "./news.html?id=" +
+            encodeURIComponent(
+              news.id
+            );
+
+        }
       );
 
 
-    card.className =
-      "news-card";
+      const image =
+        news.image_url ||
+        "";
 
 
-    card.addEventListener(
-      "click",
-      () => {
+      const imageHTML =
+        image
 
-        window.location.href =
-          "./news.html?id=" +
-          encodeURIComponent(
-            news.id
-          );
+          ? `
+            <img
+              src="${escapeHTML(image)}"
+              alt=""
+              loading="lazy"
+            >
+          `
 
-      }
-    );
+          : `
+            <div
+              style="
+                width:100%;
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#444;
+                font-size:11px;
+              "
+            >
+              NO IMAGE
+            </div>
+          `;
 
 
-    const image =
-      news.image_url ||
-      "";
+      card.innerHTML = `
 
+        <div class="news-image">
 
-    const imageHTML =
-      image
-        ? `
-          <img
-            src="${escapeHTML(image)}"
-            alt=""
-            loading="lazy"
-          >
-        `
-        : `
+          ${imageHTML}
+
           <div
-            style="
-              width:100%;
-              height:100%;
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              color:#444;
-              font-size:11px;
-            "
+            class="news-tag
+            ${categoryClass(
+              news.category
+            )}"
           >
-            NO IMAGE
-          </div>
-        `;
-
-
-    card.innerHTML = `
-
-      <div class="news-image">
-
-        ${imageHTML}
-
-        <div
-          class="news-tag ${categoryClass(
-            news.category
-          )}"
-        >
-          ${escapeHTML(
-            news.category ||
-            "Новости"
-          )}
-        </div>
-
-      </div>
-
-
-      <div class="news-info">
-
-        <div class="news-date">
-          ${formatDate(
-            news.created_at
-          )}
-        </div>
-
-
-        <h3 class="news-title">
-          ${escapeHTML(
-            news.title ||
-            "Без названия"
-          )}
-        </h3>
-
-
-        <p class="news-description">
-          ${escapeHTML(
-            news.description ||
-            ""
-          )}
-        </p>
-
-
-        <div class="news-bottom">
-
-          <div class="news-category">
             ${escapeHTML(
               news.category ||
               "Новости"
             )}
           </div>
 
+        </div>
 
-          <div class="read-more">
-            Читать →
+
+        <div class="news-info">
+
+          <div class="news-date">
+
+            ${formatDate(
+              news.created_at
+            )}
+
+          </div>
+
+
+          <h3 class="news-title">
+
+            ${escapeHTML(
+              news.title ||
+              "Без названия"
+            )}
+
+          </h3>
+
+
+          <p class="news-description">
+
+            ${escapeHTML(
+              news.description ||
+              ""
+            )}
+
+          </p>
+
+
+          <div class="news-bottom">
+
+            <div class="news-category">
+
+              ${escapeHTML(
+                news.category ||
+                "Новости"
+              )}
+
+            </div>
+
+
+            <div class="read-more">
+              Читать →
+            </div>
+
           </div>
 
         </div>
 
-      </div>
-
-    `;
+      `;
 
 
-    newsGrid.appendChild(
-      card
-    );
+      newsGrid.appendChild(
+        card
+      );
 
-  });
+    }
+  );
 
 
   newsCount.textContent =
@@ -1954,7 +1873,9 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "Escape"){
+    if(
+      event.key === "Escape"
+    ){
 
       searchInput.value =
         "";
@@ -1988,323 +1909,12 @@ document.addEventListener(
 
 
 /* =========================
-   CHANGES
-========================= */
-
-async function loadChanges(){
-
-  try{
-
-    const { data, error } =
-      await supabaseClient
-        .from("changes")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        )
-        .limit(5);
-
-
-    if(error)
-      throw error;
-
-
-    if(
-      !data ||
-      data.length === 0
-    ){
-
-      changesList.innerHTML = `
-
-        <div
-          style="
-            color:#666;
-            font-size:11px;
-          "
-        >
-          Изменений пока нет.
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-    changesList.innerHTML = "";
-
-
-    data.forEach(change => {
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-
-      item.className =
-        "change-item";
-
-
-      const icon =
-        change.icon_url
-          ? `
-            <img
-              class="change-icon"
-              src="${escapeHTML(
-                change.icon_url
-              )}"
-              alt=""
-            >
-          `
-          : `
-            <div
-              class="change-icon"
-            ></div>
-          `;
-
-
-      item.innerHTML = `
-
-        ${icon}
-
-        <div class="change-info">
-
-          <div class="change-title">
-            ${escapeHTML(
-              change.title ||
-              "Изменение"
-            )}
-          </div>
-
-          <div class="change-date">
-            ${relativeTime(
-              change.created_at
-            )}
-          </div>
-
-        </div>
-
-      `;
-
-
-      changesList.appendChild(
-        item
-      );
-
-    });
-
-  }catch(error){
-
-    console.error(
-      "Ошибка изменений:",
-      error
-    );
-
-
-    changesList.innerHTML = `
-
-      <div
-        style="
-          color:#666;
-          font-size:11px;
-        "
-      >
-        Не удалось загрузить изменения.
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================
-   RELATIVE TIME
-========================= */
-
-function relativeTime(dateString){
-
-  if(!dateString)
-    return "";
-
-
-  const date =
-    new Date(dateString);
-
-
-  const now =
-    new Date();
-
-
-  const diff =
-    Math.floor(
-      (now - date) / 1000
-    );
-
-
-  if(diff < 60)
-    return "только что";
-
-
-  const minutes =
-    Math.floor(
-      diff / 60
-    );
-
-
-  if(minutes < 60){
-
-    return `${minutes} ${
-      getMinuteWord(minutes)
-    } назад`;
-
-  }
-
-
-  const hours =
-    Math.floor(
-      minutes / 60
-    );
-
-
-  if(hours < 24){
-
-    return `${hours} ${
-      getHourWord(hours)
-    } назад`;
-
-  }
-
-
-  const days =
-    Math.floor(
-      hours / 24
-    );
-
-
-  if(days < 30){
-
-    return `${days} ${
-      getDayWord(days)
-    } назад`;
-
-  }
-
-
-  return formatDate(
-    dateString
-  );
-
-}
-
-
-/* =========================
    WORD FORMS
 ========================= */
 
-function getMinuteWord(number){
-
-  const n =
-    number % 10;
-
-  const n100 =
-    number % 100;
-
-
-  if(
-    n === 1 &&
-    n100 !== 11
-  )
-    return "минуту";
-
-
-  if(
-    n >= 2 &&
-    n <= 4 &&
-    !(
-      n100 >= 12 &&
-      n100 <= 14
-    )
-  )
-    return "минуты";
-
-
-  return "минут";
-
-}
-
-
-function getHourWord(number){
-
-  const n =
-    number % 10;
-
-  const n100 =
-    number % 100;
-
-
-  if(
-    n === 1 &&
-    n100 !== 11
-  )
-    return "час";
-
-
-  if(
-    n >= 2 &&
-    n <= 4 &&
-    !(
-      n100 >= 12 &&
-      n100 <= 14
-    )
-  )
-    return "часа";
-
-
-  return "часов";
-
-}
-
-
-function getDayWord(number){
-
-  const n =
-    number % 10;
-
-  const n100 =
-    number % 100;
-
-
-  if(
-    n === 1 &&
-    n100 !== 11
-  )
-    return "день";
-
-
-  if(
-    n >= 2 &&
-    n <= 4 &&
-    !(
-      n100 >= 12 &&
-      n100 <= 14
-    )
-  )
-    return "дня";
-
-
-  return "дней";
-
-}
-
-
-function getNewsWord(number){
+function getNewsWord(
+  number
+){
 
   const n =
     number % 10;
@@ -2340,25 +1950,32 @@ function getNewsWord(number){
    ESCAPE HTML
 ========================= */
 
-function escapeHTML(value){
+function escapeHTML(
+  value
+){
 
   return String(value)
+
     .replaceAll(
       "&",
       "&amp;"
     )
+
     .replaceAll(
       "<",
       "&lt;"
     )
+
     .replaceAll(
       ">",
       "&gt;"
     )
+
     .replaceAll(
       '"',
       "&quot;"
     )
+
     .replaceAll(
       "'",
       "&#039;"
@@ -2376,8 +1993,6 @@ async function init(){
   await loadSiteSettings();
 
   await loadNews();
-
-  await loadChanges();
 
 }
 
