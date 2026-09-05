@@ -663,11 +663,6 @@ main{
 
 /* ================= YELLOW PANEL HEADERS ================= */
 
-/* ВАЖНО:
-   жёлтая только верхняя часть,
-   содержимое остаётся тёмным
-*/
-
 .panel#changes,
 .panel#about{
   background:#0d0e0e;
@@ -1009,6 +1004,7 @@ footer{
   }
 
   /* На телефоне карточка становится вертикальной */
+
   .news-card{
     grid-template-columns:1fr;
   }
@@ -1101,11 +1097,8 @@ footer{
         Новости
       </a>
 
-      <a
-        href="#news"
-        data-nav-category="Сервера"
-      >
-        Сервера
+      <a href="./archive.html">
+        Архив
       </a>
 
       <a href="#about">
@@ -1216,13 +1209,6 @@ footer{
         data-category="all"
       >
         Все новости
-      </button>
-
-      <button
-        class="filter"
-        data-category="Сервера"
-      >
-        Сервера
       </button>
 
       <button
@@ -1436,11 +1422,8 @@ footer{
             Новости
           </a>
 
-          <a
-            href="#news"
-            data-nav-category="Сервера"
-          >
-            Сервера
+          <a href="./archive.html">
+            Архив
           </a>
 
           <a href="#about">
