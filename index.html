@@ -112,9 +112,13 @@ header{
   margin-top:5px;
 }
 
+
+/* ================= NAVIGATION ================= */
+
 nav{
   display:flex;
   align-items:center;
+  justify-content:center;
   gap:32px;
   height:100%;
 }
@@ -130,6 +134,7 @@ nav a{
   color:#888;
   text-transform:uppercase;
   transition:.2s;
+  white-space:nowrap;
 }
 
 nav a:hover{
@@ -159,6 +164,7 @@ nav a.active:after{
   color:#aaa;
   cursor:pointer;
   transition:.2s;
+  flex-shrink:0;
 }
 
 .search:hover{
@@ -185,11 +191,6 @@ nav a.active:after{
   width:62%;
   height:520px;
   transform:skewX(-18deg);
-
-  /*
-    Картинку здесь специально НЕ ставим.
-    Фон остаётся тёмным.
-  */
 
   background:
     linear-gradient(
@@ -680,6 +681,7 @@ footer{
 
 }
 
+
 @media(max-width:700px){
 
   .wrap,
@@ -691,8 +693,52 @@ footer{
     height:70px;
   }
 
+  /*
+    На телефоне меню НЕ скрываем.
+    Оно становится горизонтально
+    прокручиваемым.
+  */
+
+  .header-inner{
+    gap:12px;
+    min-width:0;
+  }
+
   nav{
+    display:flex;
+    flex:1;
+    min-width:0;
+    height:70px;
+
+    justify-content:flex-start;
+    gap:25px;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+
+    padding:0 2px;
+  }
+
+  nav::-webkit-scrollbar{
     display:none;
+  }
+
+  nav a{
+    flex:0 0 auto;
+    height:70px;
+    font-size:9px;
+    letter-spacing:1px;
+  }
+
+  .search{
+    display:none;
+  }
+
+  .logo{
+    flex-shrink:0;
   }
 
   .logo-symbol{
@@ -703,6 +749,16 @@ footer{
   .logo-symbol img{
     width:38px;
     height:38px;
+  }
+
+  .logo-text strong{
+    font-size:15px;
+    letter-spacing:1.5px;
+  }
+
+  .logo-text span{
+    font-size:7px;
+    letter-spacing:2px;
   }
 
   .hero{
@@ -726,6 +782,7 @@ footer{
   .filters{
     width:100%;
     justify-content:flex-start;
+    gap:7px;
   }
 
   .filter.active{
@@ -770,6 +827,7 @@ footer{
 
 <body>
 
+
 <header>
 
   <div class="header-inner">
@@ -777,16 +835,25 @@ footer{
     <a href="./" class="logo">
 
       <div class="logo-symbol">
+
         <img
           id="siteLogo"
           src=""
           alt="SCP"
         >
+
       </div>
 
       <div class="logo-text">
-        <strong>SCP: CB2</strong>
-        <span>MULTIPLAYER</span>
+
+        <strong>
+          SCP: CB2
+        </strong>
+
+        <span>
+          MULTIPLAYER
+        </span>
+
       </div>
 
     </a>
@@ -795,17 +862,23 @@ footer{
     <nav>
 
       <a
-        href="./"
+        href="#news"
         class="active"
+        data-nav-category="all"
       >
         Новости
       </a>
 
-      <a href="#changes">
-        Изменения
+      <a
+        href="#news"
+        data-nav-category="Сервера"
+      >
+        Сервера
       </a>
 
-      <a href="#about">
+      <a
+        href="#about"
+      >
         О проекте
       </a>
 
@@ -1091,12 +1164,18 @@ footer{
 
         <div class="footer-links">
 
-          <a href="./">
+          <a
+            href="#news"
+            data-nav-category="all"
+          >
             Новости
           </a>
 
-          <a href="#changes">
-            Изменения
+          <a
+            href="#news"
+            data-nav-category="Сервера"
+          >
+            Сервера
           </a>
 
           <a href="#about">
@@ -1150,6 +1229,7 @@ footer{
 
 
 <script>
+
 
 /* ================= SUPABASE ================= */
 
@@ -1412,12 +1492,6 @@ function createNewsCard(news){
     "news-card";
 
 
-  /*
-    Фото берётся ТОЛЬКО из Supabase.
-    Если image_url пустой —
-    никакая чужая картинка не ставится.
-  */
-
   const image =
     news.image_url ||
     "";
@@ -1608,6 +1682,45 @@ async function loadNews(){
 
 /* ================= FILTERS ================= */
 
+function activateFilter(category){
+
+  document
+    .querySelectorAll(
+      ".filter"
+    )
+    .forEach(btn => {
+
+      btn.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  const target =
+    document.querySelector(
+      `.filter[data-category="${CSS.escape(category)}"]`
+    );
+
+
+  if(target){
+
+    target.classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderNews(
+    category
+  );
+
+}
+
+
+/* Кнопки фильтров */
+
 document
   .querySelectorAll(
     ".filter"
@@ -1618,27 +1731,85 @@ document
       "click",
       () => {
 
+        activateFilter(
+          button.dataset.category
+        );
+
+      }
+    );
+
+  });
+
+
+/* ================= HEADER NAV ================= */
+
+/*
+  Верхнее меню теперь связано
+  с фильтрами новостей.
+
+  Новости -> Все
+  Сервера -> Сервера
+  О проекте -> О проекте
+*/
+
+document
+  .querySelectorAll(
+    "[data-nav-category]"
+  )
+  .forEach(link => {
+
+    link.addEventListener(
+      "click",
+      event => {
+
+        event.preventDefault();
+
+
+        const category =
+          link.dataset.navCategory;
+
+
+        activateFilter(
+          category
+        );
+
+
         document
           .querySelectorAll(
-            ".filter"
+            "nav a"
           )
-          .forEach(btn => {
+          .forEach(navLink => {
 
-            btn.classList.remove(
+            navLink.classList.remove(
               "active"
             );
 
           });
 
 
-        button.classList.add(
-          "active"
-        );
+        const headerLink =
+          document.querySelector(
+            `nav a[data-nav-category="${CSS.escape(category)}"]`
+          );
 
 
-        renderNews(
-          button.dataset.category
-        );
+        if(headerLink){
+
+          headerLink.classList.add(
+            "active"
+          );
+
+        }
+
+
+        document
+          .getElementById(
+            "news"
+          )
+          .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+          });
 
       }
     );
