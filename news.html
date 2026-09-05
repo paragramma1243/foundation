@@ -166,17 +166,29 @@ nav a.active:after{
 .search{
   width:34px;
   height:34px;
+
   border:1px solid #303233;
+
   display:grid;
   place-items:center;
+
   color:#aaa;
+
   cursor:pointer;
+
   transition:.2s;
+
   flex-shrink:0;
+
   font-size:20px;
+
   background:#050606;
+
   padding:0;
+
   appearance:none;
+
+  outline:none;
 }
 
 .search:hover{
@@ -194,19 +206,26 @@ nav a.active:after{
 
 .search-panel{
   position:absolute;
+
   top:82px;
   left:0;
   right:0;
-  z-index:20;
+
+  z-index:100;
 
   background:#050606;
+
   border-bottom:1px solid #292a2b;
 
   padding:14px 0;
 
   opacity:0;
+
   visibility:hidden;
+
   transform:translateY(-8px);
+
+  pointer-events:none;
 
   transition:
     opacity .2s ease,
@@ -216,23 +235,31 @@ nav a.active:after{
 
 .search-panel.open{
   opacity:1;
+
   visibility:visible;
+
   transform:translateY(0);
+
+  pointer-events:auto;
 }
 
 .search-panel-inner{
   width:min(1220px,calc(100% - 40px));
+
   margin:auto;
 }
 
 .header-search-box{
   width:100%;
+
   height:42px;
 
   display:flex;
+
   align-items:center;
 
   border:1px solid #303233;
+
   background:#0c0d0d;
 
   transition:.2s;
@@ -244,24 +271,35 @@ nav a.active:after{
 
 .header-search-icon{
   width:45px;
+
   height:100%;
+
   display:grid;
+
   place-items:center;
+
   color:#666;
+
   font-size:20px;
+
   flex-shrink:0;
 }
 
 .header-search-input{
   width:100%;
+
   height:100%;
+
   border:0;
+
   outline:0;
 
   background:transparent;
+
   color:#ddd;
 
   font-size:12px;
+
   letter-spacing:.5px;
 
   padding:0 15px 0 0;
@@ -276,22 +314,35 @@ nav a.active:after{
 
 .hero{
   height:345px;
+
   position:relative;
+
   overflow:hidden;
+
   background:#101111;
+
   background-repeat:no-repeat;
+
   background-size:cover;
+
   background-position:center;
+
   border-bottom:1px solid #242526;
 }
 
 .hero:after{
   content:"";
+
   position:absolute;
+
   right:-120px;
+
   top:-80px;
+
   width:62%;
+
   height:520px;
+
   transform:skewX(-18deg);
 
   background:
@@ -306,9 +357,13 @@ nav a.active:after{
 
 .hero-inner{
   height:100%;
+
   display:flex;
+
   align-items:center;
+
   position:relative;
+
   z-index:2;
 }
 
@@ -318,38 +373,59 @@ nav a.active:after{
 
 .kicker{
   color:#d6b62f;
+
   font-size:11px;
+
   letter-spacing:3px;
+
   font-weight:700;
+
   margin-bottom:12px;
+
   text-transform:uppercase;
 }
 
 .hero h1{
   font-size:57px;
+
   line-height:.95;
+
   letter-spacing:-2px;
+
   color:#f2f2f2;
+
   margin-bottom:20px;
 }
 
 .hero p{
   max-width:590px;
+
   color:#858788;
+
   font-size:14px;
+
   line-height:1.7;
 }
 
 .hero-button{
   display:inline-flex;
+
   margin-top:25px;
+
   padding:12px 22px;
+
   background:#d5b42e;
+
   color:#0a0a0a;
+
   font-size:11px;
+
   font-weight:800;
+
   letter-spacing:1.5px;
+
   text-transform:uppercase;
+
   transition:.2s;
 }
 
@@ -366,22 +442,31 @@ main{
 
 .section-head{
   display:flex;
+
   align-items:flex-end;
+
   justify-content:space-between;
+
   margin-bottom:18px;
 }
 
 .section-kicker{
   color:#777;
+
   font-size:10px;
+
   letter-spacing:3px;
+
   text-transform:uppercase;
+
   margin-bottom:7px;
 }
 
 .section-head h2{
   font-size:26px;
+
   color:#eee;
+
   letter-spacing:.5px;
 }
 
@@ -390,21 +475,33 @@ main{
 
 .filters{
   display:flex;
+
   align-items:center;
+
   justify-content:flex-start;
+
   gap:8px;
+
   flex-wrap:wrap;
+
   margin-bottom:25px;
 }
 
 .filter{
   border:1px solid #303233;
+
   background:#0c0d0d;
+
   color:#777;
+
   padding:8px 13px;
+
   font-size:10px;
+
   letter-spacing:1px;
+
   text-transform:uppercase;
+
   cursor:pointer;
 
   transform:scale(1);
@@ -419,15 +516,21 @@ main{
 
 .filter:hover{
   color:#ddd;
+
   border-color:#555;
+
   transform:translateY(-1px);
 }
 
 .filter.active{
   color:#111;
+
   background:#d5b42e;
+
   border-color:#d5b42e;
+
   transform:scale(1.07);
+
   box-shadow:0 0 14px rgba(213,180,46,.12);
 }
 
@@ -436,7 +539,9 @@ main{
 
 .content-grid{
   display:grid;
+
   grid-template-columns:minmax(0,1fr) 345px;
+
   gap:30px;
 }
 
@@ -445,57 +550,83 @@ main{
 
 .news-grid{
   display:flex;
+
   flex-direction:column;
+
   gap:15px;
 }
 
 .news-card{
   min-height:200px;
+
   border:1px solid #292a2b;
+
   background:#0d0e0e;
+
   display:grid;
+
   grid-template-columns:280px minmax(0,1fr);
+
   transition:.25s;
+
   overflow:hidden;
 }
 
 .news-card:hover{
   transform:translateY(-3px);
+
   border-color:#454647;
 }
 
 .news-image-area{
   width:100%;
+
   height:100%;
+
   min-height:200px;
+
   position:relative;
+
   overflow:hidden;
+
   background:#151616;
 }
 
 .news-image{
   width:100%;
+
   height:100%;
+
   min-height:200px;
+
   object-fit:cover;
+
   background:#151616;
+
   display:block;
 }
 
 .news-card-tag{
   position:absolute;
+
   top:14px;
+
   left:14px;
+
   z-index:2;
 
   padding:5px 8px;
 
   background:#d5b42e;
+
   color:#111;
 
   font-size:9px;
+
   font-weight:800;
+
   letter-spacing:1px;
+
   text-transform:uppercase;
 
   transition:
@@ -505,49 +636,69 @@ main{
 
 .news-card:hover .news-card-tag{
   transform:translateY(-1px);
+
   box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
 
 .news-content{
   padding:22px 24px;
+
   display:flex;
+
   flex-direction:column;
 }
 
 .news-meta{
   display:flex;
+
   align-items:center;
+
   gap:10px;
+
   margin-bottom:11px;
 }
 
 .news-date{
   color:#666;
+
   font-size:10px;
 }
 
 .news-content h3{
   font-size:23px;
+
   line-height:1.15;
+
   color:#eee;
+
   font-weight:800;
+
   margin-bottom:10px;
 }
 
 .news-content p{
   color:#777;
+
   font-size:13px;
+
   line-height:1.65;
 }
 
 .news-more{
   margin-top:auto;
+
   padding-top:15px;
+
   color:#c5a82c;
+
   font-size:10px;
+
   font-weight:700;
+
   letter-spacing:1.5px;
+
   text-transform:uppercase;
+
   transition:.2s;
 }
 
@@ -560,33 +711,45 @@ main{
 
 .sidebar{
   display:flex;
+
   flex-direction:column;
+
   gap:20px;
 }
 
 .panel{
   background:#0d0e0e;
+
   border:1px solid #292a2b;
 }
 
 .panel-head{
   padding:16px 18px;
+
   border-bottom:1px solid #292a2b;
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
 }
 
 .panel-head h3{
   font-size:12px;
+
   color:#ddd;
+
   letter-spacing:1.5px;
+
   text-transform:uppercase;
 }
 
 .panel-head span{
   color:#555;
+
   font-size:9px;
+
   letter-spacing:1px;
 }
 
@@ -599,15 +762,21 @@ main{
 
 .changes-list{
   display:flex;
+
   flex-direction:column;
 }
 
 .change-row{
   display:grid;
+
   grid-template-columns:38px 1fr auto;
+
   align-items:center;
+
   gap:10px;
+
   padding:13px 0;
+
   border-bottom:1px solid #202122;
 }
 
@@ -617,32 +786,47 @@ main{
 
 .change-icon{
   width:31px;
+
   height:31px;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   color:#c4c5c6;
+
   overflow:hidden;
+
   border:0;
+
   background:transparent;
 }
 
 .change-icon img{
   width:100%;
+
   height:100%;
+
   object-fit:contain;
+
   display:block;
 }
 
 .change-title{
   color:#aaa;
+
   font-size:11px;
+
   line-height:1.35;
 }
 
 .change-time{
   color:#555;
+
   font-size:9px;
+
   white-space:nowrap;
 }
 
@@ -651,21 +835,29 @@ main{
 
 .about-text{
   color:#777;
+
   font-size:12px;
+
   line-height:1.7;
 }
 
 .about-line{
   height:1px;
+
   background:#222;
+
   margin:15px 0;
 }
 
 .about-stat{
   display:flex;
+
   justify-content:space-between;
+
   font-size:10px;
+
   text-transform:uppercase;
+
   letter-spacing:1px;
 }
 
@@ -682,41 +874,57 @@ main{
 
 footer{
   border-top:1px solid #252627;
+
   background:#050606;
+
   padding:42px 0;
 }
 
 .footer-grid{
   display:grid;
+
   grid-template-columns:2fr 1fr 1fr;
+
   gap:50px;
 }
 
 .footer-brand{
   color:#777;
+
   font-size:11px;
+
   line-height:1.7;
+
   max-width:430px;
 }
 
 .footer-title{
   color:#bbb;
+
   font-size:10px;
+
   font-weight:700;
+
   letter-spacing:2px;
+
   margin-bottom:15px;
+
   text-transform:uppercase;
 }
 
 .footer-links{
   display:flex;
+
   flex-direction:column;
+
   gap:9px;
 }
 
 .footer-links a{
   color:#666;
+
   font-size:11px;
+
   transition:.2s;
 }
 
@@ -726,13 +934,21 @@ footer{
 
 .footer-bottom{
   margin-top:35px;
+
   padding-top:18px;
+
   border-top:1px solid #1e1f20;
+
   display:flex;
+
   justify-content:space-between;
+
   color:#444;
+
   font-size:9px;
+
   letter-spacing:1px;
+
   text-transform:uppercase;
 }
 
@@ -741,18 +957,27 @@ footer{
 
 .loading{
   padding:40px;
+
   text-align:center;
+
   color:#555;
+
   font-size:11px;
+
   text-transform:uppercase;
+
   letter-spacing:2px;
 }
 
 .empty{
   padding:35px;
+
   border:1px solid #292a2b;
+
   color:#555;
+
   text-align:center;
+
   font-size:12px;
 }
 
@@ -767,6 +992,7 @@ footer{
 
   .sidebar{
     display:grid;
+
     grid-template-columns:1fr 1fr;
   }
 
@@ -791,22 +1017,29 @@ footer{
 
   .header-inner{
     gap:12px;
+
     min-width:0;
   }
 
   nav{
     display:flex;
+
     flex:1;
+
     min-width:0;
+
     height:70px;
 
     justify-content:flex-start;
+
     gap:25px;
 
     overflow-x:auto;
+
     overflow-y:hidden;
 
     scrollbar-width:none;
+
     -webkit-overflow-scrolling:touch;
 
     padding:0 2px;
@@ -818,8 +1051,11 @@ footer{
 
   nav a{
     flex:0 0 auto;
+
     height:70px;
+
     font-size:9px;
+
     letter-spacing:1px;
   }
 
@@ -837,21 +1073,25 @@ footer{
 
   .logo-symbol{
     width:38px;
+
     height:38px;
   }
 
   .logo-symbol img{
     width:38px;
+
     height:38px;
   }
 
   .logo-text strong{
     font-size:15px;
+
     letter-spacing:1.5px;
   }
 
   .logo-text span{
     font-size:7px;
+
     letter-spacing:2px;
   }
 
@@ -869,13 +1109,17 @@ footer{
 
   .section-head{
     align-items:flex-start;
+
     flex-direction:column;
+
     gap:15px;
   }
 
   .filters{
     width:100%;
+
     justify-content:flex-start;
+
     gap:7px;
   }
 
@@ -889,11 +1133,13 @@ footer{
 
   .news-image-area{
     height:190px;
+
     min-height:0;
   }
 
   .news-image{
     height:190px;
+
     min-height:0;
   }
 
@@ -903,11 +1149,13 @@ footer{
 
   .footer-grid{
     grid-template-columns:1fr;
+
     gap:30px;
   }
 
   .footer-bottom{
     flex-direction:column;
+
     gap:8px;
   }
 
@@ -969,12 +1217,15 @@ footer{
     </nav>
 
 
+    <!-- КНОПКА ПОИСКА -->
+
     <button
       type="button"
       class="search"
       id="headerSearchButton"
       title="Поиск"
       aria-label="Открыть поиск"
+      onclick="toggleSearchPanel()"
     >
       ⌕
     </button>
@@ -1716,6 +1967,16 @@ function newsMatchesSearch(news){
       currentSearch
     );
 
+  /*
+    ПОИСК ТОЛЬКО ПО:
+
+    title
+    description
+    content
+
+    category НЕ ИСПОЛЬЗУЕТСЯ.
+  */
+
   const title =
     normalizeSearchText(
       news.title
@@ -1730,17 +1991,6 @@ function newsMatchesSearch(news){
     normalizeSearchText(
       news.content
     );
-
-  /*
-    ВАЖНО:
-
-    category здесь НЕ используется.
-
-    Поиск происходит только по:
-    title
-    description
-    content
-  */
 
   return (
     title.includes(searchText) ||
@@ -1764,6 +2014,10 @@ function renderNews(
     document.getElementById(
       "newsList"
     );
+
+  if(!list){
+    return;
+  }
 
   list.innerHTML =
     "";
@@ -1893,118 +2147,85 @@ async function loadNews(){
 
 /* ================= SEARCH PANEL ================= */
 
-const headerSearchButton =
-  document.getElementById(
-    "headerSearchButton"
-  );
+function toggleSearchPanel(){
 
-const searchPanel =
-  document.getElementById(
-    "searchPanel"
-  );
+  const panel =
+    document.getElementById(
+      "searchPanel"
+    );
+
+  const button =
+    document.getElementById(
+      "headerSearchButton"
+    );
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+  if(!panel){
+    return;
+  }
+
+  const isOpen =
+    panel.classList.contains(
+      "open"
+    );
+
+
+  if(isOpen){
+
+    panel.classList.remove(
+      "open"
+    );
+
+    if(button){
+
+      button.classList.remove(
+        "active"
+      );
+
+    }
+
+  }else{
+
+    panel.classList.add(
+      "open"
+    );
+
+    if(button){
+
+      button.classList.add(
+        "active"
+      );
+
+    }
+
+    setTimeout(
+      function(){
+
+        if(input){
+
+          input.focus();
+
+        }
+
+      },
+      100
+    );
+
+  }
+
+}
+
+
+/* ================= SEARCH INPUT ================= */
 
 const searchInput =
   document.getElementById(
     "searchInput"
   );
-
-
-function openSearch(){
-
-  if(!searchPanel){
-    return;
-  }
-
-  searchPanel.classList.add(
-    "open"
-  );
-
-  if(headerSearchButton){
-
-    headerSearchButton.classList.add(
-      "active"
-    );
-
-  }
-
-  setTimeout(
-    () => {
-
-      if(searchInput){
-        searchInput.focus();
-      }
-
-    },
-    150
-  );
-
-}
-
-
-function closeSearch(){
-
-  if(!searchPanel){
-    return;
-  }
-
-  searchPanel.classList.remove(
-    "open"
-  );
-
-  if(headerSearchButton){
-
-    headerSearchButton.classList.remove(
-      "active"
-    );
-
-  }
-
-}
-
-
-function toggleSearch(){
-
-  if(!searchPanel){
-    return;
-  }
-
-  if(
-    searchPanel.classList.contains(
-      "open"
-    )
-  ){
-
-    closeSearch();
-
-  }else{
-
-    openSearch();
-
-  }
-
-}
-
-
-/* КЛИК ПО КНОПКЕ ПОИСКА */
-
-if(headerSearchButton){
-
-  headerSearchButton.addEventListener(
-    "click",
-    function(event){
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      toggleSearch();
-
-    }
-  );
-
-}
-
-
-/* ВВОД ПОИСКА */
 
 if(searchInput){
 
@@ -2042,7 +2263,31 @@ if(searchInput){
           currentCategory
         );
 
-        closeSearch();
+        const panel =
+          document.getElementById(
+            "searchPanel"
+          );
+
+        const button =
+          document.getElementById(
+            "headerSearchButton"
+          );
+
+        if(panel){
+
+          panel.classList.remove(
+            "open"
+          );
+
+        }
+
+        if(button){
+
+          button.classList.remove(
+            "active"
+          );
+
+        }
 
       }
 
@@ -2052,24 +2297,47 @@ if(searchInput){
 }
 
 
-/* ESC ЗАКРЫВАЕТ ПОИСК */
+/* ================= ESC ================= */
 
 document.addEventListener(
   "keydown",
   function(event){
 
     if(
-      event.key === "Escape"
+      event.key !==
+      "Escape"
     ){
 
-      if(
-        searchPanel &&
-        searchPanel.classList.contains(
-          "open"
-        )
-      ){
+      return;
 
-        closeSearch();
+    }
+
+    const panel =
+      document.getElementById(
+        "searchPanel"
+      );
+
+    const button =
+      document.getElementById(
+        "headerSearchButton"
+      );
+
+    if(
+      panel &&
+      panel.classList.contains(
+        "open"
+      )
+    ){
+
+      panel.classList.remove(
+        "open"
+      );
+
+      if(button){
+
+        button.classList.remove(
+          "active"
+        );
 
       }
 
@@ -2079,22 +2347,47 @@ document.addEventListener(
 );
 
 
-/* КЛИК ВНЕ ПОИСКА */
+/* ================= CLICK OUTSIDE SEARCH ================= */
 
 document.addEventListener(
   "click",
   function(event){
 
-    if(!searchPanel){
+    const panel =
+      document.getElementById(
+        "searchPanel"
+      );
+
+    const button =
+      document.getElementById(
+        "headerSearchButton"
+      );
+
+    if(
+      !panel ||
+      !button
+    ){
+
       return;
+
     }
 
     if(
-      !searchPanel.contains(event.target) &&
-      !headerSearchButton.contains(event.target)
+      !panel.contains(
+        event.target
+      ) &&
+      !button.contains(
+        event.target
+      )
     ){
 
-      closeSearch();
+      panel.classList.remove(
+        "open"
+      );
+
+      button.classList.remove(
+        "active"
+      );
 
     }
 
@@ -2153,7 +2446,7 @@ document
 
     button.addEventListener(
       "click",
-      () => {
+      function(){
 
         activateFilter(
           button.dataset.category
@@ -2175,7 +2468,7 @@ document
 
     link.addEventListener(
       "click",
-      event => {
+      function(event){
 
         event.preventDefault();
 
@@ -2215,14 +2508,19 @@ document
         }
 
 
-        document
-          .getElementById(
+        const news =
+          document.getElementById(
             "news"
-          )
-          .scrollIntoView({
+          );
+
+        if(news){
+
+          news.scrollIntoView({
             behavior:"smooth",
             block:"start"
           });
+
+        }
 
       }
     );
