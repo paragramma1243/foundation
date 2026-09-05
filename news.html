@@ -7,12 +7,15 @@
 <title>Новость — SCP: CB2 Multiplayer</title>
 
 <style>
+
 *{
- box-sizing:border-box
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
 }
 
 html{
- scroll-behavior:smooth
+ scroll-behavior:smooth;
 }
 
 body{
@@ -22,27 +25,9 @@ body{
  font-family:Arial,Helvetica,sans-serif;
 }
 
-body:before{
- content:"";
- position:fixed;
- inset:0;
- pointer-events:none;
- opacity:.18;
- background:
- linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
- linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
- background-size:45px 45px;
-}
-
 a{
  text-decoration:none;
- color:inherit
-}
-
-.wrap{
- max-width:1220px;
- width:calc(100% - 50px);
- margin:auto
+ color:inherit;
 }
 
 
@@ -55,58 +40,53 @@ header{
  background:#050606;
  border-bottom:1px solid #202122;
  position:relative;
- z-index:5
+ z-index:5;
+}
+
+.wrap{
+ max-width:1220px;
+ width:calc(100% - 50px);
+ margin:auto;
 }
 
 .head{
  height:100%;
  display:flex;
  align-items:center;
- gap:45px
+ gap:45px;
 }
 
 .logo{
  display:flex;
  align-items:center;
  gap:12px;
- min-width:205px
+ min-width:205px;
 }
 
 .logo-symbol{
  width:45px;
  height:45px;
- border:2px solid #ddd;
- border-radius:50%;
  display:grid;
  place-items:center;
  font-size:22px;
  position:relative;
- overflow:hidden
-}
-
-.logo-symbol:after{
- content:"";
- position:absolute;
- width:31px;
- height:31px;
- border:1px solid #aaa;
- border-radius:50%
+ overflow:hidden;
 }
 
 .logo-symbol img{
- width:100%;
- height:100%;
+ width:45px;
+ height:45px;
  object-fit:contain;
- border-radius:50%;
  position:relative;
- z-index:2
+ z-index:2;
+ display:block;
 }
 
 .logo-text{
  line-height:.82;
  font-weight:800;
  font-size:25px;
- letter-spacing:-1px
+ letter-spacing:-1px;
 }
 
 .logo-text small{
@@ -114,14 +94,14 @@ header{
  color:#e52b2b;
  font-size:9px;
  letter-spacing:.7px;
- margin-top:7px
+ margin-top:7px;
 }
 
 nav{
  display:flex;
  height:100%;
  align-items:stretch;
- margin-left:auto
+ margin-left:auto;
 }
 
 nav a{
@@ -132,12 +112,19 @@ nav a{
  font-size:13px;
  font-weight:bold;
  text-transform:uppercase;
- position:relative
+ position:relative;
+ transition:
+  color .2s ease,
+  transform .2s ease;
 }
 
 nav a:hover,
 nav a.active{
- color:#fff
+ color:#fff;
+}
+
+nav a:hover{
+ transform:translateY(-1px);
 }
 
 nav a.active:after{
@@ -147,8 +134,13 @@ nav a.active:after{
  left:15px;
  right:15px;
  bottom:0;
- background:#f4ca28
+ background:#f4ca28;
 }
+
+
+/* ==========================================
+   SEARCH
+========================================== */
 
 .search{
  width:40px;
@@ -156,7 +148,9 @@ nav a.active:after{
  border:0;
  background:none;
  position:relative;
- margin-left:5px
+ margin-left:5px;
+ cursor:pointer;
+ transition:transform .2s ease;
 }
 
 .search:before{
@@ -167,7 +161,8 @@ nav a.active:after{
  border:2px solid #ddd;
  border-radius:50%;
  left:9px;
- top:8px
+ top:8px;
+ transition:border-color .2s ease;
 }
 
 .search:after{
@@ -178,7 +173,20 @@ nav a.active:after{
  background:#ddd;
  transform:rotate(45deg);
  left:23px;
- top:24px
+ top:24px;
+ transition:background .2s ease;
+}
+
+.search:hover{
+ transform:translateY(-2px);
+}
+
+.search:hover:before{
+ border-color:#f4ca28;
+}
+
+.search:hover:after{
+ background:#f4ca28;
 }
 
 
@@ -187,12 +195,12 @@ nav a.active:after{
 ========================================== */
 
 main{
- padding:40px 0 80px
+ padding:40px 0 80px;
 }
 
 .article-wrap{
  max-width:900px;
- margin:auto
+ margin:auto;
 }
 
 .back-link{
@@ -202,16 +210,31 @@ main{
  font-weight:bold;
  text-transform:uppercase;
  margin-bottom:25px;
- letter-spacing:.5px
+ letter-spacing:.5px;
+ transition:
+  color .2s ease,
+  transform .2s ease;
 }
 
 .back-link:hover{
- color:#fff
+ color:#fff;
+ transform:translateX(-3px);
 }
 
 .article{
  background:#111213;
- border:1px solid #292b2c
+ border:1px solid #292b2c;
+ border-radius:8px;
+ overflow:hidden;
+ transition:
+  transform .25s ease,
+  border-color .25s ease,
+  box-shadow .25s ease;
+}
+
+.article:hover{
+ border-color:#3d3f40;
+ box-shadow:0 12px 35px rgba(0,0,0,.2);
 }
 
 .article-image{
@@ -222,7 +245,7 @@ main{
  background-size:cover;
  background-position:center;
  position:relative;
- overflow:hidden
+ overflow:hidden;
 }
 
 .article-image:after{
@@ -233,18 +256,18 @@ main{
  font-size:80px;
  font-weight:900;
  color:rgba(255,255,255,.07);
- pointer-events:none
+ pointer-events:none;
 }
 
 .article-content{
- padding:32px 38px 42px
+ padding:32px 38px 42px;
 }
 
 .article-top{
  display:flex;
  align-items:center;
  gap:12px;
- margin-bottom:14px
+ margin-bottom:14px;
 }
 
 .tag{
@@ -252,35 +275,44 @@ main{
  color:white;
  font-size:9px;
  font-weight:bold;
- text-transform:uppercase
+ text-transform:uppercase;
+ border-radius:4px;
+ transition:
+  transform .2s ease,
+  box-shadow .2s ease;
+}
+
+.tag:hover{
+ transform:translateY(-1px);
+ box-shadow:0 5px 12px rgba(0,0,0,.18);
 }
 
 .purple{
- background:#964ce0
+ background:#964ce0;
 }
 
 .blue{
- background:#397ecb
+ background:#397ecb;
 }
 
 .green{
- background:#258b59
+ background:#258b59;
 }
 
 .orange{
- background:#bc7722
+ background:#bc7722;
 }
 
 .time{
  color:#747779;
- font-size:10px
+ font-size:10px;
 }
 
 .article h1{
  font-size:42px;
  line-height:1.08;
  margin:0 0 17px;
- letter-spacing:-1px
+ letter-spacing:-1px;
 }
 
 .article-description{
@@ -289,7 +321,7 @@ main{
  line-height:1.7;
  margin:0 0 30px;
  padding-bottom:25px;
- border-bottom:1px solid #292b2c
+ border-bottom:1px solid #292b2c;
 }
 
 .article-text{
@@ -297,29 +329,31 @@ main{
  font-size:13px;
  line-height:1.85;
  white-space:pre-wrap;
- word-wrap:break-word
+ word-wrap:break-word;
 }
 
 .article-text:empty{
- display:none
+ display:none;
 }
 
 .article-error{
  background:#111213;
  border:1px solid #292b2c;
+ border-radius:8px;
  padding:50px 30px;
  text-align:center;
  color:#e52b2b;
- font-size:12px
+ font-size:12px;
 }
 
 .article-loading{
  background:#111213;
  border:1px solid #292b2c;
+ border-radius:8px;
  padding:50px 30px;
  text-align:center;
  color:#747779;
- font-size:11px
+ font-size:11px;
 }
 
 
@@ -329,34 +363,45 @@ main{
 
 footer{
  border-top:1px solid #1d1f20;
- background:#060707
+ background:#060707;
 }
 
 .foot{
  display:grid;
  grid-template-columns:2fr 1fr 1fr;
  gap:60px;
- padding:38px 0
+ padding:38px 0;
 }
 
 .foot p,
 .foot a{
  color:#686b6d;
  font-size:10px;
- line-height:1.7
+ line-height:1.7;
+}
+
+.foot a{
+ transition:
+  color .2s ease,
+  transform .2s ease;
+}
+
+.foot a:hover{
+ color:#ddd;
+ transform:translateX(2px);
 }
 
 .foot h4{
  font-size:10px;
  text-transform:uppercase;
  margin:0 0 10px;
- color:#b8b9ba
+ color:#b8b9ba;
 }
 
 .footlinks{
  display:flex;
  flex-direction:column;
- gap:4px
+ gap:4px;
 }
 
 .bottom{
@@ -364,7 +409,7 @@ footer{
  color:#505355;
  text-align:center;
  padding:15px;
- font-size:9px
+ font-size:9px;
 }
 
 
@@ -376,11 +421,11 @@ footer{
 
  nav a{
   padding:0 7px;
-  font-size:11px
+  font-size:11px;
  }
 
  .article-image{
-  height:350px
+  height:350px;
  }
 
 }
@@ -388,75 +433,76 @@ footer{
 @media(max-width:700px){
 
  header{
-  height:68px
+  height:68px;
  }
 
  .wrap{
-  width:calc(100% - 28px)
+  width:calc(100% - 28px);
  }
 
  .head{
-  gap:0
+  gap:0;
  }
 
  .logo{
-  min-width:0
+  min-width:0;
  }
 
  .logo-text{
-  font-size:20px
+  font-size:20px;
  }
 
  .logo-symbol{
   width:38px;
-  height:38px
+  height:38px;
  }
 
- .logo-symbol:after{
-  width:27px;
-  height:27px
+ .logo-symbol img{
+  width:38px;
+  height:38px;
  }
 
  nav,
  .search{
-  display:none
+  display:none;
  }
 
  main{
-  padding:25px 0 55px
+  padding:25px 0 55px;
  }
 
  .article-image{
-  height:220px
+  height:220px;
  }
 
  .article-content{
-  padding:24px 20px 30px
+  padding:24px 20px 30px;
  }
 
  .article h1{
-  font-size:30px
+  font-size:30px;
  }
 
  .article-description{
-  font-size:13px
+  font-size:13px;
  }
 
  .article-text{
   font-size:12px;
-  line-height:1.75
+  line-height:1.75;
  }
 
  .foot{
   grid-template-columns:1fr 1fr;
-  gap:30px
+  gap:30px;
  }
 
  .foot>div:first-child{
-  grid-column:1/-1
+  grid-column:1/-1;
  }
 
 }
+
 </style>
 </head>
 
@@ -492,11 +538,11 @@ CB2
 Новости
 </a>
 
-<a href="#">
+<a href="index.html#news">
 Сервера
 </a>
 
-<a href="index.html">
+<a href="index.html#about">
 О проекте
 </a>
 
@@ -505,7 +551,8 @@ CB2
 
 <button
  class="search"
- aria-label="Поиск">
+ aria-label="Поиск"
+ type="button">
 </button>
 
 </div>
@@ -590,11 +637,11 @@ SCP: CB2 Multiplayer.
 Новости
 </a>
 
-<a href="#">
+<a href="index.html#news">
 Сервера
 </a>
 
-<a href="index.html">
+<a href="index.html#about">
 О проекте
 </a>
 
@@ -712,7 +759,7 @@ async function loadSiteSettings(){
 
     element.innerHTML = `
      <img
-      src="${settings.logo}"
+      src="${settings.logo}?v=${Date.now()}"
       alt="SCP CB2"
      >
     `;
@@ -729,7 +776,7 @@ async function loadSiteSettings(){
  if(settings.background){
 
   document.body.style.backgroundImage =
-   `url("${settings.background}")`;
+   `url("${settings.background}?v=${Date.now()}")`;
 
   document.body.style.backgroundSize =
    "cover";
@@ -739,6 +786,9 @@ async function loadSiteSettings(){
 
   document.body.style.backgroundPosition =
    "center";
+
+  document.body.style.backgroundRepeat =
+   "no-repeat";
 
  }
 
