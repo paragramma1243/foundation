@@ -266,7 +266,8 @@ h2{
 .filters{
  display:flex;
  gap:5px;
- flex-wrap:wrap
+ flex-wrap:wrap;
+ align-items:center
 }
 
 .filter{
@@ -283,7 +284,9 @@ h2{
 .filter.active{
  background:#f4ca28;
  color:#111;
- border-color:#f4ca28
+ border-color:#f4ca28;
+ padding:10px 14px;
+ margin:-1px
 }
 
 .grid{
@@ -654,8 +657,6 @@ CB2
 <nav>
 <a class="active" href="#">Новости</a>
 <a href="#">Сервера</a>
-<a href="#">Разработка</a>
-<a href="#">Сообщество</a>
 <a href="#">О проекте</a>
 </nav>
 
@@ -734,7 +735,6 @@ CB2
 
 </div>
 
-
 <aside class="side">
 
 <section class="panel">
@@ -798,7 +798,6 @@ CB2
 
 </section>
 
-
 <section class="panel about">
 
 <div class="panel-head">
@@ -822,7 +821,6 @@ SCP: CB2 Multiplayer — новостной портал о серверах,
 </div>
 </div>
 </main>
-
 
 <footer>
 
@@ -849,7 +847,6 @@ SCP: CB2 Multiplayer.
 
 </div>
 
-
 <div>
 
 <h4>Навигация</h4>
@@ -862,7 +859,6 @@ SCP: CB2 Multiplayer.
 </div>
 
 </div>
-
 
 <div>
 
@@ -885,7 +881,6 @@ SCP: CB2 Multiplayer.
 </div>
 
 </footer>
-
 
 <!-- Supabase -->
 
@@ -916,7 +911,6 @@ async function loadSiteSettings() {
   .from("site_settings")
   .select("key,value");
 
-
  if (error) {
 
   console.error(
@@ -927,13 +921,11 @@ async function loadSiteSettings() {
   return;
  }
 
-
  const settings = {};
 
  data.forEach(item => {
   settings[item.key] = item.value;
  });
-
 
  /*
   * ЛОГОТИП
@@ -956,7 +948,6 @@ async function loadSiteSettings() {
 
  }
 
-
  /*
   * ФОН САЙТА
   */
@@ -976,7 +967,6 @@ async function loadSiteSettings() {
    "center";
 
  }
-
 
  /*
   * БАННЕР
@@ -1069,14 +1059,11 @@ function formatTime(dateString) {
    (now - date) / 1000
   );
 
-
  if (seconds < 60)
   return "Только что";
 
-
  const minutes =
   Math.floor(seconds / 60);
-
 
  if (minutes < 60)
   return minutes +
@@ -1084,10 +1071,8 @@ function formatTime(dateString) {
    (minutes === 1 ? "минуту" : "минут") +
    " назад";
 
-
  const hours =
   Math.floor(minutes / 60);
-
 
  if (hours < 24)
   return hours +
@@ -1095,21 +1080,17 @@ function formatTime(dateString) {
    (hours === 1 ? "час" : "часов") +
    " назад";
 
-
  const days =
   Math.floor(hours / 24);
 
-
  if (days === 1)
   return "Вчера";
-
 
  if (days < 7)
   return days +
    " " +
    (days < 5 ? "дня" : "дней") +
    " назад";
-
 
  return date.toLocaleDateString(
   "ru-RU",
@@ -1142,7 +1123,6 @@ function createNewsCard(news) {
   "news.html?id=" +
   encodeURIComponent(news.id);
 
-
  /*
   * КАРТИНКА
   */
@@ -1152,7 +1132,6 @@ function createNewsCard(news) {
 
  pic.className =
   "pic";
-
 
  if (news.image_url) {
 
@@ -1172,7 +1151,6 @@ function createNewsCard(news) {
 
  }
 
-
  /*
   * ТЕГ
   */
@@ -1187,9 +1165,7 @@ function createNewsCard(news) {
  tag.textContent =
   news.category || "Новости";
 
-
  pic.appendChild(tag);
-
 
  /*
   * BODY
@@ -1200,7 +1176,6 @@ function createNewsCard(news) {
 
  body.className =
   "body";
-
 
  /*
   * ВРЕМЯ
@@ -1215,7 +1190,6 @@ function createNewsCard(news) {
  time.textContent =
   formatTime(news.created_at);
 
-
  /*
   * ЗАГОЛОВОК
   */
@@ -1226,7 +1200,6 @@ function createNewsCard(news) {
  title.textContent =
   news.title || "Без названия";
 
-
  /*
   * ОПИСАНИЕ
   */
@@ -1236,7 +1209,6 @@ function createNewsCard(news) {
 
  description.textContent =
   news.description || "";
-
 
  /*
   * META
@@ -1250,7 +1222,6 @@ function createNewsCard(news) {
 
  meta.innerHTML =
   "◉ 0 &nbsp;&nbsp; ▢ 0";
-
 
  body.appendChild(time);
  body.appendChild(title);
@@ -1280,7 +1251,6 @@ async function loadNews() {
  const newsList =
   document.getElementById("newsList");
 
-
  const { data, error } =
   await db
    .from("news")
@@ -1300,14 +1270,12 @@ async function loadNews() {
     }
    );
 
-
  if (error) {
 
   console.error(
    "Ошибка загрузки новостей:",
    error
   );
-
 
   newsList.innerHTML = `
    <div style="
@@ -1324,10 +1292,8 @@ async function loadNews() {
 
  }
 
-
  allNews =
   data || [];
-
 
  renderNews();
 
@@ -1343,9 +1309,7 @@ function renderNews() {
  const newsList =
   document.getElementById("newsList");
 
-
  newsList.innerHTML = "";
-
 
  const filtered =
   currentCategory === "all"
@@ -1356,7 +1320,6 @@ function renderNews() {
         news.category
        ) === currentCategory
      );
-
 
  if (filtered.length === 0) {
 
@@ -1374,7 +1337,6 @@ function renderNews() {
   return;
 
  }
-
 
  filtered.forEach(news => {
 
@@ -1403,13 +1365,10 @@ document
      x.classList.remove("active")
     );
 
-
    btn.classList.add("active");
-
 
    currentCategory =
     btn.dataset.cat;
-
 
    renderNews();
 
