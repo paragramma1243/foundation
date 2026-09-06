@@ -325,8 +325,6 @@ nav a.active:before{
   border-bottom:1px solid #242526;
 }
 
-/* Технические диагональные линии */
-
 .hero:after{
   content:"";
   position:absolute;
@@ -344,8 +342,6 @@ nav a.active:before{
   opacity:.35;
 }
 
-/* Scanlines */
-
 .hero:before{
   content:"";
   position:absolute;
@@ -361,8 +357,6 @@ nav a.active:before{
     );
   opacity:.65;
 }
-
-/* Техническая сетка */
 
 .hero .wrap:before{
   content:"";
@@ -398,8 +392,6 @@ nav a.active:before{
   pointer-events:none;
   overflow:hidden;
 }
-
-/* REC */
 
 .hero-camera-rec{
   position:absolute;
@@ -443,9 +435,6 @@ nav a.active:before{
   }
 
 }
-
-
-/* Быстрое сканирование баннера */
 
 .hero-camera-scan{
   position:absolute;
@@ -499,12 +488,6 @@ nav a.active:before{
 
 
 /* ================= HERO CAMERA LINES ================= */
-
-/*
-  Полоски как у камеры из игры.
-  Они специально очень тонкие и прозрачные,
-  чтобы не перебивать изображение.
-*/
 
 .hero-camera-lines{
   position:absolute;
@@ -1003,9 +986,6 @@ main{
   opacity:1;
 }
 
-
-/* REC */
-
 .news-camera-rec{
   position:absolute;
   top:12px;
@@ -1055,11 +1035,6 @@ main{
 
 /* ================= NEWS CAMERA LINES ================= */
 
-/*
-  Горизонтальные полоски как у камеры
-  непосредственно поверх изображения.
-*/
-
 .news-camera-lines{
   position:absolute;
   inset:0;
@@ -1077,9 +1052,6 @@ main{
   opacity:.55;
   mix-blend-mode:screen;
 }
-
-
-/* Более редкие полосы */
 
 .news-camera-lines:after{
   content:"";
@@ -1124,12 +1096,6 @@ main{
 
   opacity:0;
 }
-
-
-/*
-  Быстрый проход сканера по изображению
-  при наведении.
-*/
 
 .news-card:hover .news-camera-scan{
   animation:newsCameraScan .42s ease-out forwards;
@@ -1403,6 +1369,65 @@ main{
   color:#f0ce43;
   transform:translateX(3px);
   text-shadow:0 0 10px rgba(213,180,46,.18);
+}
+
+
+/* ================= COMMENTS COUNT ================= */
+
+.news-card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:auto;
+  padding-top:13px;
+}
+
+.news-comments{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:16px;
+  color:#505354;
+  font-size:10px;
+  line-height:1;
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.news-comments:hover{
+  color:#c5a82c;
+}
+
+.news-comments-icon{
+  width:13px;
+  height:11px;
+  position:relative;
+  display:inline-block;
+  border:1.4px solid currentColor;
+  border-radius:3px;
+  flex-shrink:0;
+}
+
+.news-comments-icon:after{
+  content:"";
+  position:absolute;
+  left:2px;
+  bottom:-4px;
+  width:4px;
+  height:4px;
+  border-left:1.4px solid currentColor;
+  border-bottom:1.4px solid currentColor;
+  transform:skew(-20deg);
+  background:#0d0e0e;
+}
+
+.news-comments-count{
+  color:inherit;
+  font-size:10px;
+  font-weight:600;
+  line-height:1;
 }
 
 
@@ -2031,7 +2056,6 @@ footer{
   }
 
 }
-
 
 @media(max-width:430px){
 
@@ -3008,6 +3032,130 @@ const NEWS_PER_LOAD =
   6;
 
 
+/* ================= COMMENTS ================= */
+
+const commentCounts =
+  {};
+
+
+/* ================= LOAD COMMENT COUNTS ================= */
+
+async function loadCommentCounts(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("comments")
+    .select("news_id");
+
+
+  if(error){
+
+    console.error(
+      "Ошибка comments:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  Object.keys(
+    commentCounts
+  ).forEach(
+    key => delete commentCounts[key]
+  );
+
+
+  if(!data){
+    return;
+  }
+
+
+  data.forEach(
+    comment => {
+
+      const newsId =
+        String(
+          comment.news_id
+        );
+
+      if(!commentCounts[newsId]){
+
+        commentCounts[newsId] =
+          0;
+
+      }
+
+      commentCounts[newsId]++;
+
+    }
+  );
+
+}
+
+
+/* ================= COMMENT INDICATOR ================= */
+
+function createCommentIndicator(
+  newsId
+){
+
+  const count =
+    Math.min(
+      Number(
+        commentCounts[
+          String(newsId)
+        ] || 0
+      ),
+      20
+    );
+
+
+  if(count === 0){
+
+    return `
+      <div
+        class="news-comments"
+        title="Нет комментариев"
+        aria-label="Нет комментариев"
+      >
+
+        <span
+          class="news-comments-icon"
+        ></span>
+
+      </div>
+    `;
+
+  }
+
+
+  return `
+    <div
+      class="news-comments"
+      title="${count} комментариев"
+      aria-label="${count} комментариев"
+    >
+
+      <span
+        class="news-comments-icon"
+      ></span>
+
+      <span
+        class="news-comments-count"
+      >
+        ${count}
+      </span>
+
+    </div>
+  `;
+
+}
+
+
 /* ================= CREATE NEWS CARD ================= */
 
 function createNewsCard(
@@ -3135,14 +3283,23 @@ function createNewsCard(
         )}
       </p>
 
-      <a
-        class="news-more"
-        href="./news.html?id=${encodeURIComponent(
+
+      <div class="news-card-bottom">
+
+        ${createCommentIndicator(
           news.id
-        )}"
-      >
-        Читать далее →
-      </a>
+        )}
+
+        <a
+          class="news-more"
+          href="./news.html?id=${encodeURIComponent(
+            news.id
+          )}"
+        >
+          Читать далее →
+        </a>
+
+      </div>
 
     </div>
 
@@ -3604,6 +3761,14 @@ async function loadNews(){
 
   allNews =
     data || [];
+
+
+  /*
+    Загружаем комментарии после получения
+    новостей, затем строим карточки.
+  */
+
+  await loadCommentCounts();
 
 
   renderNews();
