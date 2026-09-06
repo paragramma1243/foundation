@@ -377,6 +377,200 @@ main{
 
 
 /* ==========================================
+   COMMENTS
+========================================== */
+
+.comments{
+ margin-top:25px;
+ background:#111213;
+ border:1px solid #292b2c;
+ border-radius:8px;
+ padding:30px 38px;
+}
+
+.comments-title{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+ margin-bottom:25px;
+}
+
+.comments-title h2{
+ font-size:18px;
+ text-transform:uppercase;
+ letter-spacing:.3px;
+}
+
+.comments-count{
+ color:#747779;
+ font-size:10px;
+}
+
+
+/* COMMENT FORM */
+
+.comment-form{
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+ margin-bottom:30px;
+}
+
+.comment-input,
+.comment-textarea{
+ width:100%;
+ background:#090a0b;
+ border:1px solid #292b2c;
+ border-radius:5px;
+ color:#eee;
+ font-family:Arial,Helvetica,sans-serif;
+ font-size:12px;
+ outline:none;
+ transition:
+  border-color .2s ease,
+  box-shadow .2s ease;
+}
+
+.comment-input{
+ height:42px;
+ padding:0 13px;
+}
+
+.comment-textarea{
+ min-height:105px;
+ padding:12px 13px;
+ resize:vertical;
+ line-height:1.6;
+}
+
+.comment-input::placeholder,
+.comment-textarea::placeholder{
+ color:#55585a;
+}
+
+.comment-input:focus,
+.comment-textarea:focus{
+ border-color:#f4ca28;
+ box-shadow:0 0 0 2px rgba(244,202,40,.05);
+}
+
+.comment-bottom{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+}
+
+.comment-info{
+ color:#55585a;
+ font-size:9px;
+}
+
+.comment-submit{
+ border:0;
+ background:#f4ca28;
+ color:#080909;
+ border-radius:4px;
+ padding:11px 18px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ cursor:pointer;
+ transition:
+  transform .2s ease,
+  background .2s ease,
+  box-shadow .2s ease;
+}
+
+.comment-submit:hover{
+ background:#ffd83d;
+ transform:translateY(-1px);
+ box-shadow:0 5px 15px rgba(244,202,40,.12);
+}
+
+.comment-submit:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+ transform:none;
+ box-shadow:none;
+}
+
+.comment-status{
+ min-height:16px;
+ color:#747779;
+ font-size:10px;
+ margin-top:3px;
+}
+
+.comment-status.error{
+ color:#e52b2b;
+}
+
+.comment-status.success{
+ color:#4caf78;
+}
+
+
+/* COMMENT LIST */
+
+.comment-list{
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+}
+
+.comment{
+ background:#090a0b;
+ border:1px solid #242627;
+ border-radius:6px;
+ padding:16px;
+}
+
+.comment-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+ margin-bottom:9px;
+}
+
+.comment-author{
+ color:#eee;
+ font-size:11px;
+ font-weight:bold;
+}
+
+.comment-date{
+ color:#55585a;
+ font-size:9px;
+}
+
+.comment-content{
+ color:#b8babb;
+ font-size:12px;
+ line-height:1.7;
+ white-space:pre-wrap;
+ word-wrap:break-word;
+}
+
+.comments-empty{
+ text-align:center;
+ padding:25px 10px;
+ color:#55585a;
+ font-size:10px;
+ border-top:1px solid #202223;
+}
+
+.comments-loading{
+ text-align:center;
+ padding:20px 10px;
+ color:#55585a;
+ font-size:10px;
+}
+
+
+/* ==========================================
    FOOTER
 ========================================== */
 
@@ -511,6 +705,28 @@ footer{
   line-height:1.8;
  }
 
+ .comments{
+  padding:24px 20px;
+  margin-top:20px;
+ }
+
+ .comments-title{
+  margin-bottom:20px;
+ }
+
+ .comments-title h2{
+  font-size:16px;
+ }
+
+ .comment-bottom{
+  align-items:flex-start;
+  flex-direction:column;
+ }
+
+ .comment-submit{
+  width:100%;
+ }
+
  .foot{
   grid-template-columns:1fr 1fr;
   gap:30px;
@@ -604,6 +820,93 @@ CB2
 </div>
 
 </div>
+
+
+<!-- ==========================================
+     COMMENTS
+========================================== -->
+
+<section class="comments" id="comments">
+
+<div class="comments-title">
+
+<h2>
+Комментарии
+</h2>
+
+<span
+ class="comments-count"
+ id="commentsCount">
+0 комментариев
+</span>
+
+</div>
+
+
+<form
+ class="comment-form"
+ id="commentForm"
+ autocomplete="off">
+
+
+<input
+ class="comment-input"
+ id="commentAuthor"
+ type="text"
+ maxlength="40"
+ placeholder="Ваше имя"
+ required
+>
+
+
+<textarea
+ class="comment-textarea"
+ id="commentContent"
+ maxlength="1000"
+ placeholder="Напишите комментарий..."
+ required
+></textarea>
+
+
+<div class="comment-bottom">
+
+<span
+ class="comment-info"
+ id="commentChars">
+0 / 1000
+</span>
+
+
+<button
+ class="comment-submit"
+ id="commentSubmit"
+ type="submit">
+Отправить
+</button>
+
+</div>
+
+
+<div
+ class="comment-status"
+ id="commentStatus">
+</div>
+
+</form>
+
+
+<div
+ class="comment-list"
+ id="commentList">
+
+<div class="comments-loading">
+Загрузка комментариев...
+</div>
+
+</div>
+
+</section>
+
 
 </div>
 
@@ -918,6 +1221,22 @@ function formatTime(dateString){
 
 
 /* ==========================================
+   ПОЛУЧЕНИЕ ID НОВОСТИ
+========================================== */
+
+function getNewsId(){
+
+ const params =
+  new URLSearchParams(
+   window.location.search
+  );
+
+ return params.get("id");
+
+}
+
+
+/* ==========================================
    ЗАГРУЗКА НОВОСТИ
 ========================================== */
 
@@ -927,18 +1246,8 @@ async function loadNews(){
   document.getElementById("article");
 
 
- /*
-  * Получаем ID из URL
-  */
-
- const params =
-  new URLSearchParams(
-   window.location.search
-  );
-
-
  const id =
-  params.get("id");
+  getNewsId();
 
 
  if(!id){
@@ -948,6 +1257,8 @@ async function loadNews(){
     Новость не найдена.
    </div>
   `;
+
+  hideComments();
 
   return;
 
@@ -987,6 +1298,8 @@ async function loadNews(){
     Не удалось загрузить новость.
    </div>
   `;
+
+  hideComments();
 
   return;
 
@@ -1165,6 +1478,563 @@ async function loadNews(){
  document.title =
   (data.title || "Новость") +
   " — SCP: CB2 Multiplayer";
+
+
+ /*
+  * Загружаем комментарии
+  */
+
+ loadComments(
+  Number(data.id)
+ );
+
+}
+
+
+/* ==========================================
+   КОММЕНТАРИИ
+========================================== */
+
+const commentForm =
+ document.getElementById(
+  "commentForm"
+ );
+
+const commentAuthor =
+ document.getElementById(
+  "commentAuthor"
+ );
+
+const commentContent =
+ document.getElementById(
+  "commentContent"
+ );
+
+const commentChars =
+ document.getElementById(
+  "commentChars"
+ );
+
+const commentStatus =
+ document.getElementById(
+  "commentStatus"
+ );
+
+const commentSubmit =
+ document.getElementById(
+  "commentSubmit"
+ );
+
+const commentList =
+ document.getElementById(
+  "commentList"
+ );
+
+const commentsCount =
+ document.getElementById(
+  "commentsCount"
+ );
+
+
+/*
+ * Счётчик символов
+ */
+
+commentContent.addEventListener(
+ "input",
+ function(){
+
+  commentChars.textContent =
+   this.value.length +
+   " / 1000";
+
+ }
+);
+
+
+/*
+ * Формат количества комментариев
+ */
+
+function commentsWord(number){
+
+ if(number % 10 === 1 &&
+    number % 100 !== 11){
+
+  return "комментарий";
+
+ }
+
+ if(
+  number % 10 >= 2 &&
+  number % 10 <= 4 &&
+  (
+   number % 100 < 10 ||
+   number % 100 >= 20
+  )
+ ){
+
+  return "комментария";
+
+ }
+
+ return "комментариев";
+
+}
+
+
+/*
+ * Отображение количества
+ */
+
+function updateCommentsCount(number){
+
+ commentsCount.textContent =
+  number +
+  " " +
+  commentsWord(number);
+
+}
+
+
+/*
+ * Скрыть комментарии,
+ * если новости не существует
+ */
+
+function hideComments(){
+
+ const comments =
+  document.getElementById(
+   "comments"
+  );
+
+ if(comments){
+
+  comments.style.display =
+   "none";
+
+ }
+
+}
+
+
+/*
+ * Создание элемента комментария
+ */
+
+function createCommentElement(comment){
+
+ const element =
+  document.createElement("div");
+
+ element.className =
+  "comment";
+
+
+ const head =
+  document.createElement("div");
+
+ head.className =
+  "comment-head";
+
+
+ const author =
+  document.createElement("span");
+
+ author.className =
+  "comment-author";
+
+ author.textContent =
+  comment.author;
+
+
+ const date =
+  document.createElement("span");
+
+ date.className =
+  "comment-date";
+
+ date.textContent =
+  formatTime(
+   comment.created_at
+  );
+
+
+ head.appendChild(author);
+ head.appendChild(date);
+
+
+ const content =
+  document.createElement("div");
+
+ content.className =
+  "comment-content";
+
+ content.textContent =
+  comment.content;
+
+
+ element.appendChild(head);
+ element.appendChild(content);
+
+
+ return element;
+
+}
+
+
+/*
+ * Загрузка комментариев
+ */
+
+async function loadComments(newsId){
+
+ commentList.innerHTML = `
+  <div class="comments-loading">
+   Загрузка комментариев...
+  </div>
+ `;
+
+
+ const { data, error } =
+  await db
+   .from("comments")
+   .select(`
+    id,
+    news_id,
+    author,
+    content,
+    created_at
+   `)
+   .eq("news_id", newsId)
+   .order(
+    "created_at",
+    {
+     ascending:true
+    }
+   );
+
+
+ if(error){
+
+  console.error(
+   "Ошибка загрузки комментариев:",
+   error
+  );
+
+
+  commentList.innerHTML = `
+   <div class="comments-empty">
+    Не удалось загрузить комментарии.
+   </div>
+  `;
+
+  updateCommentsCount(0);
+
+  return;
+
+ }
+
+
+ updateCommentsCount(
+  data.length
+ );
+
+
+ if(!data.length){
+
+  commentList.innerHTML = `
+   <div class="comments-empty">
+    Пока нет комментариев. Будьте первым!
+   </div>
+  `;
+
+  return;
+
+ }
+
+
+ commentList.innerHTML = "";
+
+
+ data.forEach(comment => {
+
+  commentList.appendChild(
+   createCommentElement(
+    comment
+   )
+  );
+
+ });
+
+}
+
+
+/*
+ * Отправка комментария
+ */
+
+commentForm.addEventListener(
+ "submit",
+ async function(event){
+
+  event.preventDefault();
+
+
+  const newsId =
+   getNewsId();
+
+
+  const author =
+   commentAuthor.value.trim();
+
+
+  const content =
+   commentContent.value.trim();
+
+
+  /*
+   * Проверка
+   */
+
+  if(!newsId){
+
+   showCommentStatus(
+    "Новость не найдена.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  if(author.length < 2){
+
+   showCommentStatus(
+    "Имя должно содержать минимум 2 символа.",
+    true
+   );
+
+   commentAuthor.focus();
+
+   return;
+
+  }
+
+
+  if(author.length > 40){
+
+   showCommentStatus(
+    "Имя слишком длинное.",
+    true
+   );
+
+   commentAuthor.focus();
+
+   return;
+
+  }
+
+
+  if(!content){
+
+   showCommentStatus(
+    "Введите текст комментария.",
+    true
+   );
+
+   commentContent.focus();
+
+   return;
+
+  }
+
+
+  if(content.length > 1000){
+
+   showCommentStatus(
+    "Комментарий слишком длинный.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  /*
+   * Блокируем кнопку
+   */
+
+  commentSubmit.disabled =
+   true;
+
+  commentSubmit.textContent =
+   "Отправка...";
+
+  showCommentStatus(
+   "",
+   false
+  );
+
+
+  /*
+   * Отправляем в Supabase
+   */
+
+  const { data, error } =
+   await db
+    .from("comments")
+    .insert({
+     news_id:Number(newsId),
+     author:author,
+     content:content
+    })
+    .select()
+    .single();
+
+
+  /*
+   * Ошибка
+   */
+
+  if(error){
+
+   console.error(
+    "Ошибка отправки комментария:",
+    error
+   );
+
+
+   showCommentStatus(
+    "Не удалось отправить комментарий.",
+    true
+   );
+
+
+   commentSubmit.disabled =
+    false;
+
+   commentSubmit.textContent =
+    "Отправить";
+
+   return;
+
+  }
+
+
+  /*
+   * Успешно
+   */
+
+  commentForm.reset();
+
+  commentChars.textContent =
+   "0 / 1000";
+
+
+  showCommentStatus(
+   "Комментарий опубликован.",
+   false,
+   true
+  );
+
+
+  /*
+   * Добавляем комментарий
+   * сразу на страницу
+   */
+
+  if(
+   commentList.querySelector(
+    ".comments-empty"
+   )
+  ){
+
+   commentList.innerHTML =
+    "";
+
+  }
+
+
+  if(data){
+
+   commentList.appendChild(
+    createCommentElement(
+     data
+    )
+   );
+
+  }
+
+
+  /*
+   * Обновляем количество
+   */
+
+  const currentCount =
+   commentList.querySelectorAll(
+    ".comment"
+   ).length;
+
+
+  updateCommentsCount(
+   currentCount
+  );
+
+
+  /*
+   * Разблокируем кнопку
+   */
+
+  commentSubmit.disabled =
+   false;
+
+  commentSubmit.textContent =
+   "Отправить";
+
+ }
+);
+
+
+/*
+ * Статус отправки
+ */
+
+function showCommentStatus(
+ message,
+ isError,
+ isSuccess
+){
+
+ commentStatus.textContent =
+  message;
+
+
+ commentStatus.classList.remove(
+  "error",
+  "success"
+ );
+
+
+ if(isError){
+
+  commentStatus.classList.add(
+   "error"
+  );
+
+ }
+
+
+ if(isSuccess){
+
+  commentStatus.classList.add(
+   "success"
+  );
+
+ }
 
 }
 
