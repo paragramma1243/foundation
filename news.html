@@ -512,6 +512,32 @@ main{
 }
 
 
+/* ==========================================
+   COMMENT LIMIT
+========================================== */
+
+.comment-limit{
+ display:none;
+ margin-bottom:30px;
+ padding:16px;
+ background:#090a0b;
+ border:1px solid #292b2c;
+ border-radius:5px;
+ color:#747779;
+ font-size:10px;
+ line-height:1.6;
+ text-align:center;
+}
+
+.comment-limit strong{
+ display:block;
+ color:#f4ca28;
+ font-size:11px;
+ margin-bottom:5px;
+ text-transform:uppercase;
+}
+
+
 /* COMMENT LIST */
 
 .comment-list{
@@ -896,6 +922,19 @@ CB2
 
 
 <div
+ class="comment-limit"
+ id="commentLimit">
+
+<strong>
+Лимит комментариев достигнут
+</strong>
+
+Для этой новости уже опубликовано максимальное количество комментариев — 20.
+
+</div>
+
+
+<div
  class="comment-list"
  id="commentList">
 
@@ -1032,6 +1071,13 @@ supabase.createClient(
  SUPABASE_URL,
  SUPABASE_KEY
 );
+
+
+/* ==========================================
+   ЛИМИТ КОММЕНТАРИЕВ
+========================================== */
+
+const MAX_COMMENTS = 20;
 
 
 /* ==========================================
@@ -1535,6 +1581,11 @@ const commentsCount =
   "commentsCount"
  );
 
+const commentLimit =
+ document.getElementById(
+  "commentLimit"
+ );
+
 
 /*
  * Счётчик символов
@@ -1593,6 +1644,34 @@ function updateCommentsCount(number){
   number +
   " " +
   commentsWord(number);
+
+}
+
+
+/*
+ * Проверка лимита
+ */
+
+function updateCommentLimit(number){
+
+ if(number >= MAX_COMMENTS){
+
+  commentForm.style.display =
+   "none";
+
+  commentLimit.style.display =
+   "block";
+
+  return;
+
+ }
+
+
+ commentForm.style.display =
+  "flex";
+
+ commentLimit.style.display =
+  "none";
 
 }
 
@@ -1732,17 +1811,36 @@ async function loadComments(newsId){
 
   updateCommentsCount(0);
 
+  updateCommentLimit(0);
+
   return;
 
  }
 
 
+ /*
+  * На всякий случай ограничиваем
+  * отображение первыми 20 комментариями
+  */
+
+ const comments =
+  data.slice(
+   0,
+   MAX_COMMENTS
+  );
+
+
  updateCommentsCount(
-  data.length
+  comments.length
  );
 
 
- if(!data.length){
+ updateCommentLimit(
+  comments.length
+ );
+
+
+ if(!comments.length){
 
   commentList.innerHTML = `
    <div class="comments-empty">
@@ -1758,7 +1856,7 @@ async function loadComments(newsId){
  commentList.innerHTML = "";
 
 
- data.forEach(comment => {
+ comments.forEach(comment => {
 
   commentList.appendChild(
    createCommentElement(
@@ -1856,6 +1954,68 @@ commentForm.addEventListener(
 
    showCommentStatus(
     "Комментарий слишком длинный.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  /*
+   * Проверяем текущее количество
+   * перед отправкой
+   */
+
+  const { count, error:countError } =
+   await db
+    .from("comments")
+    .select(
+     "id",
+     {
+      count:"exact",
+      head:true
+     }
+    )
+    .eq(
+     "news_id",
+     Number(newsId)
+    );
+
+
+  if(countError){
+
+   console.error(
+    "Ошибка проверки количества комментариев:",
+    countError
+   );
+
+   showCommentStatus(
+    "Не удалось проверить лимит комментариев.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  /*
+   * Если уже 20 комментариев
+   */
+
+  if(count >= MAX_COMMENTS){
+
+   updateCommentsCount(
+    count
+   );
+
+   updateCommentLimit(
+    count
+   );
+
+   showCommentStatus(
+    "Лимит комментариев для этой новости достигнут.",
     true
    );
 
@@ -1986,14 +2146,43 @@ commentForm.addEventListener(
 
 
   /*
-   * Разблокируем кнопку
+   * Проверяем достижение лимита
    */
 
-  commentSubmit.disabled =
-   false;
+  updateCommentLimit(
+   currentCount
+  );
 
-  commentSubmit.textContent =
-   "Отправить";
+
+  /*
+   * Если достигли лимита,
+   * убираем возможность отправки
+   */
+
+  if(currentCount >= MAX_COMMENTS){
+
+   showCommentStatus(
+    "",
+    false
+   );
+
+  }
+
+
+  /*
+   * Разблокируем кнопку,
+   * только если лимит ещё не достигнут
+   */
+
+  if(currentCount < MAX_COMMENTS){
+
+   commentSubmit.disabled =
+    false;
+
+   commentSubmit.textContent =
+    "Отправить";
+
+  }
 
  }
 );
