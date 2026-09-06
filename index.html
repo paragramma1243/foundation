@@ -326,6 +326,7 @@ nav a.active:before{
 }
 
 /* Технические диагональные линии */
+
 .hero:after{
   content:"";
   position:absolute;
@@ -344,6 +345,7 @@ nav a.active:before{
 }
 
 /* Scanlines */
+
 .hero:before{
   content:"";
   position:absolute;
@@ -361,6 +363,7 @@ nav a.active:before{
 }
 
 /* Техническая сетка */
+
 .hero .wrap:before{
   content:"";
   position:absolute;
@@ -385,12 +388,218 @@ nav a.active:before{
   );
 }
 
+
+/* ================= HERO CAMERA ================= */
+
+.hero-camera{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* REC */
+
+.hero-camera-rec{
+  position:absolute;
+  top:18px;
+  right:22px;
+  color:rgba(235,235,235,.55);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  text-shadow:0 0 8px rgba(255,255,255,.12);
+  opacity:.72;
+}
+
+.hero-camera-rec:before{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  margin-right:7px;
+  vertical-align:middle;
+  background:#d82d2d;
+  border-radius:50%;
+  box-shadow:
+    0 0 7px rgba(216,45,45,.65),
+    0 0 14px rgba(216,45,45,.22);
+  animation:recBlink 1.4s ease-in-out infinite;
+}
+
+@keyframes recBlink{
+
+  0%,
+  45%,
+  100%{
+    opacity:1;
+  }
+
+  55%,
+  80%{
+    opacity:.35;
+  }
+
+}
+
+
+/* Быстрое сканирование баннера */
+
+.hero-camera-scan{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:1px;
+  top:-5%;
+  background:rgba(213,180,46,.22);
+  box-shadow:
+    0 0 8px rgba(213,180,46,.10),
+    0 0 18px rgba(213,180,46,.035);
+  opacity:.18;
+  animation:heroCameraScan 7s ease-in-out infinite;
+}
+
+@keyframes heroCameraScan{
+
+  0%{
+    top:-5%;
+    opacity:0;
+  }
+
+  5%{
+    opacity:.22;
+  }
+
+  16%{
+    top:105%;
+    opacity:.18;
+  }
+
+  18%{
+    top:105%;
+    opacity:0;
+  }
+
+  100%{
+    top:105%;
+    opacity:0;
+  }
+
+}
+
+
+/* ================= HERO GLITCH ================= */
+
+.hero-camera-glitch{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 18%,
+      rgba(255,255,255,.045) 18.2% 18.8%,
+      transparent 19% 46%,
+      rgba(213,180,46,.035) 46.2% 47%,
+      transparent 47.2% 77%,
+      rgba(255,255,255,.04) 77.2% 77.8%,
+      transparent 78%
+    );
+
+  animation:cameraGlitch 5.2s steps(1,end) infinite;
+}
+
+@keyframes cameraGlitch{
+
+  0%,
+  71%,
+  100%{
+    opacity:0;
+    transform:translateX(0);
+  }
+
+  72%{
+    opacity:.18;
+    transform:translateX(-3px);
+  }
+
+  73%{
+    opacity:.06;
+    transform:translateX(2px);
+  }
+
+  74%{
+    opacity:.15;
+    transform:translateX(-1px);
+  }
+
+  75%{
+    opacity:.04;
+    transform:translateX(1px);
+  }
+
+  76%{
+    opacity:0;
+    transform:translateX(0);
+  }
+
+}
+
+
+/* ================= HERO NOISE ================= */
+
+.hero-camera-noise{
+  position:absolute;
+  inset:0;
+  opacity:.055;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(255,255,255,.025) 4px
+    );
+
+  animation:heroNoise .18s steps(2,end) infinite;
+}
+
+@keyframes heroNoise{
+
+  0%{
+    transform:translate(0,0);
+  }
+
+  25%{
+    transform:translate(-1px,1px);
+  }
+
+  50%{
+    transform:translate(1px,0);
+  }
+
+  75%{
+    transform:translate(0,-1px);
+  }
+
+  100%{
+    transform:translate(0,0);
+  }
+
+}
+
+
 .hero-inner{
   height:100%;
   display:flex;
   align-items:center;
   position:relative;
-  z-index:2;
+  z-index:4;
 }
 
 .hero-content{
@@ -462,7 +671,7 @@ nav a.active:before{
   width:100%;
   height:2px;
   background:#e3bd32;
-  z-index:5;
+  z-index:6;
   box-shadow:
     0 0 10px rgba(227,189,50,.7),
     0 0 25px rgba(227,189,50,.3);
@@ -472,6 +681,7 @@ nav a.active:before{
 }
 
 @keyframes heroScan{
+
   0%{
     transform:translateX(-100%);
     opacity:0;
@@ -489,6 +699,7 @@ nav a.active:before{
     transform:translateX(100%);
     opacity:0;
   }
+
 }
 
 
@@ -617,7 +828,7 @@ main{
     opacity .25s ease,
     transform .25s ease,
     box-shadow .25s ease;
-  z-index:4;
+  z-index:8;
 }
 
 .news-card:hover{
@@ -709,6 +920,7 @@ main{
   position:absolute;
   inset:0;
   pointer-events:none;
+  z-index:2;
   background:
     linear-gradient(
       90deg,
@@ -738,13 +950,166 @@ main{
 }
 
 
+/* ================= NEWS CAMERA EFFECT ================= */
+
+/*
+  ВАЖНО:
+  .news-camera находится ВНУТРИ .news-image-area.
+  Поэтому весь эффект камеры ограничен только картинкой.
+*/
+
+.news-camera{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+
+/* REC на карточке */
+
+.news-camera-rec{
+  position:absolute;
+  top:12px;
+  right:13px;
+  color:rgba(235,235,235,.62);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-shadow:0 0 7px rgba(0,0,0,.45);
+  opacity:.5;
+  transition:opacity .2s ease;
+}
+
+.news-camera-rec:before{
+  content:"";
+  display:inline-block;
+  width:5px;
+  height:5px;
+  margin-right:5px;
+  vertical-align:middle;
+  background:#d82d2d;
+  border-radius:50%;
+  box-shadow:
+    0 0 6px rgba(216,45,45,.55),
+    0 0 11px rgba(216,45,45,.18);
+}
+
+.news-card:hover .news-camera-rec{
+  opacity:.8;
+}
+
+
+/* Быстрое сканирование картинки */
+
+.news-camera-scan{
+  position:absolute;
+  left:0;
+  top:-10%;
+  width:100%;
+  height:2px;
+
+  background:rgba(225,225,225,.30);
+
+  box-shadow:
+    0 0 8px rgba(255,255,255,.13),
+    0 0 18px rgba(255,255,255,.045);
+
+  opacity:0;
+  transform:translateY(0);
+}
+
+
+/*
+  Сканирование запускается только при наведении.
+  Быстро проходит от верха картинки к низу.
+*/
+
+.news-card:hover .news-camera-scan{
+  animation:newsCameraScan .48s ease-out forwards;
+}
+
+@keyframes newsCameraScan{
+
+  0%{
+    top:-5%;
+    opacity:0;
+  }
+
+  8%{
+    opacity:.52;
+  }
+
+  48%{
+    opacity:.36;
+  }
+
+  100%{
+    top:105%;
+    opacity:0;
+  }
+
+}
+
+
+/* Лёгкий цифровой шум только на картинке */
+
+.news-camera-noise{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(255,255,255,.022) 4px
+    );
+
+  transition:opacity .18s ease;
+}
+
+.news-card:hover .news-camera-noise{
+  opacity:.45;
+  animation:newsCameraNoise .16s steps(2,end) infinite;
+}
+
+@keyframes newsCameraNoise{
+
+  0%{
+    transform:translate(0,0);
+  }
+
+  25%{
+    transform:translate(-1px,0);
+  }
+
+  50%{
+    transform:translate(1px,1px);
+  }
+
+  75%{
+    transform:translate(0,-1px);
+  }
+
+  100%{
+    transform:translate(0,0);
+  }
+
+}
+
+
 /* ================= TAG COLORS ================= */
 
 .news-card-tag{
   position:absolute;
   top:14px;
   left:14px;
-  z-index:5;
+  z-index:7;
   padding:5px 8px;
   color:white;
   font-size:9px;
@@ -1430,6 +1795,11 @@ footer{
     opacity:.08;
   }
 
+  .hero-camera-rec{
+    top:14px;
+    right:16px;
+  }
+
   .section-head{
     align-items:flex-start;
     flex-direction:column;
@@ -1498,8 +1868,6 @@ footer{
 
 }
 
-
-/* ================= SMALL MOBILE ================= */
 
 @media(max-width:430px){
 
@@ -1635,6 +2003,21 @@ footer{
 
   <div class="hero-loading-line"></div>
 
+  <div class="hero-camera">
+
+    <div class="hero-camera-rec">
+      REC
+    </div>
+
+    <div class="hero-camera-scan"></div>
+
+    <div class="hero-camera-glitch"></div>
+
+    <div class="hero-camera-noise"></div>
+
+  </div>
+
+
   <div class="wrap hero-inner">
 
     <div class="hero-content">
@@ -1644,8 +2027,8 @@ footer{
       </div>
 
       <h1>
-        ЦЕНТР<br>
-        ИНФОРМАЦИИ
+        ГОЛОС<br>
+        ФОНДА
       </h1>
 
       <p>
@@ -1696,8 +2079,6 @@ footer{
       >
         Все новости
       </button>
-
-      <!-- СОБЫТИЯ СООБЩЕСТВА -->
 
       <button
         class="filter"
@@ -1768,8 +2149,6 @@ footer{
       <aside class="sidebar">
 
 
-        <!-- ПОСЛЕДНИЕ ИЗМЕНЕНИЯ -->
-
         <div
           class="panel"
           id="changes"
@@ -1804,8 +2183,6 @@ footer{
 
         </div>
 
-
-        <!-- SCP-СИСТЕМНОЕ СООБЩЕНИЕ -->
 
         <div class="panel">
 
@@ -1852,8 +2229,6 @@ footer{
 
         </div>
 
-
-        <!-- МОНИТОРИНГ СИСТЕМЫ -->
 
         <div class="panel">
 
@@ -1928,8 +2303,6 @@ footer{
         </div>
 
 
-        <!-- В ЦЕНТРЕ ВНИМАНИЯ -->
-
         <div
           class="panel focus-panel"
           id="focusPanel"
@@ -1960,8 +2333,6 @@ footer{
 
         </div>
 
-
-        <!-- О ПРОЕКТЕ -->
 
         <div
           class="panel"
@@ -2542,6 +2913,24 @@ function createNewsCard(
         ""
       }
 
+
+      <!--
+        ЭФФЕКТ КАМЕРЫ НАХОДИТСЯ ЗДЕСЬ,
+        ВНУТРИ ОБЛАСТИ КАРТИНКИ.
+      -->
+
+      <div class="news-camera">
+
+        <div class="news-camera-rec">
+          REC
+        </div>
+
+        <div class="news-camera-scan"></div>
+
+        <div class="news-camera-noise"></div>
+
+      </div>
+
     </div>
 
 
@@ -2942,15 +3331,6 @@ function renderNews(
       news,
       index
     ) => {
-
-      /*
-        Большой карточкой "Последняя новость"
-        становится только первая новость,
-        когда выбран фильтр "Все новости".
-
-        При выборе конкретного тега все карточки
-        остаются одинакового обычного размера.
-      */
 
       const isFeatured =
         currentCategory === "all" &&
