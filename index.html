@@ -405,13 +405,13 @@ nav a.active:before{
   position:absolute;
   top:18px;
   right:22px;
-  color:rgba(235,235,235,.55);
+  color:rgba(235,235,235,.62);
   font-size:9px;
   font-weight:700;
   letter-spacing:2px;
   text-transform:uppercase;
   text-shadow:0 0 8px rgba(255,255,255,.12);
-  opacity:.72;
+  opacity:.78;
 }
 
 .hero-camera-rec:before{
@@ -451,14 +451,22 @@ nav a.active:before{
   position:absolute;
   left:0;
   width:100%;
-  height:1px;
+  height:2px;
   top:-5%;
-  background:rgba(213,180,46,.22);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.20) 25%,
+      rgba(213,180,46,.25) 50%,
+      rgba(255,255,255,.20) 75%,
+      transparent
+    );
   box-shadow:
-    0 0 8px rgba(213,180,46,.10),
-    0 0 18px rgba(213,180,46,.035);
-  opacity:.18;
-  animation:heroCameraScan 7s ease-in-out infinite;
+    0 0 8px rgba(213,180,46,.13),
+    0 0 18px rgba(213,180,46,.05);
+  opacity:.22;
+  animation:heroCameraScan 6s ease-in-out infinite;
 }
 
 @keyframes heroCameraScan{
@@ -469,15 +477,15 @@ nav a.active:before{
   }
 
   5%{
-    opacity:.22;
+    opacity:.32;
   }
 
-  16%{
+  17%{
     top:105%;
-    opacity:.18;
+    opacity:.24;
   }
 
-  18%{
+  19%{
     top:105%;
     opacity:0;
   }
@@ -487,6 +495,33 @@ nav a.active:before{
     opacity:0;
   }
 
+}
+
+
+/* ================= HERO CAMERA LINES ================= */
+
+/*
+  Полоски как у камеры из игры.
+  Они специально очень тонкие и прозрачные,
+  чтобы не перебивать изображение.
+*/
+
+.hero-camera-lines{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(255,255,255,.018) 4px,
+      transparent 5px
+    );
+
+  opacity:.45;
+  mix-blend-mode:screen;
 }
 
 
@@ -502,47 +537,52 @@ nav a.active:before{
     linear-gradient(
       90deg,
       transparent 0 18%,
-      rgba(255,255,255,.045) 18.2% 18.8%,
+      rgba(255,255,255,.055) 18.2% 18.8%,
       transparent 19% 46%,
-      rgba(213,180,46,.035) 46.2% 47%,
+      rgba(213,180,46,.045) 46.2% 47%,
       transparent 47.2% 77%,
-      rgba(255,255,255,.04) 77.2% 77.8%,
+      rgba(255,255,255,.05) 77.2% 77.8%,
       transparent 78%
     );
 
-  animation:cameraGlitch 5.2s steps(1,end) infinite;
+  animation:cameraGlitch 4.8s steps(1,end) infinite;
 }
 
 @keyframes cameraGlitch{
 
   0%,
-  71%,
+  68%,
   100%{
     opacity:0;
     transform:translateX(0);
   }
 
-  72%{
-    opacity:.18;
-    transform:translateX(-3px);
+  69%{
+    opacity:.22;
+    transform:translateX(-4px);
   }
 
-  73%{
-    opacity:.06;
+  70%{
+    opacity:.08;
+    transform:translateX(3px);
+  }
+
+  71%{
+    opacity:.19;
+    transform:translateX(-2px);
+  }
+
+  72%{
+    opacity:.07;
     transform:translateX(2px);
   }
 
-  74%{
+  73%{
     opacity:.15;
     transform:translateX(-1px);
   }
 
-  75%{
-    opacity:.04;
-    transform:translateX(1px);
-  }
-
-  76%{
+  74%{
     opacity:0;
     transform:translateX(0);
   }
@@ -555,18 +595,20 @@ nav a.active:before{
 .hero-camera-noise{
   position:absolute;
   inset:0;
-  opacity:.055;
+  opacity:.09;
   pointer-events:none;
 
   background:
     repeating-linear-gradient(
       0deg,
       transparent 0,
-      transparent 3px,
-      rgba(255,255,255,.025) 4px
+      transparent 2px,
+      rgba(255,255,255,.022) 3px,
+      transparent 4px
     );
 
-  animation:heroNoise .18s steps(2,end) infinite;
+  animation:heroNoise .16s steps(2,end) infinite;
+  mix-blend-mode:screen;
 }
 
 @keyframes heroNoise{
@@ -952,34 +994,29 @@ main{
 
 /* ================= NEWS CAMERA EFFECT ================= */
 
-/*
-  ВАЖНО:
-  .news-camera находится ВНУТРИ .news-image-area.
-  Поэтому весь эффект камеры ограничен только картинкой.
-*/
-
 .news-camera{
   position:absolute;
   inset:0;
   z-index:4;
   pointer-events:none;
   overflow:hidden;
+  opacity:1;
 }
 
 
-/* REC на карточке */
+/* REC */
 
 .news-camera-rec{
   position:absolute;
   top:12px;
   right:13px;
-  color:rgba(235,235,235,.62);
+  color:rgba(235,235,235,.64);
   font-size:8px;
   font-weight:700;
   letter-spacing:1.5px;
   text-transform:uppercase;
-  text-shadow:0 0 7px rgba(0,0,0,.45);
-  opacity:.5;
+  text-shadow:0 0 7px rgba(0,0,0,.55);
+  opacity:.52;
   transition:opacity .2s ease;
 }
 
@@ -995,87 +1032,211 @@ main{
   box-shadow:
     0 0 6px rgba(216,45,45,.55),
     0 0 11px rgba(216,45,45,.18);
+  animation:newsRecBlink 1.6s steps(2,end) infinite;
+}
+
+@keyframes newsRecBlink{
+
+  0%,
+  100%{
+    opacity:1;
+  }
+
+  50%{
+    opacity:.4;
+  }
+
 }
 
 .news-card:hover .news-camera-rec{
-  opacity:.8;
+  opacity:.85;
 }
 
 
-/* Быстрое сканирование картинки */
-
-.news-camera-scan{
-  position:absolute;
-  left:0;
-  top:-10%;
-  width:100%;
-  height:2px;
-
-  background:rgba(225,225,225,.30);
-
-  box-shadow:
-    0 0 8px rgba(255,255,255,.13),
-    0 0 18px rgba(255,255,255,.045);
-
-  opacity:0;
-  transform:translateY(0);
-}
-
+/* ================= NEWS CAMERA LINES ================= */
 
 /*
-  Сканирование запускается только при наведении.
-  Быстро проходит от верха картинки к низу.
+  Горизонтальные полоски как у камеры
+  непосредственно поверх изображения.
 */
 
-.news-card:hover .news-camera-scan{
-  animation:newsCameraScan .48s ease-out forwards;
-}
-
-@keyframes newsCameraScan{
-
-  0%{
-    top:-5%;
-    opacity:0;
-  }
-
-  8%{
-    opacity:.52;
-  }
-
-  48%{
-    opacity:.36;
-  }
-
-  100%{
-    top:105%;
-    opacity:0;
-  }
-
-}
-
-
-/* Лёгкий цифровой шум только на картинке */
-
-.news-camera-noise{
+.news-camera-lines{
   position:absolute;
   inset:0;
-  opacity:0;
   pointer-events:none;
 
   background:
     repeating-linear-gradient(
       0deg,
       transparent 0,
-      transparent 3px,
-      rgba(255,255,255,.022) 4px
+      transparent 2px,
+      rgba(255,255,255,.024) 3px,
+      transparent 4px
     );
 
-  transition:opacity .18s ease;
+  opacity:.55;
+  mix-blend-mode:screen;
 }
 
-.news-card:hover .news-camera-noise{
-  opacity:.45;
-  animation:newsCameraNoise .16s steps(2,end) infinite;
+
+/* Более редкие полосы */
+
+.news-camera-lines:after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 11px,
+      rgba(213,180,46,.018) 12px,
+      transparent 13px
+    );
+
+  opacity:.65;
+}
+
+
+/* ================= NEWS CAMERA SCAN ================= */
+
+.news-camera-scan{
+  position:absolute;
+  left:0;
+  top:-8%;
+  width:100%;
+  height:3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.22) 20%,
+      rgba(255,255,255,.40) 50%,
+      rgba(213,180,46,.20) 80%,
+      transparent
+    );
+
+  box-shadow:
+    0 0 7px rgba(255,255,255,.16),
+    0 0 16px rgba(213,180,46,.07);
+
+  opacity:0;
+}
+
+
+/*
+  Быстрый проход сканера по изображению
+  при наведении.
+*/
+
+.news-card:hover .news-camera-scan{
+  animation:newsCameraScan .42s ease-out forwards;
+}
+
+@keyframes newsCameraScan{
+
+  0%{
+    top:-8%;
+    opacity:0;
+  }
+
+  8%{
+    opacity:.65;
+  }
+
+  45%{
+    opacity:.48;
+  }
+
+  100%{
+    top:108%;
+    opacity:0;
+  }
+
+}
+
+
+/* ================= NEWS CAMERA GLITCH ================= */
+
+.news-camera-glitch{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 25%,
+      rgba(255,255,255,.035) 25.2% 25.7%,
+      transparent 26% 62%,
+      rgba(213,180,46,.025) 62.2% 62.7%,
+      transparent 63%
+    );
+}
+
+.news-card:hover .news-camera-glitch{
+  animation:newsCameraGlitch .32s steps(1,end);
+}
+
+@keyframes newsCameraGlitch{
+
+  0%{
+    opacity:0;
+    transform:translateX(0);
+  }
+
+  20%{
+    opacity:.16;
+    transform:translateX(-2px);
+  }
+
+  35%{
+    opacity:.05;
+    transform:translateX(2px);
+  }
+
+  55%{
+    opacity:.11;
+    transform:translateX(-1px);
+  }
+
+  75%{
+    opacity:.04;
+    transform:translateX(1px);
+  }
+
+  100%{
+    opacity:0;
+    transform:translateX(0);
+  }
+
+}
+
+
+/* ================= NEWS CAMERA NOISE ================= */
+
+.news-camera-noise{
+  position:absolute;
+  inset:0;
+  opacity:.32;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(255,255,255,.022) 3px,
+      transparent 4px
+    );
+
+  mix-blend-mode:screen;
+
+  animation:
+    newsCameraNoise .16s steps(2,end) infinite;
 }
 
 @keyframes newsCameraNoise{
@@ -1416,7 +1577,6 @@ main{
   object-fit:contain;
   display:block;
 }
-
 
 .change-title{
   color:#c2c2c2;
@@ -1800,6 +1960,10 @@ footer{
     right:16px;
   }
 
+  .hero-camera-lines{
+    opacity:.35;
+  }
+
   .section-head{
     align-items:flex-start;
     flex-direction:column;
@@ -2010,6 +2174,8 @@ footer{
     </div>
 
     <div class="hero-camera-scan"></div>
+
+    <div class="hero-camera-lines"></div>
 
     <div class="hero-camera-glitch"></div>
 
@@ -2888,15 +3054,6 @@ function createNewsCard(
 
     <div class="news-image-area">
 
-      <div
-        class="news-card-tag ${tagClass}"
-      >
-        ${escapeHtml(
-          news.category ||
-          "Новости"
-        )}
-      </div>
-
       ${
         image
         ?
@@ -2914,21 +3071,30 @@ function createNewsCard(
       }
 
 
-      <!--
-        ЭФФЕКТ КАМЕРЫ НАХОДИТСЯ ЗДЕСЬ,
-        ВНУТРИ ОБЛАСТИ КАРТИНКИ.
-      -->
-
       <div class="news-camera">
 
         <div class="news-camera-rec">
           REC
         </div>
 
+        <div class="news-camera-lines"></div>
+
         <div class="news-camera-scan"></div>
+
+        <div class="news-camera-glitch"></div>
 
         <div class="news-camera-noise"></div>
 
+      </div>
+
+
+      <div
+        class="news-card-tag ${tagClass}"
+      >
+        ${escapeHtml(
+          news.category ||
+          "Новости"
+        )}
       </div>
 
     </div>
