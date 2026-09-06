@@ -303,6 +303,10 @@ main{
  background:#bc7722;
 }
 
+.community{
+ background:#318c9c;
+}
+
 .time{
  color:#747779;
  font-size:10px;
@@ -538,8 +542,8 @@ CB2
 Новости
 </a>
 
-<a href="index.html#news">
-Сервера
+<a href="archive.html">
+Архив
 </a>
 
 <a href="index.html#about">
@@ -637,8 +641,8 @@ SCP: CB2 Multiplayer.
 Новости
 </a>
 
-<a href="index.html#news">
-Сервера
+<a href="archive.html">
+Архив
 </a>
 
 <a href="index.html#about">
@@ -803,6 +807,9 @@ function categoryClass(category){
 
  if(category === "Обновления")
   return "purple";
+
+ if(category === "Сообщество")
+  return "community";
 
  if(category === "Сервера")
   return "blue";
