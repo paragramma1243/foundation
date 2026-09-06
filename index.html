@@ -761,6 +761,10 @@ main{
   background:#964ce0;
 }
 
+.news-card-tag.tag-community{
+  background:#318c9c;
+}
+
 .news-card-tag.tag-servers{
   background:#397ecb;
 }
@@ -1693,6 +1697,15 @@ footer{
         Все новости
       </button>
 
+      <!-- СОБЫТИЯ СООБЩЕСТВА -->
+
+      <button
+        class="filter"
+        data-category="Сообщество"
+      >
+        Сообщество
+      </button>
+
       <button
         class="filter"
         data-category="Обновления"
@@ -2418,6 +2431,10 @@ function categoryClass(category){
 
   if(category === "Обновления"){
     return "tag-updates";
+  }
+
+  if(category === "Сообщество"){
+    return "tag-community";
   }
 
   if(category === "Сервера"){
