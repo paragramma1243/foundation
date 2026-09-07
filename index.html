@@ -323,30 +323,25 @@ nav a.active:before{
 }
 
 .login-button{
-  border:1px solid #d5b42e;
-  background:#d5b42e;
-  color:#0a0a0a;
-  padding:10px 15px;
+  border:0;
+  background:#f4ca28;
+  color:#080909;
+  border-radius:4px;
+  padding:10px 16px;
   font-size:10px;
-  font-weight:800;
-  letter-spacing:1.2px;
+  font-weight:bold;
   text-transform:uppercase;
   cursor:pointer;
-  border-radius:5px;
   transition:
     transform .2s ease,
     background .2s ease,
-    box-shadow .2s ease,
-    filter .2s ease;
+    box-shadow .2s ease;
 }
 
 .login-button:hover{
-  background:#f0ce43;
-  border-color:#f0ce43;
+  background:#ffd83d;
   transform:translateY(-1px);
-  box-shadow:
-    0 6px 16px rgba(213,180,46,.14),
-    0 0 15px rgba(213,180,46,.06);
+  box-shadow:0 5px 15px rgba(244,202,40,.12);
 }
 
 .login-button:active{
@@ -361,45 +356,48 @@ nav a.active:before{
   display:none;
 }
 
+.auth-user.visible{
+  display:block;
+}
+
 .auth-user-button{
+  border:1px solid #292b2c;
+  background:#111213;
+  color:#eee;
+  border-radius:5px;
+  min-height:40px;
+  padding:4px 9px 4px 5px;
   display:flex;
   align-items:center;
-  gap:9px;
-  background:#0c0d0d;
-  border:1px solid #303233;
-  color:#ddd;
-  padding:5px 9px 5px 5px;
+  gap:8px;
   cursor:pointer;
-  border-radius:5px;
   transition:
     border-color .2s ease,
-    background .2s ease,
-    box-shadow .2s ease;
+    background .2s ease;
 }
 
 .auth-user-button:hover{
-  border-color:#555;
-  background:#111313;
-  box-shadow:0 0 12px rgba(213,180,46,.04);
+  border-color:#f4ca28;
+  background:#151617;
 }
 
 .auth-avatar{
   width:30px;
   height:30px;
+  border-radius:50%;
   object-fit:cover;
-  border-radius:4px;
-  background:#151616;
+  background:#202223;
   display:block;
 }
 
 .auth-name{
-  max-width:120px;
+  max-width:105px;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-  color:#ccc;
+  color:#ddd;
   font-size:10px;
-  font-weight:700;
+  font-weight:bold;
 }
 
 
@@ -407,18 +405,16 @@ nav a.active:before{
 
 .auth-menu{
   position:absolute;
-  top:calc(100% + 10px);
   right:0;
-  width:220px;
-  background:#080909;
-  border:1px solid #292a2b;
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.55),
-    0 0 20px rgba(213,180,46,.025);
-  padding:15px;
+  top:calc(100% + 8px);
+  width:190px;
+  background:#111213;
+  border:1px solid #292b2c;
+  border-radius:6px;
+  padding:10px;
   display:none;
-  z-index:100;
-  border-radius:5px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+  z-index:30;
 }
 
 .auth-menu.open{
@@ -426,48 +422,42 @@ nav a.active:before{
 }
 
 .auth-menu-info{
-  padding-bottom:13px;
-  border-bottom:1px solid #202122;
+  padding:5px 5px 10px;
+  border-bottom:1px solid #202223;
 }
 
 .auth-menu-label{
-  color:#d5b42e;
+  color:#55585a;
   font-size:8px;
-  font-weight:800;
-  letter-spacing:2px;
-  margin-bottom:7px;
+  font-weight:bold;
+  letter-spacing:.8px;
+  margin-bottom:5px;
 }
 
 .auth-menu-name{
-  color:#ddd;
+  color:#eee;
   font-size:11px;
-  font-weight:700;
-  word-break:break-word;
+  font-weight:bold;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .auth-logout{
   width:100%;
-  margin-top:12px;
-  padding:9px 10px;
-  background:#0c0d0d;
-  border:1px solid #303233;
-  color:#888;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:1px;
+  border:0;
+  background:none;
+  color:#e52b2b;
+  text-align:left;
+  padding:10px 5px 4px;
+  font-size:10px;
+  font-weight:bold;
   text-transform:uppercase;
   cursor:pointer;
-  border-radius:4px;
-  transition:
-    color .2s ease,
-    border-color .2s ease,
-    background .2s ease;
 }
 
 .auth-logout:hover{
-  color:#ddd;
-  border-color:#555;
-  background:#151616;
+  color:#ff4b4b;
 }
 
 
@@ -476,12 +466,12 @@ nav a.active:before{
 .auth-modal{
   position:fixed;
   inset:0;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(4px);
   display:none;
   align-items:center;
   justify-content:center;
   padding:20px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(7px);
   z-index:1000;
 }
 
@@ -490,15 +480,14 @@ nav a.active:before{
 }
 
 .auth-modal-box{
-  width:min(440px,100%);
+  width:100%;
+  max-width:430px;
+  background:#111213;
+  border:1px solid #363839;
+  border-radius:7px;
+  box-shadow:0 25px 70px rgba(0,0,0,.55);
   position:relative;
-  background:#0b0c0c;
-  border:1px solid #303233;
-  box-shadow:
-    0 25px 80px rgba(0,0,0,.7),
-    0 0 30px rgba(213,180,46,.025);
   overflow:hidden;
-  border-radius:6px;
   animation:authModalIn .2s ease-out;
 }
 
@@ -518,94 +507,84 @@ nav a.active:before{
 
 .auth-modal-header{
   height:48px;
+  padding:0 18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 18px;
-  border-bottom:1px solid #242526;
-  background:#050606;
+  border-bottom:1px solid #292b2c;
+  background:#0b0c0d;
 }
 
 .auth-modal-title{
-  color:#bbb;
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:2px;
+  color:#eee;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:.7px;
 }
 
 .auth-modal-code{
-  color:#555;
+  color:#f4ca28;
   font-size:8px;
-  letter-spacing:1.5px;
-  font-family:monospace;
+  font-weight:bold;
+  letter-spacing:1px;
 }
 
 .auth-modal-close{
   position:absolute;
-  top:9px;
-  right:12px;
-  width:28px;
-  height:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  top:11px;
+  right:13px;
+  width:25px;
+  height:25px;
   border:0;
-  background:transparent;
-  color:#666;
-  font-size:24px;
-  line-height:1;
+  background:none;
+  color:#747779;
+  font-size:20px;
+  line-height:20px;
   cursor:pointer;
-  z-index:2;
-  transition:
-    color .2s ease,
-    transform .2s ease;
 }
 
 .auth-modal-close:hover{
-  color:#ddd;
-  transform:rotate(90deg);
+  color:#fff;
 }
 
 .auth-modal-body{
-  padding:34px;
+  padding:30px;
 }
 
 .auth-system{
-  color:#d5b42e;
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:2px;
-  margin-bottom:11px;
+  color:#f4ca28;
+  font-size:8px;
+  font-weight:bold;
+  letter-spacing:1px;
+  margin-bottom:9px;
 }
 
 .auth-modal-body h3{
   color:#eee;
-  font-size:30px;
-  line-height:1;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  margin-bottom:14px;
+  font-size:23px;
+  line-height:1.15;
+  letter-spacing:0;
+  margin-bottom:10px;
 }
 
 .auth-modal-body p{
-  color:#777;
+  color:#85888a;
   font-size:11px;
   line-height:1.7;
-  margin-bottom:25px;
+  margin-bottom:22px;
 }
 
 .discord-login-button{
   width:100%;
-  padding:13px 18px;
-  border:1px solid #d5b42e;
-  background:#d5b42e;
-  color:#0a0a0a;
+  border:0;
+  background:#5865f2;
+  color:#fff;
+  border-radius:4px;
+  padding:13px 15px;
   font-size:10px;
-  font-weight:800;
-  letter-spacing:1.2px;
+  font-weight:bold;
   text-transform:uppercase;
   cursor:pointer;
-  border-radius:5px;
   transition:
     background .2s ease,
     transform .2s ease,
@@ -613,11 +592,9 @@ nav a.active:before{
 }
 
 .discord-login-button:hover{
-  background:#f0ce43;
+  background:#6875ff;
   transform:translateY(-1px);
-  box-shadow:
-    0 7px 18px rgba(213,180,46,.14),
-    0 0 18px rgba(213,180,46,.05);
+  box-shadow:0 5px 18px rgba(88,101,242,.18);
 }
 
 .discord-login-button:active{
@@ -630,13 +607,11 @@ nav a.active:before{
 }
 
 .auth-modal-footer{
-  margin-top:17px;
-  padding-top:14px;
-  border-top:1px solid #202122;
-  color:#454748;
-  font-size:8px;
-  letter-spacing:1.4px;
+  margin-top:18px;
   text-align:center;
+  color:#454849;
+  font-size:8px;
+  letter-spacing:.5px;
 }
 
 
@@ -2217,6 +2192,10 @@ footer{
     font-size:47px;
   }
 
+  .auth-name{
+    max-width:70px;
+  }
+
 }
 
 @media(max-width:700px){
@@ -2297,9 +2276,8 @@ footer{
   }
 
   .login-button{
-    padding:8px 10px;
-    font-size:8px;
-    letter-spacing:.8px;
+    padding:9px 12px;
+    font-size:9px;
   }
 
   .auth-name{
@@ -2307,16 +2285,16 @@ footer{
   }
 
   .auth-user-button{
-    padding:4px;
+    min-height:36px;
   }
 
   .auth-avatar{
-    width:29px;
-    height:29px;
+    width:28px;
+    height:28px;
   }
 
   .auth-menu{
-    width:200px;
+    width:190px;
   }
 
   .hero{
@@ -2439,7 +2417,7 @@ footer{
   }
 
   .auth-modal-body h3{
-    font-size:27px;
+    font-size:23px;
   }
 
 }
