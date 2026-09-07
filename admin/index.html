@@ -344,6 +344,112 @@
       font-size: 13px;
     }
 
+    /* ==============================
+       ВЫБОР РАЗМЕРА В PIXELS
+    ============================== */
+
+    .font-size-picker {
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+
+    .font-size-button {
+      min-width: 105px !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 9px;
+    }
+
+    .font-size-arrow {
+      font-size: 9px;
+      color: #858e98;
+      transition: transform .15s ease;
+    }
+
+    .font-size-picker.open .font-size-arrow {
+      transform: rotate(180deg);
+    }
+
+    .font-size-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 125px;
+      max-height: 240px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 5px;
+      background: #11151a;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, .45);
+      display: none;
+      z-index: 100;
+    }
+
+    .font-size-picker.open .font-size-menu {
+      display: block;
+    }
+
+    .font-size-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .font-size-menu::-webkit-scrollbar-track {
+      background: #0b0d10;
+      border-radius: 6px;
+    }
+
+    .font-size-menu::-webkit-scrollbar-thumb {
+      background: #3a424b;
+      border-radius: 6px;
+    }
+
+    .font-size-menu::-webkit-scrollbar-thumb:hover {
+      background: #555f69;
+    }
+
+    .font-size-option {
+      width: 100%;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 31px;
+      padding: 6px 9px !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent !important;
+      border: 0 !important;
+      border-radius: 5px !important;
+      color: #d8d8d8 !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      text-align: left;
+      opacity: 1 !important;
+    }
+
+    .font-size-option:hover {
+      background: #20262d !important;
+      color: #fff !important;
+    }
+
+    .font-size-option.current {
+      background: #d5b42e !important;
+      color: #101214 !important;
+    }
+
+    .font-size-option .size-preview {
+      color: #68717b;
+      font-size: 9px;
+      font-weight: 500;
+    }
+
+    .font-size-option.current .size-preview {
+      color: #101214;
+    }
+
     .editor-content {
       min-height: 360px;
       padding: 18px;
@@ -662,6 +768,10 @@
         min-height: 300px;
       }
 
+      .font-size-menu {
+        max-height: 220px;
+      }
+
     }
   </style>
 </head>
@@ -802,6 +912,7 @@
             Полный текст новости
           </label>
 
+
           <!-- РЕДАКТОР -->
 
           <div class="editor-wrapper">
@@ -839,6 +950,7 @@
                 id="formatSelect"
                 title="Тип текста"
               >
+
                 <option value="p">
                   Обычный текст
                 </option>
@@ -854,43 +966,39 @@
                 <option value="blockquote">
                   Цитата
                 </option>
+
               </select>
 
 
-              <!-- Размер -->
+              <!-- РАЗМЕР В PIXELS -->
 
-              <select
-                id="fontSizeSelect"
-                title="Размер текста"
+              <div
+                class="font-size-picker"
+                id="fontSizePicker"
               >
-                <option value="">
-                  Размер
-                </option>
 
-                <option value="1">
-                  Очень маленький
-                </option>
+                <button
+                  type="button"
+                  class="font-size-button"
+                  id="fontSizeButton"
+                  title="Размер текста"
+                >
+                  <span id="fontSizeButtonText">
+                    Размер
+                  </span>
 
-                <option value="2">
-                  Маленький
-                </option>
+                  <span class="font-size-arrow">
+                    ▼
+                  </span>
+                </button>
 
-                <option value="3">
-                  Обычный
-                </option>
 
-                <option value="4">
-                  Большой
-                </option>
+                <div
+                  class="font-size-menu"
+                  id="fontSizeMenu"
+                ></div>
 
-                <option value="5">
-                  Очень большой
-                </option>
-
-                <option value="6">
-                  Огромный
-                </option>
-              </select>
+              </div>
 
 
               <span class="toolbar-separator"></span>
@@ -1599,8 +1707,17 @@
     const formatSelect =
       document.getElementById("formatSelect");
 
-    const fontSizeSelect =
-      document.getElementById("fontSizeSelect");
+    const fontSizePicker =
+      document.getElementById("fontSizePicker");
+
+    const fontSizeButton =
+      document.getElementById("fontSizeButton");
+
+    const fontSizeButtonText =
+      document.getElementById("fontSizeButtonText");
+
+    const fontSizeMenu =
+      document.getElementById("fontSizeMenu");
 
     const insertLinkButton =
       document.getElementById("insertLinkButton");
@@ -2519,6 +2636,35 @@
 
         if (!button) {
           return;
+        }
+
+
+        /*
+        Кнопка размера обрабатывается
+        отдельным обработчиком ниже.
+        */
+
+        if (
+          button.id === "fontSizeButton"
+        ) {
+
+          return;
+
+        }
+
+
+        /*
+        Кнопки конкретных размеров
+        тоже обрабатываются отдельно.
+        */
+
+        if (
+          button.classList.contains(
+            "font-size-option"
+          )
+        ) {
+
+          return;
 
         }
 
@@ -2596,16 +2742,152 @@
 
     /*
     =====================================================
-    РАЗМЕР ТЕКСТА
+    РАЗМЕР ТЕКСТА — PIXELS
     =====================================================
     */
 
-    fontSizeSelect.addEventListener(
-      "change",
-      () => {
+    /*
+    Создаём размеры от 8px до 72px.
+    */
+
+    for (
+      let size = 8;
+      size <= 72;
+      size++
+    ) {
+
+      const option =
+        document.createElement("button");
+
+      option.type =
+        "button";
+
+      option.className =
+        "font-size-option";
+
+      option.dataset.size =
+        size + "px";
+
+
+      const label =
+        document.createElement("span");
+
+      label.textContent =
+        size + "px";
+
+
+      const preview =
+        document.createElement("span");
+
+      preview.className =
+        "size-preview";
+
+      preview.textContent =
+        "Aa";
+
+      preview.style.fontSize =
+        Math.min(
+          Math.max(size, 9),
+          22
+        ) + "px";
+
+
+      option.appendChild(
+        label
+      );
+
+      option.appendChild(
+        preview
+      );
+
+
+      fontSizeMenu.appendChild(
+        option
+      );
+
+    }
+
+
+    /*
+    Открытие меню размера.
+    */
+
+    fontSizeButton.addEventListener(
+      "mousedown",
+      event => {
+
+        event.preventDefault();
+
+        saveEditorSelection();
+
+      }
+    );
+
+
+    fontSizeButton.addEventListener(
+      "click",
+      event => {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        fontSizePicker.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+
+    /*
+    Выбор конкретного размера.
+    */
+
+    fontSizeMenu.addEventListener(
+      "mousedown",
+      event => {
+
+        const option =
+          event.target.closest(
+            ".font-size-option"
+          );
+
+
+        if (!option) {
+          return;
+        }
+
+
+        /*
+        Не даём меню забрать
+        выделение текста.
+        */
+
+        event.preventDefault();
+
+      }
+    );
+
+
+    fontSizeMenu.addEventListener(
+      "click",
+      event => {
+
+        const option =
+          event.target.closest(
+            ".font-size-option"
+          );
+
+
+        if (!option) {
+          return;
+        }
+
 
         const size =
-          fontSizeSelect.value;
+          option.dataset.size;
 
 
         if (!size) {
@@ -2616,18 +2898,38 @@
         restoreEditorSelection();
 
 
-        document.execCommand(
-          "fontSize",
-          false,
+        applyFontSize(
           size
         );
 
 
-        convertFontTags();
+        fontSizeButtonText.textContent =
+          size;
 
 
-        fontSizeSelect.value =
-          "";
+        document
+          .querySelectorAll(
+            ".font-size-option"
+          )
+          .forEach(
+            item => {
+
+              item.classList.remove(
+                "current"
+              );
+
+            }
+          );
+
+
+        option.classList.add(
+          "current"
+        );
+
+
+        fontSizePicker.classList.remove(
+          "open"
+        );
 
 
         newsEditor.focus();
@@ -2637,70 +2939,168 @@
 
 
     /*
+    Закрытие меню при клике
+    вне него.
+    */
+
+    document.addEventListener(
+      "mousedown",
+      event => {
+
+        if (
+          !fontSizePicker.contains(
+            event.target
+          )
+        ) {
+
+          fontSizePicker.classList.remove(
+            "open"
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
     =====================================================
-    ПРЕОБРАЗОВАНИЕ <font size="">
-    В НОРМАЛЬНЫЕ SPAN
+    ПРИМЕНЕНИЕ РАЗМЕРА
     =====================================================
     */
 
-    function convertFontTags() {
+    function applyFontSize(size) {
 
-      const sizes = {
-
-        "1": "12px",
-
-        "2": "14px",
-
-        "3": "16px",
-
-        "4": "20px",
-
-        "5": "24px",
-
-        "6": "30px",
-
-        "7": "36px"
-
-      };
+      const selection =
+        window.getSelection();
 
 
-      const fonts =
-        newsEditor.querySelectorAll(
-          "font[size]"
+      if (
+        !selection ||
+        selection.rangeCount === 0
+      ) {
+
+        return;
+
+      }
+
+
+      const range =
+        selection.getRangeAt(0);
+
+
+      /*
+      Если ничего не выделено,
+      применяем размер к текущему
+      слову/будущему вводу через span.
+      */
+
+      if (range.collapsed) {
+
+        const span =
+          document.createElement(
+            "span"
+          );
+
+
+        span.style.fontSize =
+          size;
+
+
+        span.appendChild(
+          document.createTextNode(
+            "\u200B"
+          )
         );
 
 
-      fonts.forEach(
-        font => {
-
-          const size =
-            sizes[font.getAttribute("size")] ||
-            "16px";
+        range.insertNode(
+          span
+        );
 
 
-          const span =
-            document.createElement(
-              "span"
-            );
+        const newRange =
+          document.createRange();
 
 
-          span.style.fontSize =
-            size;
+        newRange.setStart(
+          span.firstChild,
+          1
+        );
+
+        newRange.collapse(
+          true
+        );
 
 
-          while (font.firstChild) {
+        selection.removeAllRanges();
 
-            span.appendChild(
-              font.firstChild
-            );
-
-          }
+        selection.addRange(
+          newRange
+        );
 
 
-          font.replaceWith(span);
+        savedEditorRange =
+          newRange.cloneRange();
 
-        }
+
+        return;
+
+      }
+
+
+      /*
+      Если текст выделен — оборачиваем
+      его в span с точным размером.
+      */
+
+      const fragment =
+        range.extractContents();
+
+
+      const span =
+        document.createElement(
+          "span"
+        );
+
+
+      span.style.fontSize =
+        size;
+
+
+      span.appendChild(
+        fragment
       );
+
+
+      range.insertNode(
+        span
+      );
+
+
+      /*
+      Оставляем выделение на
+      изменённом тексте.
+      */
+
+      const newRange =
+        document.createRange();
+
+
+      newRange.selectNodeContents(
+        span
+      );
+
+
+      selection.removeAllRanges();
+
+      selection.addRange(
+        newRange
+      );
+
+
+      savedEditorRange =
+        newRange.cloneRange();
 
     }
 
@@ -4373,6 +4773,25 @@
             "Предпросмотр фотографии";
 
 
+          fontSizeButtonText.textContent =
+            "Размер";
+
+
+          document
+            .querySelectorAll(
+              ".font-size-option"
+            )
+            .forEach(
+              item => {
+
+                item.classList.remove(
+                  "current"
+                );
+
+              }
+            );
+
+
           newsStatus.textContent =
             "Новость успешно опубликована.";
 
@@ -4731,6 +5150,10 @@
 
           imageCaptionModal.classList.remove(
             "visible"
+          );
+
+          fontSizePicker.classList.remove(
+            "open"
           );
 
         }
