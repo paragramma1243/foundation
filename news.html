@@ -191,6 +191,273 @@ nav a.active:after{
 
 
 /* ==========================================
+   AUTH
+========================================== */
+
+.auth-area{
+ position:relative;
+ margin-left:5px;
+}
+
+.login-button{
+ border:0;
+ background:#f4ca28;
+ color:#080909;
+ border-radius:4px;
+ padding:10px 16px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ cursor:pointer;
+ transition:
+  transform .2s ease,
+  background .2s ease,
+  box-shadow .2s ease;
+}
+
+.login-button:hover{
+ background:#ffd83d;
+ transform:translateY(-1px);
+ box-shadow:0 5px 15px rgba(244,202,40,.12);
+}
+
+.auth-user{
+ display:none;
+ position:relative;
+}
+
+.auth-user.visible{
+ display:block;
+}
+
+.auth-user-button{
+ border:1px solid #292b2c;
+ background:#111213;
+ color:#eee;
+ border-radius:5px;
+ min-height:40px;
+ padding:4px 9px 4px 5px;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ cursor:pointer;
+ transition:
+  border-color .2s ease,
+  background .2s ease;
+}
+
+.auth-user-button:hover{
+ border-color:#f4ca28;
+ background:#151617;
+}
+
+.auth-avatar{
+ width:30px;
+ height:30px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#202223;
+ display:block;
+}
+
+.auth-name{
+ max-width:105px;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ color:#ddd;
+ font-size:10px;
+ font-weight:bold;
+}
+
+.auth-menu{
+ position:absolute;
+ right:0;
+ top:calc(100% + 8px);
+ width:190px;
+ background:#111213;
+ border:1px solid #292b2c;
+ border-radius:6px;
+ padding:10px;
+ display:none;
+ box-shadow:0 12px 30px rgba(0,0,0,.35);
+ z-index:30;
+}
+
+.auth-menu.open{
+ display:block;
+}
+
+.auth-menu-info{
+ padding:5px 5px 10px;
+ border-bottom:1px solid #202223;
+}
+
+.auth-menu-label{
+ color:#55585a;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:.8px;
+ margin-bottom:5px;
+}
+
+.auth-menu-name{
+ color:#eee;
+ font-size:11px;
+ font-weight:bold;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+}
+
+.auth-logout{
+ width:100%;
+ border:0;
+ background:none;
+ color:#e52b2b;
+ text-align:left;
+ padding:10px 5px 4px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ cursor:pointer;
+}
+
+.auth-logout:hover{
+ color:#ff4b4b;
+}
+
+
+/* ==========================================
+   AUTH MODAL
+========================================== */
+
+.auth-modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.78);
+ backdrop-filter:blur(4px);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:100;
+}
+
+.auth-modal.open{
+ display:flex;
+}
+
+.auth-modal-box{
+ width:100%;
+ max-width:430px;
+ background:#111213;
+ border:1px solid #363839;
+ border-radius:7px;
+ box-shadow:0 25px 70px rgba(0,0,0,.55);
+ position:relative;
+ overflow:hidden;
+}
+
+.auth-modal-header{
+ height:48px;
+ padding:0 18px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ border-bottom:1px solid #292b2c;
+ background:#0b0c0d;
+}
+
+.auth-modal-title{
+ color:#eee;
+ font-size:10px;
+ font-weight:bold;
+ letter-spacing:.7px;
+}
+
+.auth-modal-code{
+ color:#f4ca28;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+}
+
+.auth-modal-close{
+ position:absolute;
+ top:11px;
+ right:13px;
+ width:25px;
+ height:25px;
+ border:0;
+ background:none;
+ color:#747779;
+ font-size:20px;
+ line-height:20px;
+ cursor:pointer;
+}
+
+.auth-modal-close:hover{
+ color:#fff;
+}
+
+.auth-modal-body{
+ padding:30px;
+}
+
+.auth-system{
+ color:#f4ca28;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+ margin-bottom:9px;
+}
+
+.auth-modal-body h3{
+ font-size:23px;
+ margin-bottom:10px;
+}
+
+.auth-modal-body p{
+ color:#85888a;
+ font-size:11px;
+ line-height:1.7;
+ margin-bottom:22px;
+}
+
+.discord-login-button{
+ width:100%;
+ border:0;
+ background:#5865f2;
+ color:#fff;
+ border-radius:4px;
+ padding:13px 15px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ cursor:pointer;
+ transition:
+  background .2s ease,
+  transform .2s ease,
+  box-shadow .2s ease;
+}
+
+.discord-login-button:hover{
+ background:#6875ff;
+ transform:translateY(-1px);
+ box-shadow:0 5px 18px rgba(88,101,242,.18);
+}
+
+.auth-modal-footer{
+ margin-top:18px;
+ text-align:center;
+ color:#454849;
+ font-size:8px;
+ letter-spacing:.5px;
+}
+
+
+/* ==========================================
    ARTICLE
 ========================================== */
 
@@ -408,16 +675,119 @@ main{
 }
 
 
+/* ==========================================
+   AUTH COMMENT PANEL
+========================================== */
+
+.comment-login{
+ display:none;
+ margin-bottom:30px;
+ padding:20px;
+ background:#090a0b;
+ border:1px solid #292b2c;
+ border-radius:5px;
+ text-align:center;
+}
+
+.comment-login.visible{
+ display:block;
+}
+
+.comment-login-label{
+ color:#f4ca28;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+ margin-bottom:8px;
+}
+
+.comment-login-title{
+ color:#eee;
+ font-size:13px;
+ font-weight:bold;
+ margin-bottom:7px;
+}
+
+.comment-login-text{
+ color:#66696b;
+ font-size:10px;
+ line-height:1.6;
+ margin-bottom:15px;
+}
+
+.comment-login-button{
+ border:0;
+ background:#5865f2;
+ color:#fff;
+ border-radius:4px;
+ padding:11px 17px;
+ font-size:9px;
+ font-weight:bold;
+ text-transform:uppercase;
+ cursor:pointer;
+ transition:
+  background .2s ease,
+  transform .2s ease;
+}
+
+.comment-login-button:hover{
+ background:#6875ff;
+ transform:translateY(-1px);
+}
+
+
+/* COMMENT USER */
+
+.comment-user{
+ display:none;
+ align-items:center;
+ gap:9px;
+ margin-bottom:12px;
+}
+
+.comment-user.visible{
+ display:flex;
+}
+
+.comment-user-avatar{
+ width:30px;
+ height:30px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#202223;
+}
+
+.comment-user-info{
+ display:flex;
+ flex-direction:column;
+ gap:3px;
+}
+
+.comment-user-label{
+ color:#55585a;
+ font-size:8px;
+}
+
+.comment-user-name{
+ color:#eee;
+ font-size:10px;
+ font-weight:bold;
+}
+
+
 /* COMMENT FORM */
 
 .comment-form{
- display:flex;
+ display:none;
  flex-direction:column;
  gap:10px;
  margin-bottom:30px;
 }
 
-.comment-input,
+.comment-form.visible{
+ display:flex;
+}
+
 .comment-textarea{
  width:100%;
  background:#090a0b;
@@ -432,11 +802,6 @@ main{
   box-shadow .2s ease;
 }
 
-.comment-input{
- height:42px;
- padding:0 13px;
-}
-
 .comment-textarea{
  min-height:105px;
  padding:12px 13px;
@@ -444,12 +809,10 @@ main{
  line-height:1.6;
 }
 
-.comment-input::placeholder,
 .comment-textarea::placeholder{
  color:#55585a;
 }
 
-.comment-input:focus,
 .comment-textarea:focus{
  border-color:#f4ca28;
  box-shadow:0 0 0 2px rgba(244,202,40,.05);
@@ -561,15 +924,35 @@ main{
  margin-bottom:9px;
 }
 
+.comment-author-box{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+
+.comment-avatar{
+ width:30px;
+ height:30px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#202223;
+ flex-shrink:0;
+}
+
 .comment-author{
  color:#eee;
  font-size:11px;
  font-weight:bold;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
 }
 
 .comment-date{
  color:#55585a;
  font-size:9px;
+ flex-shrink:0;
 }
 
 .comment-content{
@@ -578,6 +961,7 @@ main{
  line-height:1.7;
  white-space:pre-wrap;
  word-wrap:break-word;
+ margin-left:39px;
 }
 
 .comments-empty{
@@ -667,6 +1051,10 @@ footer{
   height:280px;
  }
 
+ .auth-name{
+  max-width:70px;
+ }
+
 }
 
 @media(max-width:700px){
@@ -704,6 +1092,28 @@ footer{
  nav,
  .search{
   display:none;
+ }
+
+ .auth-area{
+  margin-left:auto;
+ }
+
+ .login-button{
+  padding:9px 12px;
+  font-size:9px;
+ }
+
+ .auth-user-button{
+  min-height:36px;
+ }
+
+ .auth-name{
+  display:none;
+ }
+
+ .auth-avatar{
+  width:28px;
+  height:28px;
  }
 
  main{
@@ -751,6 +1161,11 @@ footer{
 
  .comment-submit{
   width:100%;
+ }
+
+ .comment-content{
+  margin-left:0;
+  margin-top:5px;
  }
 
  .foot{
@@ -816,9 +1231,143 @@ CB2
  type="button">
 </button>
 
+
+<!-- AUTH -->
+
+<div class="auth-area">
+
+<button
+ id="loginButton"
+ class="login-button"
+ type="button">
+Войти
+</button>
+
+
+<div
+ id="authUser"
+ class="auth-user">
+
+<button
+ id="authUserButton"
+ class="auth-user-button"
+ type="button">
+
+<img
+ id="authAvatar"
+ class="auth-avatar"
+ src=""
+ alt="Discord">
+
+<span
+ id="authName"
+ class="auth-name">
+Пользователь
+</span>
+
+</button>
+
+
+<div
+ id="authMenu"
+ class="auth-menu">
+
+<div class="auth-menu-info">
+
+<div class="auth-menu-label">
+DISCORD ACCOUNT
+</div>
+
+<div
+ id="authMenuName"
+ class="auth-menu-name">
+Пользователь
+</div>
+
+</div>
+
+<button
+ id="logoutButton"
+ class="auth-logout"
+ type="button">
+Выйти
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 </header>
+
+
+<!-- ==========================================
+     AUTH MODAL
+========================================== -->
+
+<div
+ id="authModal"
+ class="auth-modal">
+
+<div class="auth-modal-box">
+
+<div class="auth-modal-header">
+
+<div class="auth-modal-title">
+ACCESS AUTHORIZATION
+</div>
+
+<div class="auth-modal-code">
+CB2 / AUTH
+</div>
+
+</div>
+
+
+<button
+ id="authModalClose"
+ class="auth-modal-close"
+ type="button"
+ aria-label="Закрыть">
+×
+</button>
+
+
+<div class="auth-modal-body">
+
+<div class="auth-system">
+FOUNDATION ACCESS SYSTEM
+</div>
+
+<h3>
+Вход в систему
+</h3>
+
+<p>
+Авторизуйтесь через Discord, чтобы получить возможность оставлять комментарии под новостями.
+</p>
+
+
+<button
+ id="discordLoginButton"
+ class="discord-login-button"
+ type="button">
+Войти через Discord
+</button>
+
+
+<div class="auth-modal-footer">
+AUTHENTICATION PROVIDED BY DISCORD
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 
 
@@ -852,7 +1401,9 @@ CB2
      COMMENTS
 ========================================== -->
 
-<section class="comments" id="comments">
+<section
+ class="comments"
+ id="comments">
 
 <div class="comments-title">
 
@@ -869,20 +1420,69 @@ CB2
 </div>
 
 
+<!-- LOGIN MESSAGE -->
+
+<div
+ id="commentLogin"
+ class="comment-login">
+
+<div class="comment-login-label">
+FOUNDATION ACCESS
+</div>
+
+<div class="comment-login-title">
+Авторизуйтесь для комментариев
+</div>
+
+<div class="comment-login-text">
+Для публикации комментариев необходимо войти через Discord.
+</div>
+
+<button
+ id="commentLoginButton"
+ class="comment-login-button"
+ type="button">
+Войти через Discord
+</button>
+
+</div>
+
+
+<!-- CURRENT USER -->
+
+<div
+ id="commentUser"
+ class="comment-user">
+
+<img
+ id="commentUserAvatar"
+ class="comment-user-avatar"
+ src=""
+ alt="">
+
+<div class="comment-user-info">
+
+<span class="comment-user-label">
+КОММЕНТАРИЙ ОТ ИМЕНИ
+</span>
+
+<span
+ id="commentUserName"
+ class="comment-user-name">
+Пользователь
+</span>
+
+</div>
+
+</div>
+
+
+<!-- COMMENT FORM -->
+
 <form
  class="comment-form"
  id="commentForm"
  autocomplete="off">
-
-
-<input
- class="comment-input"
- id="commentAuthor"
- type="text"
- maxlength="40"
- placeholder="Ваше имя"
- required
->
 
 
 <textarea
@@ -921,6 +1521,8 @@ CB2
 </form>
 
 
+<!-- LIMIT -->
+
 <div
  class="comment-limit"
  id="commentLimit">
@@ -933,6 +1535,8 @@ CB2
 
 </div>
 
+
+<!-- COMMENT LIST -->
 
 <div
  class="comment-list"
@@ -1060,16 +1664,492 @@ Steam
 
 <script>
 
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
 const SUPABASE_URL =
 "https://ajmavwxzakkjsfolijhp.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
+
 const db =
-supabase.createClient(
+window.supabase.createClient(
  SUPABASE_URL,
- SUPABASE_KEY
+ SUPABASE_KEY,
+ {
+  auth:{
+   persistSession:true,
+   autoRefreshToken:true,
+   detectSessionInUrl:true
+  }
+ }
+);
+
+
+/* ==========================================
+   AUTH ELEMENTS
+========================================== */
+
+const loginButton =
+ document.getElementById(
+  "loginButton"
+ );
+
+const authUser =
+ document.getElementById(
+  "authUser"
+ );
+
+const authUserButton =
+ document.getElementById(
+  "authUserButton"
+ );
+
+const authAvatar =
+ document.getElementById(
+  "authAvatar"
+ );
+
+const authName =
+ document.getElementById(
+  "authName"
+ );
+
+const authMenu =
+ document.getElementById(
+  "authMenu"
+ );
+
+const authMenuName =
+ document.getElementById(
+  "authMenuName"
+ );
+
+const logoutButton =
+ document.getElementById(
+  "logoutButton"
+ );
+
+const authModal =
+ document.getElementById(
+  "authModal"
+ );
+
+const authModalClose =
+ document.getElementById(
+  "authModalClose"
+ );
+
+const discordLoginButton =
+ document.getElementById(
+  "discordLoginButton"
+ );
+
+
+/* ==========================================
+   COMMENT AUTH ELEMENTS
+========================================== */
+
+const commentLogin =
+ document.getElementById(
+  "commentLogin"
+ );
+
+const commentLoginButton =
+ document.getElementById(
+  "commentLoginButton"
+ );
+
+const commentUser =
+ document.getElementById(
+  "commentUser"
+ );
+
+const commentUserAvatar =
+ document.getElementById(
+  "commentUserAvatar"
+ );
+
+const commentUserName =
+ document.getElementById(
+  "commentUserName"
+ );
+
+
+/* ==========================================
+   AUTH MODAL
+========================================== */
+
+function openAuthModal(){
+
+ authModal.classList.add(
+  "open"
+ );
+
+}
+
+
+function closeAuthModal(){
+
+ authModal.classList.remove(
+  "open"
+ );
+
+}
+
+
+loginButton.addEventListener(
+ "click",
+ openAuthModal
+);
+
+
+commentLoginButton.addEventListener(
+ "click",
+ openAuthModal
+);
+
+
+authModalClose.addEventListener(
+ "click",
+ closeAuthModal
+);
+
+
+authModal.addEventListener(
+ "click",
+ function(event){
+
+  if(event.target === authModal){
+
+   closeAuthModal();
+
+  }
+
+ }
+);
+
+
+document.addEventListener(
+ "keydown",
+ function(event){
+
+  if(event.key === "Escape"){
+
+   closeAuthModal();
+
+   authMenu.classList.remove(
+    "open"
+   );
+
+  }
+
+ }
+);
+
+
+/* ==========================================
+   DISCORD LOGIN
+========================================== */
+
+async function loginWithDiscord(){
+
+ discordLoginButton.disabled =
+  true;
+
+ discordLoginButton.textContent =
+  "Подключение...";
+
+
+ const { error } =
+  await db.auth.signInWithOAuth({
+   provider:"discord",
+
+   options:{
+    redirectTo:
+     window.location.origin
+   }
+
+  });
+
+
+ if(error){
+
+  console.error(
+   "Ошибка Discord OAuth:",
+   error
+  );
+
+  discordLoginButton.disabled =
+   false;
+
+  discordLoginButton.textContent =
+   "Войти через Discord";
+
+  alert(
+   "Не удалось выполнить вход через Discord."
+  );
+
+ }
+
+}
+
+
+discordLoginButton.addEventListener(
+ "click",
+ loginWithDiscord
+);
+
+
+/* ==========================================
+   USER DATA
+========================================== */
+
+function getDiscordUserData(user){
+
+ const metadata =
+  user?.user_metadata || {};
+
+
+ const name =
+  metadata.full_name ||
+  metadata.name ||
+  metadata.preferred_username ||
+  "Discord пользователь";
+
+
+ const avatar =
+  metadata.avatar_url ||
+  "https://cdn.discordapp.com/embed/avatars/0.png";
+
+
+ return {
+  name:name,
+  avatar:avatar
+ };
+
+}
+
+
+/* ==========================================
+   RENDER AUTH USER
+========================================== */
+
+function renderAuthUser(user){
+
+ if(!user){
+
+  loginButton.style.display =
+   "block";
+
+  authUser.classList.remove(
+   "visible"
+  );
+
+  commentLogin.classList.add(
+   "visible"
+  );
+
+  commentUser.classList.remove(
+   "visible"
+  );
+
+  commentForm.classList.remove(
+   "visible"
+  );
+
+  return;
+
+ }
+
+
+ const userData =
+  getDiscordUserData(
+   user
+  );
+
+
+ loginButton.style.display =
+  "none";
+
+ authUser.classList.add(
+  "visible"
+ );
+
+
+ authAvatar.src =
+  userData.avatar;
+
+ authAvatar.alt =
+  userData.name;
+
+
+ authName.textContent =
+  userData.name;
+
+
+ authMenuName.textContent =
+  userData.name;
+
+
+ /* COMMENTS */
+
+ commentLogin.classList.remove(
+  "visible"
+ );
+
+ commentUser.classList.add(
+  "visible"
+ );
+
+ commentForm.classList.add(
+  "visible"
+ );
+
+
+ commentUserAvatar.src =
+  userData.avatar;
+
+ commentUserAvatar.alt =
+  userData.name;
+
+ commentUserName.textContent =
+  userData.name;
+
+}
+
+
+/* ==========================================
+   CHECK AUTH
+========================================== */
+
+async function checkAuth(){
+
+ const {
+  data,
+  error
+ } =
+  await db.auth.getUser();
+
+
+ if(error){
+
+  console.error(
+   "Ошибка проверки авторизации:",
+   error
+  );
+
+  renderAuthUser(
+   null
+  );
+
+  return null;
+
+ }
+
+
+ renderAuthUser(
+  data.user
+ );
+
+
+ return data.user;
+
+}
+
+
+/* ==========================================
+   AUTH STATE
+========================================== */
+
+db.auth.onAuthStateChange(
+ function(event, session){
+
+  renderAuthUser(
+   session?.user || null
+  );
+
+  if(session?.user){
+
+   closeAuthModal();
+
+  }
+
+ }
+);
+
+
+/* ==========================================
+   USER MENU
+========================================== */
+
+authUserButton.addEventListener(
+ "click",
+ function(event){
+
+  event.stopPropagation();
+
+  authMenu.classList.toggle(
+   "open"
+  );
+
+ }
+);
+
+
+document.addEventListener(
+ "click",
+ function(event){
+
+  if(
+   !authUser.contains(event.target)
+  ){
+
+   authMenu.classList.remove(
+    "open"
+   );
+
+  }
+
+ }
+);
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+logoutButton.addEventListener(
+ "click",
+ async function(){
+
+  const {
+   error
+  } =
+   await db.auth.signOut();
+
+
+  if(error){
+
+   console.error(
+    "Ошибка выхода:",
+    error
+   );
+
+   return;
+
+  }
+
+
+  authMenu.classList.remove(
+   "open"
+  );
+
+ }
 );
 
 
@@ -1077,7 +2157,8 @@ supabase.createClient(
    ЛИМИТ КОММЕНТАРИЕВ
 ========================================== */
 
-const MAX_COMMENTS = 20;
+const MAX_COMMENTS =
+ 20;
 
 
 /* ==========================================
@@ -1115,10 +2196,6 @@ async function loadSiteSettings(){
  });
 
 
- /*
-  * ЛОГОТИП
-  */
-
  if(settings.logo){
 
   document
@@ -1136,10 +2213,6 @@ async function loadSiteSettings(){
 
  }
 
-
- /*
-  * ФОН
-  */
 
  if(settings.background){
 
@@ -1289,7 +2362,9 @@ function getNewsId(){
 async function loadNews(){
 
  const article =
-  document.getElementById("article");
+  document.getElementById(
+   "article"
+  );
 
 
  const id =
@@ -1310,10 +2385,6 @@ async function loadNews(){
 
  }
 
-
- /*
-  * Запрос в Supabase
-  */
 
  const { data, error } =
   await db
@@ -1352,10 +2423,6 @@ async function loadNews(){
  }
 
 
- /*
-  * HTML
-  */
-
  article.innerHTML = "";
 
 
@@ -1365,10 +2432,6 @@ async function loadNews(){
  articleElement.className =
   "article";
 
-
- /*
-  * КАРТИНКА
-  */
 
  const image =
   document.createElement("div");
@@ -1390,10 +2453,6 @@ async function loadNews(){
  }
 
 
- /*
-  * CONTENT
-  */
-
  const content =
   document.createElement("div");
 
@@ -1401,20 +2460,12 @@ async function loadNews(){
   "article-content";
 
 
- /*
-  * TOP
-  */
-
  const top =
   document.createElement("div");
 
  top.className =
   "article-top";
 
-
- /*
-  * TAG
-  */
 
  const tag =
   document.createElement("span");
@@ -1429,10 +2480,6 @@ async function loadNews(){
   data.category ||
   "Новости";
 
-
- /*
-  * TIME
-  */
 
  const time =
   document.createElement("span");
@@ -1450,10 +2497,6 @@ async function loadNews(){
  top.appendChild(time);
 
 
- /*
-  * TITLE
-  */
-
  const title =
   document.createElement("h1");
 
@@ -1461,10 +2504,6 @@ async function loadNews(){
   data.title ||
   "Без названия";
 
-
- /*
-  * DESCRIPTION
-  */
 
  const description =
   document.createElement("p");
@@ -1476,10 +2515,6 @@ async function loadNews(){
   data.description ||
   "";
 
-
- /*
-  * FULL TEXT
-  */
 
  const text =
   document.createElement("div");
@@ -1517,18 +2552,10 @@ async function loadNews(){
  );
 
 
- /*
-  * Меняем title вкладки
-  */
-
  document.title =
   (data.title || "Новость") +
   " — SCP: CB2 Multiplayer";
 
-
- /*
-  * Загружаем комментарии
-  */
 
  loadComments(
   Number(data.id)
@@ -1544,11 +2571,6 @@ async function loadNews(){
 const commentForm =
  document.getElementById(
   "commentForm"
- );
-
-const commentAuthor =
- document.getElementById(
-  "commentAuthor"
  );
 
 const commentContent =
@@ -1587,9 +2609,9 @@ const commentLimit =
  );
 
 
-/*
- * Счётчик символов
- */
+/* ==========================================
+   СЧЁТЧИК СИМВОЛОВ
+========================================== */
 
 commentContent.addEventListener(
  "input",
@@ -1603,18 +2625,21 @@ commentContent.addEventListener(
 );
 
 
-/*
- * Формат количества комментариев
- */
+/* ==========================================
+   ФОРМАТ КОММЕНТАРИЕВ
+========================================== */
 
 function commentsWord(number){
 
- if(number % 10 === 1 &&
-    number % 100 !== 11){
+ if(
+  number % 10 === 1 &&
+  number % 100 !== 11
+ ){
 
   return "комментарий";
 
  }
+
 
  if(
   number % 10 >= 2 &&
@@ -1629,14 +2654,11 @@ function commentsWord(number){
 
  }
 
+
  return "комментариев";
 
 }
 
-
-/*
- * Отображение количества
- */
 
 function updateCommentsCount(number){
 
@@ -1648,16 +2670,17 @@ function updateCommentsCount(number){
 }
 
 
-/*
- * Проверка лимита
- */
+/* ==========================================
+   ПРОВЕРКА ЛИМИТА
+========================================== */
 
 function updateCommentLimit(number){
 
  if(number >= MAX_COMMENTS){
 
-  commentForm.style.display =
-   "none";
+  commentForm.classList.remove(
+   "visible"
+  );
 
   commentLimit.style.display =
    "block";
@@ -1667,19 +2690,18 @@ function updateCommentLimit(number){
  }
 
 
- commentForm.style.display =
-  "flex";
-
  commentLimit.style.display =
   "none";
+
+
+ checkAuth();
 
 }
 
 
-/*
- * Скрыть комментарии,
- * если новости не существует
- */
+/* ==========================================
+   СКРЫТЬ КОММЕНТАРИИ
+========================================== */
 
 function hideComments(){
 
@@ -1698,9 +2720,9 @@ function hideComments(){
 }
 
 
-/*
- * Создание элемента комментария
- */
+/* ==========================================
+   СОЗДАНИЕ КОММЕНТАРИЯ
+========================================== */
 
 function createCommentElement(comment){
 
@@ -1718,6 +2740,28 @@ function createCommentElement(comment){
   "comment-head";
 
 
+ const authorBox =
+  document.createElement("div");
+
+ authorBox.className =
+  "comment-author-box";
+
+
+ const avatar =
+  document.createElement("img");
+
+ avatar.className =
+  "comment-avatar";
+
+ avatar.src =
+  comment.avatar_url ||
+  "https://cdn.discordapp.com/embed/avatars/0.png";
+
+ avatar.alt =
+  comment.author ||
+  "Discord пользователь";
+
+
  const author =
   document.createElement("span");
 
@@ -1725,7 +2769,17 @@ function createCommentElement(comment){
   "comment-author";
 
  author.textContent =
-  comment.author;
+  comment.author ||
+  "Discord пользователь";
+
+
+ authorBox.appendChild(
+  avatar
+ );
+
+ authorBox.appendChild(
+  author
+ );
 
 
  const date =
@@ -1740,8 +2794,13 @@ function createCommentElement(comment){
   );
 
 
- head.appendChild(author);
- head.appendChild(date);
+ head.appendChild(
+  authorBox
+ );
+
+ head.appendChild(
+  date
+ );
 
 
  const content =
@@ -1754,8 +2813,13 @@ function createCommentElement(comment){
   comment.content;
 
 
- element.appendChild(head);
- element.appendChild(content);
+ element.appendChild(
+  head
+ );
+
+ element.appendChild(
+  content
+ );
 
 
  return element;
@@ -1763,9 +2827,9 @@ function createCommentElement(comment){
 }
 
 
-/*
- * Загрузка комментариев
- */
+/* ==========================================
+   ЗАГРУЗКА КОММЕНТАРИЕВ
+========================================== */
 
 async function loadComments(newsId){
 
@@ -1776,17 +2840,25 @@ async function loadComments(newsId){
  `;
 
 
- const { data, error } =
+ const {
+  data,
+  error
+ } =
   await db
    .from("comments")
    .select(`
     id,
     news_id,
+    user_id,
     author,
+    avatar_url,
     content,
     created_at
    `)
-   .eq("news_id", newsId)
+   .eq(
+    "news_id",
+    newsId
+   )
    .order(
     "created_at",
     {
@@ -1811,17 +2883,10 @@ async function loadComments(newsId){
 
   updateCommentsCount(0);
 
-  updateCommentLimit(0);
-
   return;
 
  }
 
-
- /*
-  * На всякий случай ограничиваем
-  * отображение первыми 20 комментариями
-  */
 
  const comments =
   data.slice(
@@ -1835,9 +2900,16 @@ async function loadComments(newsId){
  );
 
 
- updateCommentLimit(
-  comments.length
- );
+ if(comments.length >= MAX_COMMENTS){
+
+  commentForm.classList.remove(
+   "visible"
+  );
+
+  commentLimit.style.display =
+   "block";
+
+ }
 
 
  if(!comments.length){
@@ -1853,25 +2925,28 @@ async function loadComments(newsId){
  }
 
 
- commentList.innerHTML = "";
+ commentList.innerHTML =
+  "";
 
 
- comments.forEach(comment => {
+ comments.forEach(
+  comment => {
 
-  commentList.appendChild(
-   createCommentElement(
-    comment
-   )
-  );
+   commentList.appendChild(
+    createCommentElement(
+     comment
+    )
+   );
 
- });
+  }
+ );
 
 }
 
 
-/*
- * Отправка комментария
- */
+/* ==========================================
+   ОТПРАВКА КОММЕНТАРИЯ
+========================================== */
 
 commentForm.addEventListener(
  "submit",
@@ -1880,21 +2955,42 @@ commentForm.addEventListener(
   event.preventDefault();
 
 
+  /*
+   * СНАЧАЛА ПРОВЕРЯЕМ АВТОРИЗАЦИЮ
+   */
+
+  const {
+   data:userData,
+   error:userError
+  } =
+   await db.auth.getUser();
+
+
+  if(
+   userError ||
+   !userData.user
+  ){
+
+   renderAuthUser(null);
+
+   openAuthModal();
+
+   return;
+
+  }
+
+
+  const user =
+   userData.user;
+
+
   const newsId =
    getNewsId();
-
-
-  const author =
-   commentAuthor.value.trim();
 
 
   const content =
    commentContent.value.trim();
 
-
-  /*
-   * Проверка
-   */
 
   if(!newsId){
 
@@ -1902,34 +2998,6 @@ commentForm.addEventListener(
     "Новость не найдена.",
     true
    );
-
-   return;
-
-  }
-
-
-  if(author.length < 2){
-
-   showCommentStatus(
-    "Имя должно содержать минимум 2 символа.",
-    true
-   );
-
-   commentAuthor.focus();
-
-   return;
-
-  }
-
-
-  if(author.length > 40){
-
-   showCommentStatus(
-    "Имя слишком длинное.",
-    true
-   );
-
-   commentAuthor.focus();
 
    return;
 
@@ -1963,11 +3031,23 @@ commentForm.addEventListener(
 
 
   /*
-   * Проверяем текущее количество
-   * перед отправкой
+   * ПОЛУЧАЕМ DISCORD ДАННЫЕ
    */
 
-  const { count, error:countError } =
+  const discordData =
+   getDiscordUserData(
+    user
+   );
+
+
+  /*
+   * ПРОВЕРЯЕМ ЛИМИТ
+   */
+
+  const {
+   count,
+   error:countError
+  } =
    await db
     .from("comments")
     .select(
@@ -1986,7 +3066,7 @@ commentForm.addEventListener(
   if(countError){
 
    console.error(
-    "Ошибка проверки количества комментариев:",
+    "Ошибка проверки количества:",
     countError
    );
 
@@ -2000,24 +3080,18 @@ commentForm.addEventListener(
   }
 
 
-  /*
-   * Если уже 20 комментариев
-   */
-
   if(count >= MAX_COMMENTS){
 
    updateCommentsCount(
     count
    );
 
-   updateCommentLimit(
-    count
+   commentForm.classList.remove(
+    "visible"
    );
 
-   showCommentStatus(
-    "Лимит комментариев для этой новости достигнут.",
-    true
-   );
+   commentLimit.style.display =
+    "block";
 
    return;
 
@@ -2025,7 +3099,7 @@ commentForm.addEventListener(
 
 
   /*
-   * Блокируем кнопку
+   * БЛОКИРУЕМ КНОПКУ
    */
 
   commentSubmit.disabled =
@@ -2034,6 +3108,7 @@ commentForm.addEventListener(
   commentSubmit.textContent =
    "Отправка...";
 
+
   showCommentStatus(
    "",
    false
@@ -2041,23 +3116,39 @@ commentForm.addEventListener(
 
 
   /*
-   * Отправляем в Supabase
+   * ОТПРАВЛЯЕМ
    */
 
-  const { data, error } =
+  const {
+   data,
+   error
+  } =
    await db
     .from("comments")
     .insert({
-     news_id:Number(newsId),
-     author:author,
-     content:content
+
+     news_id:
+      Number(newsId),
+
+     user_id:
+      user.id,
+
+     author:
+      discordData.name,
+
+     avatar_url:
+      discordData.avatar,
+
+     content:
+      content
+
     })
     .select()
     .single();
 
 
   /*
-   * Ошибка
+   * ОШИБКА
    */
 
   if(error){
@@ -2086,10 +3177,11 @@ commentForm.addEventListener(
 
 
   /*
-   * Успешно
+   * УСПЕШНО
    */
 
-  commentForm.reset();
+  commentContent.value =
+   "";
 
   commentChars.textContent =
    "0 / 1000";
@@ -2103,8 +3195,7 @@ commentForm.addEventListener(
 
 
   /*
-   * Добавляем комментарий
-   * сразу на страницу
+   * УБИРАЕМ EMPTY
    */
 
   if(
@@ -2119,6 +3210,10 @@ commentForm.addEventListener(
   }
 
 
+  /*
+   * ДОБАВЛЯЕМ КОММЕНТАРИЙ
+   */
+
   if(data){
 
    commentList.appendChild(
@@ -2131,7 +3226,7 @@ commentForm.addEventListener(
 
 
   /*
-   * Обновляем количество
+   * ОБНОВЛЯЕМ КОЛИЧЕСТВО
    */
 
   const currentCount =
@@ -2146,20 +3241,19 @@ commentForm.addEventListener(
 
 
   /*
-   * Проверяем достижение лимита
+   * ДОСТИГНУТ ЛИМИТ
    */
 
-  updateCommentLimit(
-   currentCount
-  );
+  if(
+   currentCount >= MAX_COMMENTS
+  ){
 
+   commentForm.classList.remove(
+    "visible"
+   );
 
-  /*
-   * Если достигли лимита,
-   * убираем возможность отправки
-   */
-
-  if(currentCount >= MAX_COMMENTS){
+   commentLimit.style.display =
+    "block";
 
    showCommentStatus(
     "",
@@ -2170,11 +3264,12 @@ commentForm.addEventListener(
 
 
   /*
-   * Разблокируем кнопку,
-   * только если лимит ещё не достигнут
+   * РАЗБЛОКИРОВКА
    */
 
-  if(currentCount < MAX_COMMENTS){
+  if(
+   currentCount < MAX_COMMENTS
+  ){
 
    commentSubmit.disabled =
     false;
@@ -2188,9 +3283,9 @@ commentForm.addEventListener(
 );
 
 
-/*
- * Статус отправки
- */
+/* ==========================================
+   СТАТУС
+========================================== */
 
 function showCommentStatus(
  message,
@@ -2233,6 +3328,8 @@ function showCommentStatus(
 ========================================== */
 
 loadSiteSettings();
+
+checkAuth();
 
 loadNews();
 
