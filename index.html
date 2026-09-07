@@ -2451,7 +2451,7 @@ footer{
 
   *,
   *:before,
-  *:after{
+  *::after{
     animation:none !important;
     transition:none !important;
     scroll-behavior:auto !important;
@@ -3213,7 +3213,8 @@ const supabaseClient =
       auth:{
         persistSession:true,
         autoRefreshToken:true,
-        detectSessionInUrl:true
+        detectSessionInUrl:true,
+        flowType:"implicit"
       }
     }
   );
@@ -3277,6 +3278,19 @@ const discordLoginButton =
   );
 
 
+/* ================= CURRENT PAGE URL ================= */
+
+function getCurrentPageUrl(){
+
+  return (
+    window.location.origin +
+    window.location.pathname +
+    window.location.search
+  );
+
+}
+
+
 /* ================= OPEN AUTH MODAL ================= */
 
 function openAuthModal(){
@@ -3313,6 +3327,8 @@ function closeAuthModal(){
 }
 
 
+/* ================= LOGIN BUTTON ================= */
+
 if(loginButton){
 
   loginButton.addEventListener(
@@ -3326,6 +3342,8 @@ if(loginButton){
 
 }
 
+
+/* ================= CLOSE MODAL ================= */
 
 if(authModalClose){
 
@@ -3410,7 +3428,12 @@ async function loginWithDiscord(){
 
   try{
 
+    const redirectUrl =
+      getCurrentPageUrl();
+
+
     const {
+      data,
       error
     } =
       await supabaseClient.auth.signInWithOAuth({
@@ -3418,8 +3441,7 @@ async function loginWithDiscord(){
         provider:"discord",
 
         options:{
-          redirectTo:
-            window.location.origin
+          redirectTo:redirectUrl
         }
 
       });
@@ -3443,7 +3465,16 @@ async function loginWithDiscord(){
       discordLoginButton.textContent =
         "Войти через Discord";
 
+      return;
+
     }
+
+
+    console.log(
+      "Discord OAuth запущен:",
+      data
+    );
+
 
   }catch(error){
 
@@ -3478,16 +3509,57 @@ if(discordLoginButton){
 }
 
 
+/* ================= DISCORD USER DATA ================= */
+
+function getDiscordUserData(
+  user
+){
+
+  if(!user){
+
+    return {
+      name:"Discord пользователь",
+      avatar:
+        "https://cdn.discordapp.com/embed/avatars/0.png"
+    };
+
+  }
+
+
+  const metadata =
+    user.user_metadata ||
+    {};
+
+
+  const name =
+    metadata.full_name ||
+    metadata.name ||
+    metadata.preferred_username ||
+    metadata.custom_claims?.global_name ||
+    "Discord пользователь";
+
+
+  const avatar =
+    metadata.avatar_url ||
+    metadata.picture ||
+    "https://cdn.discordapp.com/embed/avatars/0.png";
+
+
+  return {
+    name,
+    avatar
+  };
+
+}
+
+
 /* ================= RENDER USER ================= */
 
 function renderAuthUser(
   user
 ){
 
-  if(
-    !user ||
-    !user.user_metadata
-  ){
+  if(!user){
 
     if(loginButton){
 
@@ -3503,25 +3575,23 @@ function renderAuthUser(
 
     }
 
+    if(authMenu){
+
+      authMenu.classList.remove(
+        "open"
+      );
+
+    }
+
     return;
 
   }
 
 
-  const metadata =
-    user.user_metadata;
-
-
-  const username =
-    metadata.full_name ||
-    metadata.name ||
-    metadata.preferred_username ||
-    "Discord пользователь";
-
-
-  const avatar =
-    metadata.avatar_url ||
-    "https://cdn.discordapp.com/embed/avatars/0.png";
+  const discordUser =
+    getDiscordUserData(
+      user
+    );
 
 
   if(loginButton){
@@ -3543,10 +3613,10 @@ function renderAuthUser(
   if(authAvatar){
 
     authAvatar.src =
-      avatar;
+      discordUser.avatar;
 
     authAvatar.alt =
-      username;
+      discordUser.name;
 
   }
 
@@ -3554,7 +3624,7 @@ function renderAuthUser(
   if(authName){
 
     authName.textContent =
-      username;
+      discordUser.name;
 
   }
 
@@ -3562,7 +3632,7 @@ function renderAuthUser(
   if(authMenuName){
 
     authMenuName.textContent =
-      username;
+      discordUser.name;
 
   }
 
@@ -3582,13 +3652,13 @@ async function checkAuth(){
       data,
       error
     } =
-      await supabaseClient.auth.getUser();
+      await supabaseClient.auth.getSession();
 
 
     if(error){
 
       console.error(
-        "Ошибка проверки авторизации:",
+        "Ошибка проверки сессии:",
         error
       );
 
@@ -3601,9 +3671,50 @@ async function checkAuth(){
     }
 
 
-    renderAuthUser(
-      data.user
-    );
+    if(
+      data &&
+      data.session &&
+      data.session.user
+    ){
+
+      renderAuthUser(
+        data.session.user
+      );
+
+    }else{
+
+      renderAuthUser(
+        null
+      );
+
+    }
+
+
+    /*
+      После обработки OAuth
+      убираем токены из адресной строки.
+    */
+
+    if(
+      window.location.hash &&
+      (
+        window.location.hash.includes(
+          "access_token"
+        ) ||
+        window.location.hash.includes(
+          "refresh_token"
+        )
+      )
+    ){
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname +
+        window.location.search
+      );
+
+    }
 
   }catch(error){
 
@@ -3654,7 +3765,9 @@ document.addEventListener(
     if(
       authUser &&
       authMenu &&
-      !authUser.contains(event.target)
+      !authUser.contains(
+        event.target
+      )
     ){
 
       authMenu.classList.remove(
@@ -3690,6 +3803,10 @@ if(logoutButton){
             error
           );
 
+          alert(
+            "Не удалось выйти из аккаунта."
+          );
+
           return;
 
         }
@@ -3708,11 +3825,16 @@ if(logoutButton){
           null
         );
 
+
       }catch(error){
 
         console.error(
           "Ошибка выхода:",
           error
+        );
+
+        alert(
+          "Произошла ошибка при выходе."
         );
 
       }
@@ -4823,11 +4945,6 @@ async function loadNews(){
   allNews =
     data || [];
 
-
-  /*
-    Загружаем комментарии после получения
-    новостей, затем строим карточки.
-  */
 
   await loadCommentCounts();
 
