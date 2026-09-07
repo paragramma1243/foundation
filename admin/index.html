@@ -1,5185 +1,4440 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Админ-панель Новостей CB2</title>
-
-  <!-- DOMPurify для безопасной очистки HTML -->
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #0b0d10;
-      color: #e8e8e8;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .login,
-    .admin {
-      min-height: 100vh;
-    }
-
-    .login {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-box {
-      width: 100%;
-      max-width: 420px;
-      background: #11151a;
-      border: 1px solid #252b32;
-      border-radius: 12px;
-      padding: 30px;
-    }
-
-    h1 {
-      margin-top: 0;
-    }
-
-    .muted {
-      color: #858e98;
-      font-size: 14px;
-    }
-
-    label {
-      display: block;
-      margin: 18px 0 7px;
-      font-size: 14px;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 12px;
-      background: #0b0d10;
-      border: 1px solid #30363d;
-      border-radius: 7px;
-      color: white;
-      outline: none;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    textarea {
-      min-height: 180px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-      border-color: #65717e;
-    }
-
-    button {
-      border: 0;
-      border-radius: 7px;
-      padding: 11px 16px;
-      cursor: pointer;
-      background: #e8e8e8;
-      color: #101214;
-      font-weight: 700;
-    }
-
-    button:hover {
-      opacity: .9;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .login button {
-      width: 100%;
-      margin-top: 22px;
-    }
-
-    .error {
-      color: #ff7777;
-      margin-top: 14px;
-      font-size: 14px;
-    }
-
-    .admin {
-      display: none;
-    }
-
-    header {
-      height: 68px;
-      border-bottom: 1px solid #252b32;
-      background: #11151a;
-    }
-
-    .header-inner {
-      width: min(1100px, calc(100% - 30px));
-      height: 100%;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-weight: 800;
-    }
-
-    main {
-      width: min(1100px, calc(100% - 30px));
-      margin: auto;
-      padding: 35px 0 60px;
-    }
-
-    .panel {
-      background: #11151a;
-      border: 1px solid #252b32;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .panel h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .upload-row {
-      display: grid;
-      grid-template-columns: 1fr 180px;
-      gap: 20px;
-      align-items: center;
-      padding: 18px 0;
-      border-top: 1px solid #252b32;
-    }
-
-    .upload-row:first-of-type {
-      border-top: 0;
-    }
-
-    .preview {
-      width: 180px;
-      height: 100px;
-      border: 1px dashed #3a424b;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      color: #68717b;
-      font-size: 12px;
-      text-align: center;
-      background: #0b0d10;
-    }
-
-    .preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .status {
-      margin-top: 15px;
-      color: #8fbcff;
-      font-size: 14px;
-    }
-
-    .news-form label {
-      margin-top: 18px;
-    }
-
-    .news-form label:first-child {
-      margin-top: 0;
-    }
-
-    .news-image-preview {
-      width: 100%;
-      max-width: 500px;
-      height: 250px;
-      margin-top: 12px;
-      border: 1px dashed #3a424b;
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #68717b;
-      font-size: 13px;
-    }
-
-    .news-image-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .publish-button {
-      margin-top: 22px;
-      width: 100%;
-    }
-
-    .news-list,
-    .changes-list,
-    .comments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .news-item {
-      display: grid;
-      grid-template-columns: 110px 1fr auto;
-      gap: 16px;
-      align-items: center;
-      padding: 14px;
-      background: #0b0d10;
-      border: 1px solid #252b32;
-      border-radius: 9px;
-    }
-
-    .news-item-image {
-      width: 110px;
-      height: 75px;
-      border-radius: 6px;
-      overflow: hidden;
-      background: #161b20;
-    }
-
-    .news-item-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .news-item-title {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .news-item-meta {
-      color: #858e98;
-      font-size: 13px;
-    }
-
-    .delete-button {
-      background: #3a1717;
-      color: #ff9b9b;
-    }
-
-    .empty {
-      color: #858e98;
-      font-size: 14px;
-      padding: 10px 0;
-    }
-
-    /* ==============================
-       РЕДАКТОР НОВОСТИ
-    ============================== */
-
-    .editor-wrapper {
-      margin-top: 8px;
-      border: 1px solid #30363d;
-      border-radius: 9px;
-      overflow: hidden;
-      background: #0b0d10;
-    }
-
-    .editor-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      padding: 9px;
-      background: #151a20;
-      border-bottom: 1px solid #30363d;
-    }
-
-    .editor-toolbar button {
-      min-width: 38px;
-      height: 34px;
-      padding: 6px 9px;
-      background: #20262d;
-      color: #e8e8e8;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .editor-toolbar button:hover {
-      background: #2a323b;
-      opacity: 1;
-    }
-
-    .editor-toolbar button.active {
-      background: #d5b42e;
-      color: #101214;
-      border-color: #d5b42e;
-    }
-
-    .editor-toolbar .toolbar-separator {
-      width: 1px;
-      height: 28px;
-      background: #30363d;
-      margin: 3px 3px;
-    }
-
-    .editor-toolbar select {
-      width: auto;
-      min-width: 125px;
-      height: 34px;
-      padding: 5px 8px;
-      border-radius: 6px;
-      background: #20262d;
-      border-color: #30363d;
-      font-size: 13px;
-    }
-
-    /* ==============================
-       ВЫБОР РАЗМЕРА В PIXELS
-    ============================== */
-
-    .font-size-picker {
-      position: relative;
-      display: inline-flex;
-      flex-shrink: 0;
-    }
-
-    .font-size-button {
-      min-width: 105px !important;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 9px;
-    }
-
-    .font-size-arrow {
-      font-size: 9px;
-      color: #858e98;
-      transition: transform .15s ease;
-    }
-
-    .font-size-picker.open .font-size-arrow {
-      transform: rotate(180deg);
-    }
-
-    .font-size-menu {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      width: 125px;
-      max-height: 240px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 5px;
-      background: #11151a;
-      border: 1px solid #30363d;
-      border-radius: 7px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, .45);
-      display: none;
-      z-index: 100;
-    }
-
-    .font-size-picker.open .font-size-menu {
-      display: block;
-    }
-
-    .font-size-menu::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .font-size-menu::-webkit-scrollbar-track {
-      background: #0b0d10;
-      border-radius: 6px;
-    }
-
-    .font-size-menu::-webkit-scrollbar-thumb {
-      background: #3a424b;
-      border-radius: 6px;
-    }
-
-    .font-size-menu::-webkit-scrollbar-thumb:hover {
-      background: #555f69;
-    }
-
-    .font-size-option {
-      width: 100%;
-      min-width: 0 !important;
-      height: auto !important;
-      min-height: 31px;
-      padding: 6px 9px !important;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: transparent !important;
-      border: 0 !important;
-      border-radius: 5px !important;
-      color: #d8d8d8 !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      text-align: left;
-      opacity: 1 !important;
-    }
-
-    .font-size-option:hover {
-      background: #20262d !important;
-      color: #fff !important;
-    }
-
-    .font-size-option.current {
-      background: #d5b42e !important;
-      color: #101214 !important;
-    }
-
-    .font-size-option .size-preview {
-      color: #68717b;
-      font-size: 9px;
-      font-weight: 500;
-    }
-
-    .font-size-option.current .size-preview {
-      color: #101214;
-    }
-
-    .editor-content {
-      min-height: 360px;
-      padding: 18px;
-      outline: none;
-      color: #e8e8e8;
-      font-size: 16px;
-      line-height: 1.75;
-      overflow-wrap: anywhere;
-    }
-
-    .editor-content:focus {
-      box-shadow: inset 0 0 0 1px #65717e;
-    }
-
-    .editor-content:empty::before {
-      content: attr(data-placeholder);
-      color: #68717b;
-      pointer-events: none;
-    }
-
-    .editor-content p {
-      margin: 0 0 14px;
-    }
-
-    .editor-content h2 {
-      font-size: 27px;
-      margin: 25px 0 12px;
-      line-height: 1.25;
-    }
-
-    .editor-content h3 {
-      font-size: 21px;
-      margin: 22px 0 10px;
-      line-height: 1.3;
-    }
-
-    .editor-content blockquote {
-      margin: 18px 0;
-      padding: 12px 18px;
-      border-left: 3px solid #d5b42e;
-      background: #15191e;
-      color: #bfc6cd;
-      border-radius: 0 7px 7px 0;
-    }
-
-    .editor-content ul,
-    .editor-content ol {
-      margin: 10px 0 16px;
-      padding-left: 28px;
-    }
-
-    .editor-content a {
-      color: #8fbcff;
-      text-decoration: underline;
-    }
-
-    /* Встроенные изображения */
-
-    .news-inline-image {
-      margin: 25px auto;
-      padding: 8px;
-      max-width: 100%;
-      background: #101419;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, .25);
-    }
-
-    .news-inline-image img {
-      display: block;
-      width: 100%;
-      max-height: 650px;
-      object-fit: contain;
-      border-radius: 6px;
-      background: #080a0d;
-    }
-
-    .news-inline-image figcaption {
-      padding: 10px 8px 4px;
-      color: #858e98;
-      font-size: 13px;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    .editor-content .news-inline-image {
-      cursor: default;
-    }
-
-    .editor-help {
-      padding: 9px 12px;
-      border-top: 1px solid #252b32;
-      color: #68717b;
-      font-size: 12px;
-    }
-
-    /* ==============================
-       МОДАЛЬНОЕ ОКНО ССЫЛКИ
-    ============================== */
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .72);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal-overlay.visible {
-      display: flex;
-    }
-
-    .link-modal {
-      width: 100%;
-      max-width: 450px;
-      background: #11151a;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
-    }
-
-    .link-modal h3 {
-      margin: 0 0 8px;
-    }
-
-    .link-modal .modal-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .link-modal .modal-buttons button {
-      flex: 1;
-    }
-
-    .modal-cancel {
-      background: #252b32;
-      color: #d5d5d5;
-    }
-
-    /* ==============================
-       ПОСЛЕДНИЕ ИЗМЕНЕНИЯ
-    ============================== */
-
-    .change-form {
-      margin-top: 20px;
-    }
-
-    .change-icon-preview {
-      width: 90px;
-      height: 90px;
-      margin-top: 12px;
-      border: 1px dashed #3a424b;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background: #0b0d10;
-      color: #68717b;
-      font-size: 12px;
-      text-align: center;
-    }
-
-    .change-icon-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .change-add-button {
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    .change-item {
-      display: grid;
-      grid-template-columns: 55px 1fr auto;
-      gap: 14px;
-      align-items: center;
-      padding: 12px;
-      background: #0b0d10;
-      border: 1px solid #252b32;
-      border-radius: 9px;
-    }
-
-    .change-item-icon {
-      width: 55px;
-      height: 55px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .change-item-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .change-item-title {
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .change-item-meta {
-      color: #858e98;
-      font-size: 12px;
-    }
-
-    .change-list-title {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid #252b32;
-    }
-
-    /* ==============================
-       КОММЕНТАРИИ
-    ============================== */
-
-    .comment-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 16px;
-      align-items: center;
-      padding: 16px;
-      background: #0b0d10;
-      border: 1px solid #252b32;
-      border-radius: 9px;
-    }
-
-    .comment-author {
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
-
-    .comment-content {
-      color: #d7d7d7;
-      font-size: 14px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .comment-meta {
-      color: #858e98;
-      font-size: 12px;
-      margin-top: 9px;
-    }
-
-    .comment-news {
-      color: #aeb7c0;
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    .comment-news span {
-      color: #d5b42e;
-    }
-
-    @media (max-width: 700px) {
-
-      .upload-row {
-        grid-template-columns: 1fr;
-      }
-
-      .preview {
-        width: 100%;
-      }
-
-      .news-item {
-        grid-template-columns: 1fr;
-      }
-
-      .news-item-image {
-        width: 100%;
-        height: 180px;
-      }
-
-      .change-item {
-        grid-template-columns: 50px 1fr;
-      }
-
-      .change-item .delete-button {
-        grid-column: 1 / -1;
-        width: 100%;
-      }
-
-      .comment-item {
-        grid-template-columns: 1fr;
-      }
-
-      .comment-item .delete-button {
-        width: 100%;
-      }
-
-      .editor-toolbar {
-        gap: 4px;
-      }
-
-      .editor-toolbar button {
-        min-width: 34px;
-        padding: 5px 7px;
-      }
-
-      .editor-toolbar .toolbar-separator {
-        display: none;
-      }
-
-      .editor-content {
-        min-height: 300px;
-      }
-
-      .font-size-menu {
-        max-height: 220px;
-      }
-
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SCP: CB2 Multiplayer — Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+
+<style>
+*{
+ box-sizing:border-box;
+}
+
+html{
+ scroll-behavior:smooth;
+}
+
+body{
+ margin:0;
+ background:#0b0d10;
+ color:#e8e8e8;
+ font-family:Arial,Helvetica,sans-serif;
+}
+
+button,
+input,
+textarea,
+select{
+ font-family:inherit;
+}
+
+button{
+ cursor:pointer;
+}
+
+.hidden{
+ display:none!important;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-screen{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:
+ radial-gradient(circle at 50% 20%,rgba(213,180,46,.04),transparent 35%),
+ #0b0d10;
+}
+
+.login-box{
+ width:100%;
+ max-width:420px;
+ background:#11151a;
+ border:1px solid #252b32;
+ border-radius:12px;
+ padding:30px;
+ box-shadow:0 25px 80px rgba(0,0,0,.4);
+}
+
+.login-label{
+ color:#d5b42e;
+ font-size:9px;
+ font-weight:bold;
+ letter-spacing:1.5px;
+ margin-bottom:9px;
+}
+
+.login-box h1{
+ margin:0 0 8px;
+ font-size:24px;
+}
+
+.login-box p{
+ color:#70767c;
+ font-size:11px;
+ line-height:1.7;
+ margin:0 0 24px;
+}
+
+.field{
+ margin-bottom:15px;
+}
+
+.field label{
+ display:block;
+ color:#858b91;
+ font-size:9px;
+ font-weight:bold;
+ letter-spacing:.7px;
+ margin-bottom:7px;
+ text-transform:uppercase;
+}
+
+.field input,
+.field textarea,
+.field select{
+ width:100%;
+ border:1px solid #292f36;
+ background:#0d1013;
+ color:#eee;
+ border-radius:6px;
+ padding:11px 12px;
+ outline:none;
+ font-size:11px;
+ transition:border-color .2s,box-shadow .2s;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+ border-color:#d5b42e;
+ box-shadow:0 0 0 2px rgba(213,180,46,.06);
+}
+
+.field textarea{
+ resize:vertical;
+ min-height:100px;
+ line-height:1.6;
+}
+
+.primary-button{
+ border:0;
+ background:#d5b42e;
+ color:#080909;
+ border-radius:5px;
+ padding:11px 17px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ transition:background .2s,transform .2s,box-shadow .2s;
+}
+
+.primary-button:hover{
+ background:#e5c34b;
+ transform:translateY(-1px);
+ box-shadow:0 5px 20px rgba(213,180,46,.12);
+}
+
+.secondary-button{
+ border:1px solid #30363d;
+ background:#171b20;
+ color:#cfd2d4;
+ border-radius:5px;
+ padding:10px 14px;
+ font-size:10px;
+ font-weight:bold;
+ text-transform:uppercase;
+ transition:border-color .2s,background .2s;
+}
+
+.secondary-button:hover{
+ border-color:#d5b42e;
+ background:#1c2127;
+}
+
+.danger-button{
+ border:1px solid #522323;
+ background:#211416;
+ color:#e34a4a;
+ border-radius:5px;
+ padding:8px 11px;
+ font-size:9px;
+ font-weight:bold;
+ text-transform:uppercase;
+}
+
+.danger-button:hover{
+ background:#32191b;
+ color:#ff6464;
+}
+
+.status{
+ min-height:18px;
+ margin-top:10px;
+ color:#6f767c;
+ font-size:10px;
+ line-height:1.5;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-screen{
+ display:none;
+ min-height:100vh;
+}
+
+.admin-screen.visible{
+ display:block;
+}
+
+.admin-header{
+ position:sticky;
+ top:0;
+ z-index:50;
+ height:64px;
+ background:#11151a;
+ border-bottom:1px solid #252b32;
+}
+
+.admin-header-inner{
+ width:min(1100px,calc(100% - 30px));
+ height:100%;
+ margin:auto;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px;
+}
+
+.admin-brand{
+ display:flex;
+ align-items:center;
+ gap:11px;
+}
+
+.admin-brand-mark{
+ width:31px;
+ height:31px;
+ border:1px solid #d5b42e;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:#d5b42e;
+ font-size:10px;
+ font-weight:bold;
+}
+
+.admin-brand-text strong{
+ display:block;
+ font-size:11px;
+ letter-spacing:.5px;
+}
+
+.admin-brand-text span{
+ display:block;
+ margin-top:3px;
+ color:#555c62;
+ font-size:8px;
+ letter-spacing:1px;
+}
+
+.admin-main{
+ width:min(1100px,calc(100% - 30px));
+ margin:30px auto 70px;
+}
+
+.panel{
+ background:#11151a;
+ border:1px solid #252b32;
+ border-radius:10px;
+ padding:22px;
+ margin-bottom:20px;
+}
+
+.panel-header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+ margin-bottom:20px;
+}
+
+.panel-title{
+ margin:0;
+ font-size:14px;
+}
+
+.panel-code{
+ color:#555c62;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+}
+
+.grid-2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:16px;
+}
+
+.upload-row{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ flex-wrap:wrap;
+}
+
+.file-input{
+ width:100%;
+ border:1px dashed #30363d;
+ background:#0d1013;
+ color:#777d82;
+ border-radius:6px;
+ padding:10px;
+ font-size:10px;
+}
+
+.preview-box{
+ margin-top:10px;
+ min-height:50px;
+ display:flex;
+ align-items:center;
+}
+
+.preview-box img{
+ max-width:180px;
+ max-height:120px;
+ object-fit:contain;
+ border:1px solid #30363d;
+ background:#080a0c;
+ border-radius:5px;
+ padding:4px;
+}
+
+/* =========================
+   EDITOR
+========================= */
+
+.editor-wrapper{
+ border:1px solid #30363d;
+ border-radius:9px;
+ overflow:visible;
+ background:#0d1013;
+ position:relative;
+}
+
+.editor-toolbar{
+ display:flex;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:5px;
+ padding:8px;
+ background:#151a20;
+ border-bottom:1px solid #30363d;
+ border-radius:9px 9px 0 0;
+ position:relative;
+ z-index:20;
+}
+
+.toolbar-button{
+ min-width:32px;
+ height:32px;
+ border:1px solid #292f36;
+ background:#20262d;
+ color:#c8cccf;
+ border-radius:5px;
+ padding:0 9px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:10px;
+ font-weight:bold;
+ transition:
+  background .15s,
+  border-color .15s,
+  color .15s,
+  box-shadow .15s;
+}
+
+.toolbar-button:hover{
+ border-color:#777d83;
+ background:#272e36;
+ color:#fff;
+}
+
+.toolbar-button.active{
+ background:#d5b42e;
+ border-color:#d5b42e;
+ color:#080909;
+ box-shadow:0 0 0 1px rgba(213,180,46,.12);
+}
+
+.toolbar-separator{
+ width:1px;
+ height:23px;
+ background:#30363d;
+ margin:0 3px;
+}
+
+/* CUSTOM PICKERS */
+
+.editor-picker{
+ position:relative;
+}
+
+.editor-picker-button{
+ height:32px;
+ min-width:125px;
+ padding:0 10px;
+ border:1px solid #292f36;
+ background:#20262d;
+ color:#c8cccf;
+ border-radius:5px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ font-size:10px;
+ font-weight:bold;
+ transition:background .15s,border-color .15s;
+}
+
+.editor-picker-button:hover,
+.editor-picker.open .editor-picker-button{
+ border-color:#777d83;
+ background:#272e36;
+ color:#fff;
+}
+
+.editor-picker-button.current{
+ border-color:#d5b42e;
+}
+
+.editor-picker-arrow{
+ color:#777d83;
+ font-size:9px;
+}
+
+.editor-picker-menu{
+ position:absolute;
+ top:calc(100% + 6px);
+ left:0;
+ width:100%;
+ min-width:150px;
+ padding:5px;
+ background:#11151a;
+ border:1px solid #343b43;
+ border-radius:6px;
+ box-shadow:0 15px 40px rgba(0,0,0,.5);
+ display:none;
+ z-index:100;
+}
+
+.editor-picker.open .editor-picker-menu{
+ display:block;
+}
+
+.editor-picker-option{
+ width:100%;
+ min-height:31px;
+ border:0;
+ border-radius:4px;
+ background:transparent;
+ color:#aeb3b7;
+ padding:7px 9px;
+ text-align:left;
+ font-size:10px;
+ cursor:pointer;
+ transition:background .15s,color .15s;
+}
+
+.editor-picker-option:hover{
+ background:#20262d;
+ color:#fff;
+}
+
+.editor-picker-option.active{
+ background:#d5b42e;
+ color:#080909;
+ font-weight:bold;
+}
+
+.font-size-picker .editor-picker-menu{
+ max-height:270px;
+ overflow-y:auto;
+}
+
+.editor-content{
+ min-height:360px;
+ padding:18px;
+ outline:none;
+ font-size:14px;
+ line-height:1.75;
+ color:#e8e8e8;
+ background:#0d1013;
+ border-radius:0 0 9px 9px;
+}
+
+.editor-content:empty:before{
+ content:"Начните писать новость...";
+ color:#4d545a;
+ pointer-events:none;
+}
+
+.editor-content p{
+ margin:0 0 13px;
+}
+
+.editor-content h2{
+ margin:20px 0 12px;
+ color:#f0f0f0;
+ font-size:25px;
+ line-height:1.25;
+}
+
+.editor-content h3{
+ margin:18px 0 10px;
+ color:#f0f0f0;
+ font-size:19px;
+ line-height:1.3;
+}
+
+.editor-content blockquote{
+ margin:16px 0;
+ padding:11px 15px;
+ border-left:3px solid #d5b42e;
+ background:#15191e;
+ color:#aeb3b7;
+}
+
+.editor-content ul,
+.editor-content ol{
+ margin:8px 0 14px;
+ padding-left:25px;
+}
+
+.editor-content li{
+ margin:4px 0;
+}
+
+.editor-content a{
+ color:#d5b42e;
+ text-decoration:underline;
+}
+
+.editor-content a:hover{
+ color:#f0d45b;
+}
+
+.news-inline-image{
+ margin:20px 0;
+ padding:7px;
+ background:#11151a;
+ border:1px solid #3a4148;
+ border-radius:7px;
+ position:relative;
+}
+
+.news-inline-image:before{
+ content:"";
+ position:absolute;
+ top:-1px;
+ left:-1px;
+ width:28px;
+ height:28px;
+ border-top:2px solid #d5b42e;
+ border-left:2px solid #d5b42e;
+ border-radius:7px 0 0 0;
+ pointer-events:none;
+}
+
+.news-inline-image img{
+ display:block;
+ width:100%;
+ max-height:600px;
+ object-fit:contain;
+ border-radius:4px;
+ background:#080a0c;
+}
+
+.news-inline-image figcaption{
+ padding:9px 7px 4px;
+ color:#737a80;
+ text-align:center;
+ font-size:9px;
+ line-height:1.5;
+}
+
+.editor-help{
+ margin-top:9px;
+ color:#4e555b;
+ font-size:8px;
+ line-height:1.6;
+}
+
+.editor-content ::selection{
+ background:rgba(213,180,46,.35);
+}
+
+/* =========================
+   LINK MODAL
+========================= */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.78);
+ backdrop-filter:blur(4px);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:200;
+}
+
+.modal.open{
+ display:flex;
+}
+
+.modal-box{
+ width:100%;
+ max-width:460px;
+ background:#11151a;
+ border:1px solid #343b43;
+ border-radius:8px;
+ box-shadow:0 25px 70px rgba(0,0,0,.6);
+ overflow:hidden;
+}
+
+.modal-header{
+ height:48px;
+ padding:0 17px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ background:#0d1013;
+ border-bottom:1px solid #292f36;
+}
+
+.modal-title{
+ font-size:10px;
+ font-weight:bold;
+ letter-spacing:.7px;
+}
+
+.modal-code{
+ color:#d5b42e;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+}
+
+.modal-close{
+ border:0;
+ background:none;
+ color:#72787d;
+ font-size:20px;
+ line-height:20px;
+ cursor:pointer;
+}
+
+.modal-close:hover{
+ color:#fff;
+}
+
+.modal-body{
+ padding:20px;
+}
+
+.modal-actions{
+ display:flex;
+ justify-content:flex-end;
+ gap:8px;
+ margin-top:18px;
+}
+
+/* =========================
+   LISTS
+========================= */
+
+.news-list,
+.changes-list,
+.comments-list{
+ display:flex;
+ flex-direction:column;
+ gap:8px;
+}
+
+.news-item,
+.change-item,
+.comment-item{
+ border:1px solid #252b32;
+ background:#0d1013;
+ border-radius:7px;
+ padding:12px;
+}
+
+.news-item{
+ display:grid;
+ grid-template-columns:1fr auto;
+ align-items:center;
+ gap:15px;
+}
+
+.item-title{
+ color:#eee;
+ font-size:11px;
+ font-weight:bold;
+ line-height:1.4;
+}
+
+.item-meta{
+ margin-top:5px;
+ color:#5f666c;
+ font-size:8px;
+}
+
+.change-item{
+ display:grid;
+ grid-template-columns:45px 1fr auto;
+ align-items:center;
+ gap:12px;
+}
+
+.change-icon{
+ width:40px;
+ height:40px;
+ border:1px solid #30363d;
+ border-radius:5px;
+ object-fit:cover;
+ background:#080a0c;
+}
+
+.comment-item{
+ display:grid;
+ grid-template-columns:1fr auto;
+ gap:15px;
+}
+
+.comment-author{
+ color:#d5b42e;
+ font-size:9px;
+ font-weight:bold;
+}
+
+.comment-content{
+ margin-top:6px;
+ color:#9da3a8;
+ font-size:10px;
+ line-height:1.6;
+ word-break:break-word;
+}
+
+.comment-date{
+ margin-top:5px;
+ color:#4e555a;
+ font-size:8px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:800px){
+
+ .grid-2{
+  grid-template-columns:1fr;
+ }
+
+ .editor-toolbar{
+  gap:4px;
+ }
+
+ .toolbar-button{
+  min-width:30px;
+  padding:0 7px;
+ }
+
+ .editor-picker-button{
+  min-width:110px;
+ }
+
+ .news-item{
+  grid-template-columns:1fr;
+ }
+
+ .change-item{
+  grid-template-columns:40px 1fr;
+ }
+
+ .change-item .danger-button{
+  grid-column:2;
+  justify-self:start;
+ }
+
+ .comment-item{
+  grid-template-columns:1fr;
+ }
+}
+
+@media(max-width:550px){
+
+ .admin-main,
+ .admin-header-inner{
+  width:calc(100% - 20px);
+ }
+
+ .panel{
+  padding:15px;
+ }
+
+ .admin-header{
+  height:auto;
+  min-height:60px;
+ }
+
+ .admin-header-inner{
+  padding:10px 0;
+ }
+
+ .admin-brand-text span{
+  display:none;
+ }
+
+ .editor-toolbar{
+  position:relative;
+  padding:6px;
+ }
+
+ .editor-picker-button{
+  min-width:105px;
+ }
+
+ .editor-content{
+  min-height:300px;
+  padding:13px;
+ }
+
+ .modal{
+  padding:10px;
+ }
+
+ .modal-body{
+  padding:15px;
+ }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- LOGIN -->
+<!-- =========================
+     LOGIN
+========================= -->
 
-  <section class="login" id="loginScreen">
+<div id="loginScreen" class="login-screen">
 
-    <div class="login-box">
+ <div class="login-box">
 
-      <h1>Админ-панель</h1>
+  <div class="login-label">FOUNDATION ADMINISTRATION</div>
 
-      <p class="muted">
-        SCP: CB2 Multiplayer
-      </p>
+  <h1>Панель администратора</h1>
 
-      <label for="email">
-        Email
-      </label>
+  <p>
+   Авторизуйтесь через учётную запись Supabase,
+   чтобы управлять новостями, изменениями, комментариями и изображениями.
+  </p>
 
-      <input
-        id="email"
-        type="email"
-        placeholder="Email администратора"
-      >
+  <div class="field">
+   <label>Email</label>
+   <input id="emailInput" type="email" autocomplete="username">
+  </div>
 
-      <label for="password">
-        Пароль
-      </label>
+  <div class="field">
+   <label>Пароль</label>
+   <input id="passwordInput" type="password" autocomplete="current-password">
+  </div>
 
-      <input
-        id="password"
-        type="password"
-        placeholder="Пароль"
-      >
+  <button id="loginButton" class="primary-button" type="button">
+   Войти
+  </button>
 
-      <button id="loginButton">
-        Войти
-      </button>
+  <div id="loginStatus" class="status"></div>
 
-      <div
-        class="error"
-        id="loginError"
-      ></div>
+ </div>
+
+</div>
+
+
+<!-- =========================
+     ADMIN
+========================= -->
+
+<div id="adminScreen" class="admin-screen">
+
+ <header class="admin-header">
+
+  <div class="admin-header-inner">
+
+   <div class="admin-brand">
+
+    <div class="admin-brand-mark">
+     SCP
+    </div>
+
+    <div class="admin-brand-text">
+     <strong>ГОЛОС ФОНДА</strong>
+     <span>CB2 MULTIPLAYER / ADMINISTRATION</span>
+    </div>
+
+   </div>
+
+   <button id="logoutButton" class="secondary-button" type="button">
+    Выйти
+   </button>
+
+  </div>
+
+ </header>
+
+
+ <main class="admin-main">
+
+
+  <!-- =========================
+       CREATE NEWS
+  ========================= -->
+
+  <section class="panel">
+
+   <div class="panel-header">
+    <h2 class="panel-title">Создание новости</h2>
+    <div class="panel-code">NEWS / CREATE</div>
+   </div>
+
+
+   <div class="field">
+
+    <label>Главное изображение</label>
+
+    <input
+     id="newsImage"
+     class="file-input"
+     type="file"
+     accept="image/png,image/jpeg,image/webp"
+    >
+
+    <div id="newsImagePreview" class="preview-box"></div>
+
+   </div>
+
+
+   <div class="grid-2">
+
+    <div class="field">
+
+     <label>Заголовок</label>
+
+     <input
+      id="newsTitle"
+      type="text"
+      maxlength="200"
+      placeholder="Заголовок новости"
+     >
 
     </div>
+
+
+    <div class="field">
+
+     <label>Категория</label>
+
+     <select id="newsCategory">
+
+      <option value="Сообщество">Сообщество</option>
+      <option value="Сервера">Сервера</option>
+      <option value="Обновления">Обновления</option>
+      <option value="События">События</option>
+      <option value="Разработка">Разработка</option>
+
+     </select>
+
+    </div>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Краткое описание</label>
+
+    <textarea
+     id="newsDescription"
+     placeholder="Краткое описание новости..."
+    ></textarea>
+
+   </div>
+
+
+   <!-- =========================
+        EDITOR
+   ========================= -->
+
+   <div class="field">
+
+    <label>Содержание новости</label>
+
+
+    <div class="editor-wrapper">
+
+     <div id="editorToolbar" class="editor-toolbar">
+
+
+      <!-- UNDO / REDO -->
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="undo"
+       title="Отменить"
+      >↶</button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="redo"
+       title="Повторить"
+      >↷</button>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- TEXT TYPE -->
+
+      <div id="formatPicker" class="editor-picker">
+
+       <button
+        id="formatPickerButton"
+        class="editor-picker-button"
+        type="button"
+       >
+        <span id="formatPickerText">Обычный текст</span>
+        <span class="editor-picker-arrow">▼</span>
+       </button>
+
+       <div id="formatPickerMenu" class="editor-picker-menu">
+
+        <button
+         class="editor-picker-option active"
+         type="button"
+         data-format="p"
+        >
+         Обычный текст
+        </button>
+
+        <button
+         class="editor-picker-option"
+         type="button"
+         data-format="h2"
+        >
+         Заголовок
+        </button>
+
+        <button
+         class="editor-picker-option"
+         type="button"
+         data-format="h3"
+        >
+         Подзаголовок
+        </button>
+
+        <button
+         class="editor-picker-option"
+         type="button"
+         data-format="blockquote"
+        >
+         Цитата
+        </button>
+
+       </div>
+
+      </div>
+
+
+      <!-- FONT SIZE -->
+
+      <div id="fontSizePicker" class="editor-picker font-size-picker">
+
+       <button
+        id="fontSizeButton"
+        class="editor-picker-button"
+        type="button"
+       >
+        <span id="fontSizeText">14 px</span>
+        <span class="editor-picker-arrow">▼</span>
+       </button>
+
+       <div id="fontSizeMenu" class="editor-picker-menu"></div>
+
+      </div>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- TEXT FORMAT -->
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="bold"
+       title="Жирный"
+       data-state-command="bold"
+      ><b>B</b></button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="italic"
+       title="Курсив"
+       data-state-command="italic"
+      ><i>I</i></button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="underline"
+       title="Подчёркивание"
+       data-state-command="underline"
+      ><u>U</u></button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="strikeThrough"
+       title="Зачёркивание"
+       data-state-command="strikeThrough"
+      ><s>S</s></button>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- LISTS -->
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="insertUnorderedList"
+       title="Маркированный список"
+       data-state-command="insertUnorderedList"
+      >☷</button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="insertOrderedList"
+       title="Нумерованный список"
+       data-state-command="insertOrderedList"
+      >1.</button>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- ALIGN -->
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="justifyLeft"
+       title="По левому краю"
+       data-state-command="justifyLeft"
+      >≡</button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="justifyCenter"
+       title="По центру"
+       data-state-command="justifyCenter"
+      >≡</button>
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="justifyRight"
+       title="По правому краю"
+       data-state-command="justifyRight"
+      >≡</button>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- LINK -->
+
+      <button
+       id="insertLinkButton"
+       class="toolbar-button"
+       type="button"
+       title="Вставить ссылку"
+      >🔗</button>
+
+
+      <!-- IMAGE -->
+
+      <button
+       id="insertImageButton"
+       class="toolbar-button"
+       type="button"
+       title="Вставить изображение"
+      >▧</button>
+
+
+      <div class="toolbar-separator"></div>
+
+
+      <!-- REMOVE FORMAT -->
+
+      <button
+       class="toolbar-button"
+       type="button"
+       data-command="removeFormat"
+       title="Убрать форматирование"
+      >Tx</button>
+
+
+     </div>
+
+
+     <div
+      id="newsEditor"
+      class="editor-content"
+      contenteditable="true"
+      spellcheck="true"
+     ></div>
+
+    </div>
+
+
+    <input
+     id="inlineImageFile"
+     type="file"
+     accept="image/png,image/jpeg,image/webp"
+     hidden
+    >
+
+
+    <div class="editor-help">
+     Выделите текст и используйте панель форматирования. Размер текста по умолчанию — 14 px.
+     Вы можете добавлять заголовки, цитаты, ссылки и изображения прямо между абзацами.
+    </div>
+
+   </div>
+
+
+   <button
+    id="publishNewsButton"
+    class="primary-button"
+    type="button"
+   >
+    Опубликовать новость
+   </button>
+
+   <div id="newsStatus" class="status"></div>
 
   </section>
 
 
-  <!-- ADMIN -->
 
-  <section
-    class="admin"
-    id="adminScreen"
-  >
+  <!-- =========================
+       LAST CHANGES
+  ========================= -->
 
-    <header>
+  <section class="panel">
 
-      <div class="header-inner">
+   <div class="panel-header">
 
-        <div class="logo">
-          SCP: CB2 — Админ-панель
-        </div>
+    <h2 class="panel-title">
+     Последние изменения
+    </h2>
 
-        <button id="logoutButton">
-          Выйти
-        </button>
+    <div class="panel-code">
+     SYSTEM / CHANGES
+    </div>
 
-      </div>
+   </div>
 
-    </header>
 
+   <div class="grid-2">
 
-    <main>
+    <div class="field">
 
-      <!-- СОЗДАНИЕ НОВОСТИ -->
+     <label>Название изменения</label>
 
-      <div class="panel">
+     <input
+      id="changeTitle"
+      type="text"
+      maxlength="200"
+      placeholder="Например: Обновлена система серверов"
+     >
 
-        <h2>
-          Создать новость
-        </h2>
+    </div>
 
-        <p class="muted">
-          Заполни данные новости. Заголовок и описание будут
-          отображаться на главной странице, а полный текст —
-          внутри самой новости.
-        </p>
 
+    <div class="field">
 
-        <div class="news-form">
+     <label>Иконка</label>
 
-          <label for="newsImage">
-            Фотография новости
-          </label>
+     <input
+      id="changeIcon"
+      class="file-input"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+     >
 
-          <input
-            type="file"
-            id="newsImage"
-            accept="image/png,image/jpeg,image/webp"
-          >
+     <div id="changeIconPreview" class="preview-box"></div>
 
-          <div
-            class="news-image-preview"
-            id="newsImagePreview"
-          >
-            Предпросмотр фотографии
-          </div>
+    </div>
 
+   </div>
 
-          <label for="newsTitle">
-            Заголовок
-          </label>
 
-          <input
-            id="newsTitle"
-            type="text"
-            placeholder="Введите заголовок новости"
-            maxlength="200"
-          >
+   <button
+    id="addChangeButton"
+    class="primary-button"
+    type="button"
+   >
+    Добавить изменение
+   </button>
 
+   <div id="changeStatus" class="status"></div>
 
-          <label for="newsDescription">
-            Краткое описание
-          </label>
-
-          <textarea
-            id="newsDescription"
-            style="min-height:120px"
-            placeholder="Это описание будет видно на главной странице..."
-          ></textarea>
-
-
-          <label>
-            Полный текст новости
-          </label>
-
-
-          <!-- РЕДАКТОР -->
-
-          <div class="editor-wrapper">
-
-            <div
-              class="editor-toolbar"
-              id="editorToolbar"
-            >
-
-              <!-- Отмена / повтор -->
-
-              <button
-                type="button"
-                data-command="undo"
-                title="Отменить"
-              >
-                ↶
-              </button>
-
-              <button
-                type="button"
-                data-command="redo"
-                title="Повторить"
-              >
-                ↷
-              </button>
-
-
-              <span class="toolbar-separator"></span>
-
-
-              <!-- Заголовок -->
-
-              <select
-                id="formatSelect"
-                title="Тип текста"
-              >
-
-                <option value="p">
-                  Обычный текст
-                </option>
-
-                <option value="h2">
-                  Заголовок
-                </option>
-
-                <option value="h3">
-                  Подзаголовок
-                </option>
-
-                <option value="blockquote">
-                  Цитата
-                </option>
-
-              </select>
-
-
-              <!-- РАЗМЕР В PIXELS -->
-
-              <div
-                class="font-size-picker"
-                id="fontSizePicker"
-              >
-
-                <button
-                  type="button"
-                  class="font-size-button"
-                  id="fontSizeButton"
-                  title="Размер текста"
-                >
-                  <span id="fontSizeButtonText">
-                    Размер
-                  </span>
-
-                  <span class="font-size-arrow">
-                    ▼
-                  </span>
-                </button>
-
-
-                <div
-                  class="font-size-menu"
-                  id="fontSizeMenu"
-                ></div>
-
-              </div>
-
-
-              <span class="toolbar-separator"></span>
-
-
-              <!-- Форматирование -->
-
-              <button
-                type="button"
-                data-command="bold"
-                title="Жирный"
-              >
-                B
-              </button>
-
-              <button
-                type="button"
-                data-command="italic"
-                title="Курсив"
-                style="font-style:italic"
-              >
-                I
-              </button>
-
-              <button
-                type="button"
-                data-command="underline"
-                title="Подчёркнутый"
-                style="text-decoration:underline"
-              >
-                U
-              </button>
-
-              <button
-                type="button"
-                data-command="strikeThrough"
-                title="Зачёркнутый"
-                style="text-decoration:line-through"
-              >
-                S
-              </button>
-
-
-              <span class="toolbar-separator"></span>
-
-
-              <!-- Списки -->
-
-              <button
-                type="button"
-                data-command="insertUnorderedList"
-                title="Маркированный список"
-              >
-                •☰
-              </button>
-
-              <button
-                type="button"
-                data-command="insertOrderedList"
-                title="Нумерованный список"
-              >
-                1.
-              </button>
-
-
-              <span class="toolbar-separator"></span>
-
-
-              <!-- Выравнивание -->
-
-              <button
-                type="button"
-                data-command="justifyLeft"
-                title="По левому краю"
-              >
-                ≡
-              </button>
-
-              <button
-                type="button"
-                data-command="justifyCenter"
-                title="По центру"
-              >
-                ≡
-              </button>
-
-              <button
-                type="button"
-                data-command="justifyRight"
-                title="По правому краю"
-              >
-                ≡
-              </button>
-
-
-              <span class="toolbar-separator"></span>
-
-
-              <!-- Ссылка -->
-
-              <button
-                type="button"
-                id="insertLinkButton"
-                title="Вставить ссылку"
-              >
-                🔗
-              </button>
-
-
-              <!-- Картинка -->
-
-              <button
-                type="button"
-                id="insertImageButton"
-                title="Вставить изображение в новость"
-              >
-                🖼
-              </button>
-
-
-              <!-- Очистить -->
-
-              <button
-                type="button"
-                data-command="removeFormat"
-                title="Убрать форматирование"
-              >
-                Tx
-              </button>
-
-            </div>
-
-
-            <div
-              id="newsEditor"
-              class="editor-content"
-              contenteditable="true"
-              spellcheck="true"
-              data-placeholder="Начните писать текст новости..."
-            ></div>
-
-
-            <div class="editor-help">
-              Выдели текст для форматирования. Картинки можно вставлять прямо между абзацами.
-            </div>
-
-          </div>
-
-
-          <!-- Скрытый выбор изображения -->
-
-          <input
-            type="file"
-            id="inlineImageFile"
-            accept="image/png,image/jpeg,image/webp"
-            style="display:none"
-          >
-
-
-          <label for="newsCategory">
-            Тег новости
-          </label>
-
-          <select id="newsCategory">
-
-            <option value="Сообщество">
-              Сообщество
-            </option>
-
-            <option value="Сервера">
-              Сервера
-            </option>
-
-            <option value="Обновления">
-              Обновления
-            </option>
-
-            <option value="События">
-              События
-            </option>
-
-            <option value="Разработка">
-              Разработка
-            </option>
-
-          </select>
-
-
-          <button
-            class="publish-button"
-            id="publishNewsButton"
-          >
-            Опубликовать новость
-          </button>
-
-          <div
-            class="status"
-            id="newsStatus"
-          ></div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ПОСЛЕДНИЕ ИЗМЕНЕНИЯ -->
-
-      <div class="panel">
-
-        <h2>
-          Последние изменения
-        </h2>
-
-        <p class="muted">
-          Добавляй изменения проекта, которые будут отображаться
-          в блоке «Последние изменения» на главной странице.
-        </p>
-
-
-        <div class="change-form">
-
-          <label for="changeTitle">
-            Название изменения
-          </label>
-
-          <input
-            id="changeTitle"
-            type="text"
-            maxlength="200"
-            placeholder="Например: Добавлена карта Site-65"
-          >
-
-
-          <label for="changeIcon">
-            Иконка изменения
-          </label>
-
-          <p class="muted">
-            Лучше использовать небольшое PNG или WEBP с прозрачным фоном.
-          </p>
-
-          <input
-            type="file"
-            id="changeIcon"
-            accept="image/png,image/webp,image/jpeg"
-          >
-
-
-          <div
-            class="change-icon-preview"
-            id="changeIconPreview"
-          >
-            Предпросмотр
-          </div>
-
-
-          <button
-            class="change-add-button"
-            id="addChangeButton"
-          >
-            Добавить изменение
-          </button>
-
-
-          <div
-            class="status"
-            id="changeStatus"
-          ></div>
-
-        </div>
-
-
-        <h3 class="change-list-title">
-          Добавленные изменения
-        </h3>
-
-        <div
-          class="changes-list"
-          id="changesList"
-        >
-          <div class="empty">
-            Загрузка...
-          </div>
-        </div>
-
-      </div>
-
-
-      <!-- ПОСЛЕДНИЕ КОММЕНТАРИИ -->
-
-      <div class="panel">
-
-        <h2>
-          Последние комментарии
-        </h2>
-
-        <p class="muted">
-          Здесь отображаются 20 последних опубликованных комментариев.
-          При необходимости комментарий можно удалить.
-        </p>
-
-        <div
-          class="status"
-          id="commentsStatus"
-        ></div>
-
-        <div
-          class="comments-list"
-          id="commentsList"
-        >
-          <div class="empty">
-            Загрузка...
-          </div>
-        </div>
-
-      </div>
-
-
-      <!-- СПИСОК НОВОСТЕЙ -->
-
-      <div class="panel">
-
-        <h2>
-          Новости
-        </h2>
-
-        <p class="muted">
-          Опубликованные новости.
-        </p>
-
-        <div
-          class="news-list"
-          id="newsList"
-        >
-          <div class="empty">
-            Загрузка...
-          </div>
-        </div>
-
-      </div>
-
-
-      <!-- ОФОРМЛЕНИЕ / ИЗОБРАЖЕНИЯ -->
-
-      <div class="panel">
-
-        <h2>
-          Изображения
-        </h2>
-
-        <p class="muted">
-          Управление изображениями сайта.
-        </p>
-
-
-        <!-- LOGO -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Логотип
-            </h3>
-
-            <p class="muted">
-              Основной логотип сайта.
-            </p>
-
-            <input
-              type="file"
-              id="logoFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('logo')"
-            >
-              Загрузить логотип
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="logoPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <!-- BACKGROUND -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Фон
-            </h3>
-
-            <p class="muted">
-              Фоновое изображение сайта.
-            </p>
-
-            <input
-              type="file"
-              id="backgroundFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('background')"
-            >
-              Загрузить фон
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="backgroundPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <!-- BANNER -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Баннер
-            </h3>
-
-            <p class="muted">
-              Большое изображение для оформления сайта.
-            </p>
-
-            <input
-              type="file"
-              id="bannerFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('banner')"
-            >
-              Загрузить баннер
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="bannerPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <div
-          class="status"
-          id="status"
-        ></div>
-
-      </div>
-
-    </main>
+   <div
+    id="changesList"
+    class="changes-list"
+   ></div>
 
   </section>
 
 
-  <!-- МОДАЛЬНОЕ ОКНО ВСТАВКИ ССЫЛКИ -->
 
-  <div
-    class="modal-overlay"
-    id="linkModal"
-  >
+  <!-- =========================
+       COMMENTS
+  ========================= -->
 
-    <div class="link-modal">
+  <section class="panel">
 
-      <h3>
-        Вставить ссылку
-      </h3>
+   <div class="panel-header">
 
-      <p class="muted">
-        Укажи адрес страницы и текст, который будет отображаться в новости.
-      </p>
+    <h2 class="panel-title">
+     Последние комментарии
+    </h2>
 
+    <div class="panel-code">
+     COMMUNITY / COMMENTS
+    </div>
 
-      <label for="linkText">
-        Текст ссылки
-      </label>
+   </div>
 
-      <input
-        id="linkText"
-        type="text"
-        placeholder="Например: Официальный Discord"
-        maxlength="200"
-      >
+   <div id="commentsStatus" class="status"></div>
 
+   <div
+    id="commentsList"
+    class="comments-list"
+   ></div>
 
-      <label for="linkUrl">
-        URL
-      </label>
-
-      <input
-        id="linkUrl"
-        type="url"
-        placeholder="https://example.com"
-      >
+  </section>
 
 
-      <div class="modal-buttons">
 
-        <button
-          type="button"
-          class="modal-cancel"
-          id="linkCancelButton"
-        >
-          Отмена
-        </button>
+  <!-- =========================
+       NEWS LIST
+  ========================= -->
 
-        <button
-          type="button"
-          id="linkConfirmButton"
-        >
-          Вставить ссылку
-        </button>
+  <section class="panel">
 
-      </div>
+   <div class="panel-header">
+
+    <h2 class="panel-title">
+     Новости
+    </h2>
+
+    <div class="panel-code">
+     DATABASE / NEWS
+    </div>
+
+   </div>
+
+   <div
+    id="newsList"
+    class="news-list"
+   ></div>
+
+  </section>
+
+
+
+  <!-- =========================
+       SITE IMAGES
+  ========================= -->
+
+  <section class="panel">
+
+   <div class="panel-header">
+
+    <h2 class="panel-title">
+     Изображения сайта
+    </h2>
+
+    <div class="panel-code">
+     SYSTEM / MEDIA
+    </div>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Логотип</label>
+
+    <div class="upload-row">
+
+     <input
+      id="logoFile"
+      class="file-input"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+     >
+
+     <button
+      class="secondary-button"
+      type="button"
+      data-image-type="logo"
+     >
+      Загрузить
+     </button>
 
     </div>
+
+    <div id="logoPreview" class="preview-box"></div>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Фоновое изображение</label>
+
+    <div class="upload-row">
+
+     <input
+      id="backgroundFile"
+      class="file-input"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+     >
+
+     <button
+      class="secondary-button"
+      type="button"
+      data-image-type="background"
+     >
+      Загрузить
+     </button>
+
+    </div>
+
+    <div id="backgroundPreview" class="preview-box"></div>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Баннер</label>
+
+    <div class="upload-row">
+
+     <input
+      id="bannerFile"
+      class="file-input"
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+     >
+
+     <button
+      class="secondary-button"
+      type="button"
+      data-image-type="banner"
+     >
+      Загрузить
+     </button>
+
+    </div>
+
+    <div id="bannerPreview" class="preview-box"></div>
+
+   </div>
+
+
+   <div id="imagesStatus" class="status"></div>
+
+  </section>
+
+
+ </main>
+
+</div>
+
+
+
+<!-- =========================
+     LINK MODAL
+========================= -->
+
+<div id="linkModal" class="modal">
+
+ <div class="modal-box">
+
+  <div class="modal-header">
+
+   <div class="modal-title">
+    INSERT HYPERLINK
+   </div>
+
+   <div class="modal-code">
+    LINK / AUTH
+   </div>
+
+   <button
+    id="linkModalClose"
+    class="modal-close"
+    type="button"
+   >×</button>
 
   </div>
 
 
-  <!-- МОДАЛЬНОЕ ОКНО ПОДПИСИ К КАРТИНКЕ -->
+  <div class="modal-body">
 
-  <div
-    class="modal-overlay"
-    id="imageCaptionModal"
-  >
+   <div class="field">
 
-    <div class="link-modal">
+    <label>Текст ссылки</label>
 
-      <h3>
-        Изображение
-      </h3>
+    <input
+     id="linkText"
+     type="text"
+     placeholder="Например: официальный Discord"
+    >
 
-      <p class="muted">
-        Можно добавить подпись под изображением. Это необязательно.
-      </p>
+   </div>
 
 
-      <label for="imageCaption">
-        Подпись
-      </label>
+   <div class="field">
 
-      <input
-        id="imageCaption"
-        type="text"
-        placeholder="Например: Новый интерфейс сервера"
-        maxlength="300"
-      >
+    <label>URL</label>
+
+    <input
+     id="linkUrl"
+     type="url"
+     placeholder="https://example.com"
+    >
+
+   </div>
 
 
-      <div class="modal-buttons">
+   <div class="modal-actions">
 
-        <button
-          type="button"
-          class="modal-cancel"
-          id="imageCaptionCancelButton"
-        >
-          Отмена
-        </button>
+    <button
+     id="linkCancel"
+     class="secondary-button"
+     type="button"
+    >
+     Отмена
+    </button>
 
-        <button
-          type="button"
-          id="imageCaptionConfirmButton"
-        >
-          Вставить
-        </button>
+    <button
+     id="linkConfirm"
+     class="primary-button"
+     type="button"
+    >
+     Вставить
+    </button>
 
-      </div>
+   </div>
 
-    </div>
+  </div>
+
+ </div>
+
+</div>
+
+
+
+<!-- =========================
+     IMAGE CAPTION MODAL
+========================= -->
+
+<div id="imageModal" class="modal">
+
+ <div class="modal-box">
+
+  <div class="modal-header">
+
+   <div class="modal-title">
+    INSERT IMAGE
+   </div>
+
+   <div class="modal-code">
+    MEDIA / ARTICLE
+   </div>
+
+   <button
+    id="imageModalClose"
+    class="modal-close"
+    type="button"
+   >×</button>
 
   </div>
 
 
-  <!-- SUPABASE -->
+  <div class="modal-body">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <div class="field">
 
-  <script>
+    <label>Подпись изображения</label>
 
-    /*
-    =====================================================
-    SUPABASE
-    =====================================================
-    */
+    <input
+     id="imageCaption"
+     type="text"
+     maxlength="300"
+     placeholder="Необязательно"
+    >
 
-    const SUPABASE_URL =
-      "https://ajmavwxzakkjsfolijhp.supabase.co";
+   </div>
 
-    const SUPABASE_KEY =
-      "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
+   <div class="modal-actions">
 
-    const { createClient } = supabase;
+    <button
+     id="imageCancel"
+     class="secondary-button"
+     type="button"
+    >
+     Отмена
+    </button>
 
+    <button
+     id="imageConfirm"
+     class="primary-button"
+     type="button"
+    >
+     Вставить
+    </button>
 
-    const db =
-      createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+   </div>
 
+  </div>
 
-    /*
-    =====================================================
-    ЭЛЕМЕНТЫ
-    =====================================================
-    */
+ </div>
 
-    const loginScreen =
-      document.getElementById("loginScreen");
+</div>
 
-    const adminScreen =
-      document.getElementById("adminScreen");
 
-    const loginButton =
-      document.getElementById("loginButton");
 
-    const logoutButton =
-      document.getElementById("logoutButton");
+<script>
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-    const loginError =
-      document.getElementById("loginError");
+const SUPABASE_URL =
+ "https://ajmavwxzakkjsfolijhp.supabase.co";
 
-    const status =
-      document.getElementById("status");
+const SUPABASE_KEY =
+ "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
-    const newsStatus =
-      document.getElementById("newsStatus");
+const { createClient } = supabase;
 
-    const changeStatus =
-      document.getElementById("changeStatus");
+const db = createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
 
-    const commentsStatus =
-      document.getElementById("commentsStatus");
 
-    const newsImage =
-      document.getElementById("newsImage");
+/* =========================================================
+   DOM
+========================================================= */
 
-    const newsImagePreview =
-      document.getElementById("newsImagePreview");
+const loginScreen =
+ document.getElementById("loginScreen");
 
-    const publishNewsButton =
-      document.getElementById("publishNewsButton");
+const adminScreen =
+ document.getElementById("adminScreen");
 
-    const newsList =
-      document.getElementById("newsList");
+const emailInput =
+ document.getElementById("emailInput");
 
-    const changeIcon =
-      document.getElementById("changeIcon");
+const passwordInput =
+ document.getElementById("passwordInput");
 
-    const changeIconPreview =
-      document.getElementById("changeIconPreview");
+const loginButton =
+ document.getElementById("loginButton");
 
-    const addChangeButton =
-      document.getElementById("addChangeButton");
+const loginStatus =
+ document.getElementById("loginStatus");
 
-    const changesList =
-      document.getElementById("changesList");
+const logoutButton =
+ document.getElementById("logoutButton");
 
-    const commentsList =
-      document.getElementById("commentsList");
 
+/* NEWS */
 
-    /*
-    =====================================================
-    РЕДАКТОР
-    =====================================================
-    */
+const newsImage =
+ document.getElementById("newsImage");
 
-    const newsEditor =
-      document.getElementById("newsEditor");
+const newsImagePreview =
+ document.getElementById("newsImagePreview");
 
-    const editorToolbar =
-      document.getElementById("editorToolbar");
+const newsTitle =
+ document.getElementById("newsTitle");
 
-    const formatSelect =
-      document.getElementById("formatSelect");
+const newsDescription =
+ document.getElementById("newsDescription");
 
-    const fontSizePicker =
-      document.getElementById("fontSizePicker");
+const newsCategory =
+ document.getElementById("newsCategory");
 
-    const fontSizeButton =
-      document.getElementById("fontSizeButton");
+const newsEditor =
+ document.getElementById("newsEditor");
 
-    const fontSizeButtonText =
-      document.getElementById("fontSizeButtonText");
+const editorToolbar =
+ document.getElementById("editorToolbar");
 
-    const fontSizeMenu =
-      document.getElementById("fontSizeMenu");
+const publishNewsButton =
+ document.getElementById("publishNewsButton");
 
-    const insertLinkButton =
-      document.getElementById("insertLinkButton");
+const newsStatus =
+ document.getElementById("newsStatus");
 
-    const insertImageButton =
-      document.getElementById("insertImageButton");
 
-    const inlineImageFile =
-      document.getElementById("inlineImageFile");
+/* FORMAT PICKER */
 
+const formatPicker =
+ document.getElementById("formatPicker");
 
-    /*
-    =====================================================
-    МОДАЛКИ
-    =====================================================
-    */
+const formatPickerButton =
+ document.getElementById("formatPickerButton");
 
-    const linkModal =
-      document.getElementById("linkModal");
+const formatPickerText =
+ document.getElementById("formatPickerText");
 
-    const linkText =
-      document.getElementById("linkText");
+const formatPickerMenu =
+ document.getElementById("formatPickerMenu");
 
-    const linkUrl =
-      document.getElementById("linkUrl");
 
-    const linkCancelButton =
-      document.getElementById("linkCancelButton");
+/* FONT SIZE */
 
-    const linkConfirmButton =
-      document.getElementById("linkConfirmButton");
+const fontSizePicker =
+ document.getElementById("fontSizePicker");
 
+const fontSizeButton =
+ document.getElementById("fontSizeButton");
 
-    const imageCaptionModal =
-      document.getElementById("imageCaptionModal");
+const fontSizeText =
+ document.getElementById("fontSizeText");
 
-    const imageCaption =
-      document.getElementById("imageCaption");
+const fontSizeMenu =
+ document.getElementById("fontSizeMenu");
 
-    const imageCaptionCancelButton =
-      document.getElementById("imageCaptionCancelButton");
 
-    const imageCaptionConfirmButton =
-      document.getElementById("imageCaptionConfirmButton");
+/* LINK */
 
+const insertLinkButton =
+ document.getElementById("insertLinkButton");
 
-    let savedEditorRange = null;
+const linkModal =
+ document.getElementById("linkModal");
 
-    let pendingImageUrl = null;
+const linkModalClose =
+ document.getElementById("linkModalClose");
 
+const linkCancel =
+ document.getElementById("linkCancel");
 
-    /*
-    =====================================================
-    ПРОВЕРКА АВТОРИЗАЦИИ
-    =====================================================
-    */
+const linkConfirm =
+ document.getElementById("linkConfirm");
 
-    async function checkUser() {
+const linkText =
+ document.getElementById("linkText");
 
-      const {
-        data: {
-          session
-        }
-      } = await db.auth.getSession();
+const linkUrl =
+ document.getElementById("linkUrl");
 
 
-      if (session) {
+/* IMAGE */
 
-        loginScreen.style.display = "none";
+const insertImageButton =
+ document.getElementById("insertImageButton");
 
-        adminScreen.style.display = "block";
+const inlineImageFile =
+ document.getElementById("inlineImageFile");
 
-        loadSiteSettings();
+const imageModal =
+ document.getElementById("imageModal");
 
-        loadNews();
+const imageModalClose =
+ document.getElementById("imageModalClose");
 
-        loadChanges();
+const imageCancel =
+ document.getElementById("imageCancel");
 
-        loadComments();
+const imageConfirm =
+ document.getElementById("imageConfirm");
 
-      } else {
+const imageCaption =
+ document.getElementById("imageCaption");
 
-        loginScreen.style.display = "flex";
 
-        adminScreen.style.display = "none";
+/* OTHER */
 
-      }
+const changeTitle =
+ document.getElementById("changeTitle");
 
-    }
+const changeIcon =
+ document.getElementById("changeIcon");
 
+const changeIconPreview =
+ document.getElementById("changeIconPreview");
 
-    /*
-    =====================================================
-    ВХОД
-    =====================================================
-    */
+const addChangeButton =
+ document.getElementById("addChangeButton");
 
-    loginButton.addEventListener(
-      "click",
-      async () => {
+const changeStatus =
+ document.getElementById("changeStatus");
 
-        loginError.textContent = "";
+const changesList =
+ document.getElementById("changesList");
 
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim();
+const commentsStatus =
+ document.getElementById("commentsStatus");
 
-        const password =
-          document
-            .getElementById("password")
-            .value;
+const commentsList =
+ document.getElementById("commentsList");
 
+const newsList =
+ document.getElementById("newsList");
 
-        if (!email || !password) {
+const imagesStatus =
+ document.getElementById("imagesStatus");
 
-          loginError.textContent =
-            "Введите email и пароль.";
 
-          return;
+/* =========================================================
+   STATE
+========================================================= */
 
-        }
+let savedEditorRange = null;
+let pendingImageUrl = null;
 
 
-        loginButton.disabled = true;
+/* =========================================================
+   UTILS
+========================================================= */
 
-        loginButton.textContent =
-          "Вход...";
+function escapeHtml(value){
 
+ return String(value ?? "")
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 
-        const {
-          error
-        } =
-          await db.auth.signInWithPassword({
+}
 
-            email: email,
 
-            password: password
+function escapeAttribute(value){
 
-          });
+ return escapeHtml(value)
+  .replace(/`/g,"&#096;");
 
+}
 
-        if (error) {
 
-          loginError.textContent =
-            "Ошибка входа: " +
-            error.message;
+function setStatus(element,message,error=false){
 
-          loginButton.disabled = false;
+ element.textContent = message || "";
+ element.style.color =
+  error ? "#e34a4a" : "#6f767c";
 
-          loginButton.textContent =
-            "Войти";
+}
 
-          return;
 
-        }
+function randomString(){
 
+ return Math.random()
+  .toString(36)
+  .slice(2,9);
 
-        loginButton.disabled = false;
+}
 
-        loginButton.textContent =
-          "Войти";
 
+/* =========================================================
+   AUTH
+========================================================= */
 
-        checkUser();
+async function checkUser(){
 
-      }
+ const {
+  data,
+  error
+ } = await db.auth.getSession();
+
+ if(error){
+
+  setStatus(
+   loginStatus,
+   error.message,
+   true
+  );
+
+  return;
+
+ }
+
+ const session =
+  data?.session || null;
+
+ if(session){
+
+  loginScreen.style.display = "none";
+  adminScreen.classList.add("visible");
+
+  await Promise.all([
+   loadSiteSettings(),
+   loadNews(),
+   loadChanges(),
+   loadComments()
+  ]);
+
+ }else{
+
+  loginScreen.style.display = "flex";
+  adminScreen.classList.remove("visible");
+
+ }
+
+}
+
+
+loginButton.addEventListener(
+ "click",
+ async()=>{
+
+  const email =
+   emailInput.value.trim();
+
+  const password =
+   passwordInput.value;
+
+  if(!email || !password){
+
+   setStatus(
+    loginStatus,
+    "Введите email и пароль.",
+    true
+   );
+
+   return;
+
+  }
+
+  setStatus(
+   loginStatus,
+   "Проверка доступа..."
+  );
+
+  loginButton.disabled = true;
+
+  const {
+   error
+  } = await db.auth.signInWithPassword({
+   email,
+   password
+  });
+
+  loginButton.disabled = false;
+
+  if(error){
+
+   setStatus(
+    loginStatus,
+    error.message,
+    true
+   );
+
+   return;
+
+  }
+
+  setStatus(
+   loginStatus,
+   "Доступ разрешён."
+  );
+
+ }
+);
+
+
+passwordInput.addEventListener(
+ "keydown",
+ event=>{
+
+  if(event.key === "Enter"){
+   loginButton.click();
+  }
+
+ }
+);
+
+
+logoutButton.addEventListener(
+ "click",
+ async()=>{
+
+  await db.auth.signOut();
+
+  location.reload();
+
+ }
+);
+
+
+/* =========================================================
+   SITE SETTINGS
+========================================================= */
+
+async function loadSiteSettings(){
+
+ const {
+  data,
+  error
+ } = await db
+  .from("site_settings")
+  .select("key,value");
+
+ if(error){
+
+  setStatus(
+   imagesStatus,
+   error.message,
+   true
+  );
+
+  return;
+
+ }
+
+ const settings = {};
+
+ (data || []).forEach(row=>{
+  settings[row.key] = row.value;
+ });
+
+
+ renderPreview(
+  "logoPreview",
+  settings.logo
+ );
+
+ renderPreview(
+  "backgroundPreview",
+  settings.background
+ );
+
+ renderPreview(
+  "bannerPreview",
+  settings.banner
+ );
+
+}
+
+
+function renderPreview(
+ containerId,
+ url
+){
+
+ const container =
+  document.getElementById(containerId);
+
+ container.innerHTML = "";
+
+ if(!url){
+  return;
+ }
+
+ const img =
+  document.createElement("img");
+
+ img.src = url;
+ img.alt = "";
+
+ container.appendChild(img);
+
+}
+
+
+async function uploadImage(type){
+
+ const input =
+  document.getElementById(
+   type + "File"
+  );
+
+ const file =
+  input.files?.[0];
+
+ if(!file){
+
+  setStatus(
+   imagesStatus,
+   "Выберите изображение.",
+   true
+  );
+
+  return;
+
+ }
+
+ if(file.size > 5 * 1024 * 1024){
+
+  setStatus(
+   imagesStatus,
+   "Максимальный размер файла — 5 МБ.",
+   true
+  );
+
+  return;
+
+ }
+
+ const extension =
+  file.name.split(".").pop().toLowerCase();
+
+ const path =
+  `site/${type}.${extension}`;
+
+ setStatus(
+  imagesStatus,
+  "Загрузка изображения..."
+ );
+
+ const {
+  error:uploadError
+ } = await db.storage
+  .from("site-images")
+  .upload(
+   path,
+   file,
+   {
+    upsert:true,
+    contentType:file.type
+   }
+  );
+
+ if(uploadError){
+
+  setStatus(
+   imagesStatus,
+   uploadError.message,
+   true
+  );
+
+  return;
+
+ }
+
+ const {
+  data:publicData
+ } = db.storage
+  .from("site-images")
+  .getPublicUrl(path);
+
+ const url =
+  publicData.publicUrl;
+
+ const {
+  error:dbError
+ } = await db
+  .from("site_settings")
+  .upsert(
+   {
+    key:type,
+    value:url
+   },
+   {
+    onConflict:"key"
+   }
+  );
+
+ if(dbError){
+
+  setStatus(
+   imagesStatus,
+   dbError.message,
+   true
+  );
+
+  return;
+
+ }
+
+ renderPreview(
+  type + "Preview",
+  url
+ );
+
+ setStatus(
+  imagesStatus,
+  "Изображение успешно обновлено."
+ );
+
+}
+
+
+document
+ .querySelectorAll("[data-image-type]")
+ .forEach(button=>{
+
+  button.addEventListener(
+   "click",
+   ()=>{
+
+    uploadImage(
+     button.dataset.imageType
+    );
+
+   }
+  );
+
+ });
+
+
+/* =========================================================
+   NEWS IMAGE PREVIEW
+========================================================= */
+
+newsImage.addEventListener(
+ "change",
+ ()=>{
+
+  newsImagePreview.innerHTML = "";
+
+  const file =
+   newsImage.files?.[0];
+
+  if(!file){
+   return;
+  }
+
+  if(file.size > 5 * 1024 * 1024){
+
+   setStatus(
+    newsStatus,
+    "Максимальный размер изображения — 5 МБ.",
+    true
+   );
+
+   newsImage.value = "";
+
+   return;
+
+  }
+
+  const img =
+   document.createElement("img");
+
+  img.src =
+   URL.createObjectURL(file);
+
+  img.alt = "";
+
+  newsImagePreview.appendChild(img);
+
+ }
+);
+
+
+/* =========================================================
+   EDITOR SELECTION
+========================================================= */
+
+function saveEditorSelection(){
+
+ const selection =
+  window.getSelection();
+
+ if(!selection.rangeCount){
+  return;
+ }
+
+ const range =
+  selection.getRangeAt(0);
+
+ if(
+  newsEditor.contains(range.commonAncestorContainer)
+ ){
+
+  savedEditorRange =
+   range.cloneRange();
+
+ }
+
+}
+
+
+function restoreEditorSelection(){
+
+ newsEditor.focus();
+
+ const selection =
+  window.getSelection();
+
+ selection.removeAllRanges();
+
+ if(savedEditorRange){
+
+  try{
+
+   selection.addRange(
+    savedEditorRange
+   );
+
+   return;
+
+  }catch(error){}
+
+ }
+
+ const range =
+  document.createRange();
+
+ range.selectNodeContents(
+  newsEditor
+ );
+
+ range.collapse(false);
+
+ selection.addRange(range);
+
+}
+
+
+function closePickers(){
+
+ formatPicker.classList.remove("open");
+ fontSizePicker.classList.remove("open");
+
+}
+
+
+/* =========================================================
+   TOOLBAR SELECTION PROTECTION
+========================================================= */
+
+editorToolbar.addEventListener(
+ "mousedown",
+ event=>{
+
+  const target =
+   event.target.closest("button");
+
+  if(!target){
+   return;
+  }
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+/* =========================================================
+   FORMAT PICKER
+========================================================= */
+
+const formatNames = {
+
+ p:"Обычный текст",
+
+ h2:"Заголовок",
+
+ h3:"Подзаголовок",
+
+ blockquote:"Цитата"
+
+};
+
+
+formatPickerButton.addEventListener(
+ "mousedown",
+ event=>{
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+formatPickerButton.addEventListener(
+ "click",
+ event=>{
+
+  event.stopPropagation();
+
+  const willOpen =
+   !formatPicker.classList.contains("open");
+
+  closePickers();
+
+  if(willOpen){
+   formatPicker.classList.add("open");
+  }
+
+ }
+);
+
+
+formatPickerMenu.addEventListener(
+ "mousedown",
+ event=>{
+
+  const option =
+   event.target.closest(
+    ".editor-picker-option"
+   );
+
+  if(!option){
+   return;
+  }
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+formatPickerMenu.addEventListener(
+ "click",
+ event=>{
+
+  const option =
+   event.target.closest(
+    ".editor-picker-option"
+   );
+
+  if(!option){
+   return;
+  }
+
+  const format =
+   option.dataset.format;
+
+  restoreEditorSelection();
+
+  document.execCommand(
+   "formatBlock",
+   false,
+   format
+  );
+
+  formatPickerText.textContent =
+   formatNames[format] ||
+   "Обычный текст";
+
+  document
+   .querySelectorAll(
+    "#formatPickerMenu .editor-picker-option"
+   )
+   .forEach(item=>{
+
+    item.classList.toggle(
+     "active",
+     item.dataset.format === format
+    );
+
+   });
+
+  closePickers();
+
+  updateToolbarState();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+/* =========================================================
+   FONT SIZE PICKER
+========================================================= */
+
+for(let size=8; size<=72; size+=1){
+
+ const option =
+  document.createElement("button");
+
+ option.type = "button";
+
+ option.className =
+  "editor-picker-option";
+
+ option.dataset.size =
+  size;
+
+ option.textContent =
+  `${size} px`;
+
+ fontSizeMenu.appendChild(option);
+
+}
+
+
+function getCurrentFontSize(){
+
+ const selection =
+  window.getSelection();
+
+ if(!selection.rangeCount){
+  return 14;
+ }
+
+ let node =
+  selection.anchorNode;
+
+ if(node && node.nodeType === Node.TEXT_NODE){
+  node = node.parentElement;
+ }
+
+ if(!node || !newsEditor.contains(node)){
+  return 14;
+ }
+
+ const element =
+  node.closest(
+   "[style*='font-size'],span"
+  );
+
+ if(element){
+
+  const computed =
+   window.getComputedStyle(element);
+
+  const px =
+   parseFloat(computed.fontSize);
+
+  if(Number.isFinite(px)){
+   return Math.round(px);
+  }
+
+ }
+
+ const computed =
+  window.getComputedStyle(node);
+
+ const px =
+  parseFloat(computed.fontSize);
+
+ if(Number.isFinite(px)){
+  return Math.round(px);
+ }
+
+ return 14;
+
+}
+
+
+function updateFontSizeState(){
+
+ const size =
+  getCurrentFontSize();
+
+ fontSizeText.textContent =
+  `${size} px`;
+
+ document
+  .querySelectorAll(
+   "#fontSizeMenu .editor-picker-option"
+  )
+  .forEach(option=>{
+
+   option.classList.toggle(
+    "active",
+    Number(option.dataset.size) === size
+   );
+
+  });
+
+}
+
+
+fontSizeButton.addEventListener(
+ "mousedown",
+ event=>{
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+fontSizeButton.addEventListener(
+ "click",
+ event=>{
+
+  event.stopPropagation();
+
+  const willOpen =
+   !fontSizePicker.classList.contains("open");
+
+  closePickers();
+
+  if(willOpen){
+
+   updateFontSizeState();
+
+   fontSizePicker.classList.add("open");
+
+  }
+
+ }
+);
+
+
+fontSizeMenu.addEventListener(
+ "mousedown",
+ event=>{
+
+  const option =
+   event.target.closest(
+    ".editor-picker-option"
+   );
+
+  if(!option){
+   return;
+  }
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+fontSizeMenu.addEventListener(
+ "click",
+ event=>{
+
+  const option =
+   event.target.closest(
+    ".editor-picker-option"
+   );
+
+  if(!option){
+   return;
+  }
+
+  const size =
+   Number(option.dataset.size);
+
+  restoreEditorSelection();
+
+  applyFontSize(size);
+
+  fontSizeText.textContent =
+   `${size} px`;
+
+  document
+   .querySelectorAll(
+    "#fontSizeMenu .editor-picker-option"
+   )
+   .forEach(item=>{
+
+    item.classList.toggle(
+     "active",
+     Number(item.dataset.size) === size
+    );
+
+   });
+
+  closePickers();
+
+  saveEditorSelection();
+
+  updateToolbarState();
+
+ }
+);
+
+
+function applyFontSize(size){
+
+ const selection =
+  window.getSelection();
+
+ if(!selection.rangeCount){
+  return;
+ }
+
+ const range =
+  selection.getRangeAt(0);
+
+ if(!newsEditor.contains(
+  range.commonAncestorContainer
+ )){
+  return;
+ }
+
+
+ if(range.collapsed){
+
+  const span =
+   document.createElement("span");
+
+  span.style.fontSize =
+   `${size}px`;
+
+  const text =
+   document.createTextNode("\u200B");
+
+  span.appendChild(text);
+
+  range.insertNode(span);
+
+  const newRange =
+   document.createRange();
+
+  newRange.setStart(
+   text,
+   1
+  );
+
+  newRange.collapse(true);
+
+  selection.removeAllRanges();
+
+  selection.addRange(newRange);
+
+  savedEditorRange =
+   newRange.cloneRange();
+
+  return;
+
+ }
+
+
+ const fragment =
+  range.extractContents();
+
+ const span =
+  document.createElement("span");
+
+ span.style.fontSize =
+  `${size}px`;
+
+ span.appendChild(fragment);
+
+ range.insertNode(span);
+
+ const newRange =
+  document.createRange();
+
+ newRange.selectNodeContents(span);
+
+ selection.removeAllRanges();
+
+ selection.addRange(newRange);
+
+ savedEditorRange =
+  newRange.cloneRange();
+
+}
+
+
+/* =========================================================
+   TOOLBAR COMMANDS
+========================================================= */
+
+editorToolbar.addEventListener(
+ "click",
+ event=>{
+
+  const button =
+   event.target.closest(
+    "[data-command]"
+   );
+
+  if(!button){
+   return;
+  }
+
+  restoreEditorSelection();
+
+  const command =
+   button.dataset.command;
+
+  document.execCommand(
+   command,
+   false,
+   null
+  );
+
+  updateToolbarState();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+/* =========================================================
+   TOOLBAR ACTIVE STATE
+========================================================= */
+
+function updateToolbarState(){
+
+ const stateButtons =
+  editorToolbar.querySelectorAll(
+   "[data-state-command]"
+  );
+
+ stateButtons.forEach(button=>{
+
+  const command =
+   button.dataset.stateCommand;
+
+  let active = false;
+
+  try{
+
+   active =
+    document.queryCommandState(
+     command
+    );
+
+  }catch(error){}
+
+  button.classList.toggle(
+   "active",
+   active
+  );
+
+ });
+
+
+ /* ALIGN */
+
+ const alignButtons =
+  editorToolbar.querySelectorAll(
+   "[data-state-command^='justify']"
+  );
+
+ alignButtons.forEach(button=>{
+
+  let active = false;
+
+  try{
+
+   active =
+    document.queryCommandState(
+     button.dataset.stateCommand
+    );
+
+  }catch(error){}
+
+  button.classList.toggle(
+   "active",
+   active
+  );
+
+ });
+
+
+ updateFontSizeState();
+
+
+ /* BLOCK */
+
+ const selection =
+  window.getSelection();
+
+ if(selection.rangeCount){
+
+  let node =
+   selection.anchorNode;
+
+  if(node?.nodeType === Node.TEXT_NODE){
+   node = node.parentElement;
+  }
+
+  if(node && newsEditor.contains(node)){
+
+   const block =
+    node.closest(
+     "p,h2,h3,blockquote"
+    );
+
+   const tag =
+    block?.tagName?.toLowerCase() ||
+    "p";
+
+   formatPickerText.textContent =
+    formatNames[tag] ||
+    "Обычный текст";
+
+   document
+    .querySelectorAll(
+     "#formatPickerMenu .editor-picker-option"
+    )
+    .forEach(option=>{
+
+     option.classList.toggle(
+      "active",
+      option.dataset.format === tag
+     );
+
+    });
+
+  }
+
+ }
+
+}
+
+
+/* =========================================================
+   EDITOR EVENTS
+========================================================= */
+
+newsEditor.addEventListener(
+ "keyup",
+ ()=>{
+  saveEditorSelection();
+  updateToolbarState();
+ }
+);
+
+
+newsEditor.addEventListener(
+ "mouseup",
+ ()=>{
+  saveEditorSelection();
+  updateToolbarState();
+ }
+);
+
+
+newsEditor.addEventListener(
+ "input",
+ ()=>{
+  saveEditorSelection();
+  updateToolbarState();
+ }
+);
+
+
+newsEditor.addEventListener(
+ "focus",
+ ()=>{
+  updateToolbarState();
+ }
+);
+
+
+document.addEventListener(
+ "selectionchange",
+ ()=>{
+
+  const selection =
+   window.getSelection();
+
+  if(
+   selection.rangeCount &&
+   newsEditor.contains(
+    selection.anchorNode
+   )
+  ){
+
+   saveEditorSelection();
+   updateToolbarState();
+
+  }
+
+ }
+);
+
+
+/* =========================================================
+   LINK
+========================================================= */
+
+insertLinkButton.addEventListener(
+ "mousedown",
+ event=>{
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+insertLinkButton.addEventListener(
+ "click",
+ ()=>{
+
+  restoreEditorSelection();
+
+  const selection =
+   window.getSelection();
+
+  let selectedText = "";
+
+  if(selection.rangeCount){
+
+   selectedText =
+    selection
+     .toString()
+     .trim();
+
+  }
+
+  linkText.value =
+   selectedText;
+
+  linkUrl.value = "";
+
+  linkModal.classList.add("open");
+
+  setTimeout(
+   ()=>{
+    linkText.focus();
+   },
+   20
+  );
+
+ }
+);
+
+
+function closeLinkModal(){
+
+ linkModal.classList.remove("open");
+
+}
+
+
+linkModalClose.addEventListener(
+ "click",
+ closeLinkModal
+);
+
+linkCancel.addEventListener(
+ "click",
+ closeLinkModal
+);
+
+
+linkConfirm.addEventListener(
+ "click",
+ ()=>{
+
+  const text =
+   linkText.value.trim();
+
+  const url =
+   linkUrl.value.trim();
+
+  if(!text){
+
+   alert(
+    "Введите текст ссылки."
+   );
+
+   return;
+
+  }
+
+  if(
+   !/^https?:\/\//i.test(url) &&
+   !/^mailto:/i.test(url)
+  ){
+
+   alert(
+    "Ссылка должна начинаться с https://, http:// или mailto:"
+   );
+
+   return;
+
+  }
+
+  restoreEditorSelection();
+
+  const selection =
+   window.getSelection();
+
+  if(!selection.rangeCount){
+   return;
+  }
+
+  const range =
+   selection.getRangeAt(0);
+
+  range.deleteContents();
+
+  const link =
+   document.createElement("a");
+
+  link.href = url;
+  link.target = "_blank";
+  link.rel =
+   "noopener noreferrer";
+
+  link.textContent = text;
+
+  range.insertNode(link);
+
+  const newRange =
+   document.createRange();
+
+  newRange.setStartAfter(link);
+  newRange.collapse(true);
+
+  selection.removeAllRanges();
+
+  selection.addRange(newRange);
+
+  savedEditorRange =
+   newRange.cloneRange();
+
+  closeLinkModal();
+
+  updateToolbarState();
+
+ }
+);
+
+
+/* =========================================================
+   INLINE IMAGE
+========================================================= */
+
+insertImageButton.addEventListener(
+ "mousedown",
+ event=>{
+
+  event.preventDefault();
+
+  saveEditorSelection();
+
+ }
+);
+
+
+insertImageButton.addEventListener(
+ "click",
+ ()=>{
+
+  restoreEditorSelection();
+
+  inlineImageFile.value = "";
+
+  inlineImageFile.click();
+
+ }
+);
+
+
+inlineImageFile.addEventListener(
+ "change",
+ async()=>{
+
+  const file =
+   inlineImageFile.files?.[0];
+
+  if(!file){
+   return;
+  }
+
+  if(file.size > 5 * 1024 * 1024){
+
+   alert(
+    "Максимальный размер изображения — 5 МБ."
+   );
+
+   inlineImageFile.value = "";
+
+   return;
+
+  }
+
+  if(
+   ![
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+   ].includes(file.type)
+  ){
+
+   alert(
+    "Разрешены PNG, JPG и WEBP."
+   );
+
+   return;
+
+  }
+
+  const previousText =
+   imageCaption.value;
+
+  imageCaption.value =
+   previousText || "";
+
+  try{
+
+   const url =
+    await uploadInlineImage(file);
+
+   pendingImageUrl =
+    url;
+
+   imageModal.classList.add("open");
+
+   setTimeout(
+    ()=>{
+     imageCaption.focus();
+    },
+    20
+   );
+
+  }catch(error){
+
+   alert(
+    error.message
+   );
+
+  }
+
+ }
+);
+
+
+async function uploadInlineImage(file){
+
+ const extension =
+  file.name
+   .split(".")
+   .pop()
+   .toLowerCase();
+
+ const path =
+  `article/article-${Date.now()}-${randomString()}.${extension}`;
+
+ const {
+  error
+ } = await db.storage
+  .from("site-images")
+  .upload(
+   path,
+   file,
+   {
+    upsert:false,
+    contentType:file.type
+   }
+  );
+
+ if(error){
+  throw error;
+ }
+
+ const {
+  data
+ } = db.storage
+  .from("site-images")
+  .getPublicUrl(path);
+
+ return data.publicUrl;
+
+}
+
+
+function closeImageModal(){
+
+ imageModal.classList.remove("open");
+
+ pendingImageUrl = null;
+
+ imageCaption.value = "";
+
+}
+
+
+imageModalClose.addEventListener(
+ "click",
+ closeImageModal
+);
+
+imageCancel.addEventListener(
+ "click",
+ closeImageModal
+);
+
+
+imageConfirm.addEventListener(
+ "click",
+ ()=>{
+
+  if(!pendingImageUrl){
+   return;
+  }
+
+  const caption =
+   imageCaption.value.trim();
+
+  restoreEditorSelection();
+
+  const selection =
+   window.getSelection();
+
+  if(!selection.rangeCount){
+   return;
+  }
+
+  const range =
+   selection.getRangeAt(0);
+
+  range.deleteContents();
+
+
+  const figure =
+   document.createElement("figure");
+
+  figure.className =
+   "news-inline-image";
+
+
+  const img =
+   document.createElement("img");
+
+  img.src =
+   pendingImageUrl;
+
+  img.alt =
+   caption || "Изображение новости";
+
+
+  const figcaption =
+   document.createElement("figcaption");
+
+  figcaption.textContent =
+   caption;
+
+
+  figure.appendChild(img);
+  figure.appendChild(figcaption);
+
+  range.insertNode(figure);
+
+
+  const paragraph =
+   document.createElement("p");
+
+  paragraph.innerHTML =
+   "<br>";
+
+  figure.after(paragraph);
+
+
+  const newRange =
+   document.createRange();
+
+  newRange.setStart(
+   paragraph,
+   0
+  );
+
+  newRange.collapse(true);
+
+  selection.removeAllRanges();
+
+  selection.addRange(newRange);
+
+  savedEditorRange =
+   newRange.cloneRange();
+
+  closeImageModal();
+
+  newsEditor.focus();
+
+ }
+);
+
+
+/* =========================================================
+   NEWS UPLOAD
+========================================================= */
+
+async function uploadNewsImage(file){
+
+ if(!file){
+  throw new Error(
+   "Главное изображение не выбрано."
+  );
+ }
+
+ if(file.size > 5 * 1024 * 1024){
+
+  throw new Error(
+   "Максимальный размер изображения — 5 МБ."
+  );
+
+ }
+
+ const extension =
+  file.name
+   .split(".")
+   .pop()
+   .toLowerCase();
+
+ const path =
+  `news/news-${Date.now()}-${randomString()}.${extension}`;
+
+ const {
+  error
+ } = await db.storage
+  .from("site-images")
+  .upload(
+   path,
+   file,
+   {
+    upsert:false,
+    contentType:file.type
+   }
+  );
+
+ if(error){
+  throw error;
+ }
+
+ const {
+  data
+ } = db.storage
+  .from("site-images")
+  .getPublicUrl(path);
+
+ return data.publicUrl;
+
+}
+
+
+/* =========================================================
+   PUBLISH NEWS
+========================================================= */
+
+publishNewsButton.addEventListener(
+ "click",
+ async()=>{
+
+  const title =
+   newsTitle.value.trim();
+
+  const description =
+   newsDescription.value.trim();
+
+  const rawContent =
+   newsEditor.innerHTML.trim();
+
+  const category =
+   newsCategory.value;
+
+  const imageFile =
+   newsImage.files?.[0];
+
+
+  if(!title){
+
+   setStatus(
+    newsStatus,
+    "Введите заголовок.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  if(!description){
+
+   setStatus(
+    newsStatus,
+    "Введите описание.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  const plainText =
+   newsEditor.innerText
+    .replace(/\u200B/g,"")
+    .trim();
+
+
+  if(!plainText){
+
+   setStatus(
+    newsStatus,
+    "Введите содержание новости.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  if(!imageFile){
+
+   setStatus(
+    newsStatus,
+    "Выберите главное изображение.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  publishNewsButton.disabled = true;
+
+  setStatus(
+   newsStatus,
+   "Загрузка изображения..."
+  );
+
+
+  try{
+
+   const imageUrl =
+    await uploadNewsImage(
+     imageFile
     );
 
 
-    /*
-    =====================================================
-    ВЫХОД
-    =====================================================
-    */
+   const cleanContent =
+    DOMPurify.sanitize(
+     rawContent,
+     {
+      ALLOWED_TAGS:[
+       "p",
+       "br",
+       "strong",
+       "b",
+       "em",
+       "i",
+       "u",
+       "s",
+       "strike",
+       "span",
+       "h2",
+       "h3",
+       "h4",
+       "ul",
+       "ol",
+       "li",
+       "blockquote",
+       "a",
+       "figure",
+       "figcaption",
+       "img"
+      ],
 
-    logoutButton.addEventListener(
-      "click",
-      async () => {
+      ALLOWED_ATTR:[
+       "href",
+       "target",
+       "rel",
+       "src",
+       "alt",
+       "title",
+       "class",
+       "style"
+      ],
 
-        await db.auth.signOut();
-
-        checkUser();
-
-      }
+      FORBID_TAGS:[
+       "script",
+       "iframe",
+       "object",
+       "embed",
+       "form"
+      ]
+     }
     );
 
 
-    /*
-    =====================================================
-    ЗАГРУЗКА СОХРАНЁННЫХ НАСТРОЕК
-    =====================================================
-    */
+   setStatus(
+    newsStatus,
+    "Сохранение новости..."
+   );
 
-    async function loadSiteSettings() {
 
-      const {
-        data,
-        error
-      } =
-        await db
-          .from("site_settings")
-          .select("*");
+   const {
+    error
+   } = await db
+    .from("news")
+    .insert({
+     title,
+     description,
+     content:cleanContent,
+     category,
+     image:imageUrl
+    });
 
 
-      if (error) {
+   if(error){
+    throw error;
+   }
 
-        console.error(
-          "Ошибка загрузки настроек:",
-          error.message
-        );
 
-        return;
+   setStatus(
+    newsStatus,
+    "Новость успешно опубликована."
+   );
 
-      }
 
+   newsTitle.value = "";
+   newsDescription.value = "";
+   newsImage.value = "";
+   newsImagePreview.innerHTML = "";
+   newsEditor.innerHTML = "";
 
-      const settings = {};
+   fontSizeText.textContent =
+    "14 px";
 
+   formatPickerText.textContent =
+    "Обычный текст";
 
-      if (data) {
+   document
+    .querySelectorAll(
+     "#formatPickerMenu .editor-picker-option"
+    )
+    .forEach(option=>{
 
-        data.forEach(
-          item => {
+     option.classList.toggle(
+      "active",
+      option.dataset.format === "p"
+     );
 
-            settings[item.key] =
-              item.value;
+    });
 
-          }
-        );
+   updateToolbarState();
 
-      }
+   await loadNews();
 
 
-      if (settings.logo) {
+  }catch(error){
 
-        const preview =
-          document.getElementById(
-            "logoPreview"
-          );
+   console.error(error);
 
-        preview.innerHTML =
-          `<img
-            src="${escapeAttribute(settings.logo)}"
-            alt=""
-          >`;
+   setStatus(
+    newsStatus,
+    error.message ||
+     "Не удалось опубликовать новость.",
+    true
+   );
 
-      }
+  }finally{
 
+   publishNewsButton.disabled = false;
 
-      if (settings.background) {
+  }
 
-        const preview =
-          document.getElementById(
-            "backgroundPreview"
-          );
+ });
 
-        preview.innerHTML =
-          `<img
-            src="${escapeAttribute(settings.background)}"
-            alt=""
-          >`;
 
-      }
+/* =========================================================
+   LOAD NEWS
+========================================================= */
 
+async function loadNews(){
 
-      if (settings.banner) {
+ const {
+  data,
+  error
+ } = await db
+  .from("news")
+  .select(
+   "id,title,category,created_at"
+  )
+  .order(
+   "created_at",
+   {
+    ascending:false
+   }
+  );
 
-        const preview =
-          document.getElementById(
-            "bannerPreview"
-          );
+ if(error){
 
-        preview.innerHTML =
-          `<img
-            src="${escapeAttribute(settings.banner)}"
-            alt=""
-          >`;
+  newsList.innerHTML =
+   `<div class="status">${escapeHtml(error.message)}</div>`;
 
-      }
+  return;
 
-    }
+ }
 
 
-    /*
-    =====================================================
-    ЗАГРУЗКА КАРТИНКИ ОФОРМЛЕНИЯ
-    =====================================================
-    */
+ newsList.innerHTML = "";
 
-    async function uploadImage(type) {
 
-      const input =
-        document.getElementById(
-          type + "File"
-        );
+ if(!data?.length){
 
+  newsList.innerHTML =
+   `<div class="status">Новостей пока нет.</div>`;
 
-      const file =
-        input.files[0];
+  return;
 
+ }
 
-      if (!file) {
 
-        status.textContent =
-          "Сначала выбери изображение.";
+ data.forEach(news=>{
 
-        return;
+  const item =
+   document.createElement("div");
 
-      }
+  item.className =
+   "news-item";
 
+  const info =
+   document.createElement("div");
 
-      if (file.size > 5 * 1024 * 1024) {
+  info.innerHTML = `
+   <div class="item-title">
+    ${escapeHtml(news.title)}
+   </div>
 
-        status.textContent =
-          "Файл слишком большой. Максимум 5 MB.";
+   <div class="item-meta">
+    ${escapeHtml(news.category || "Без категории")}
+    ·
+    ${formatDate(news.created_at)}
+   </div>
+  `;
 
-        return;
 
-      }
+  const deleteButton =
+   document.createElement("button");
 
+  deleteButton.className =
+   "danger-button";
 
-      status.textContent =
-        "Загрузка...";
+  deleteButton.type =
+   "button";
 
+  deleteButton.textContent =
+   "Удалить";
 
-      const extension =
-        file.name
-          .split(".")
-          .pop()
-          .toLowerCase();
 
+  deleteButton.addEventListener(
+   "click",
+   ()=>{
+    deleteNews(news.id);
+   }
+  );
 
-      const fileName =
-        type +
-        "." +
-        extension;
 
+  item.appendChild(info);
+  item.appendChild(deleteButton);
 
-      const filePath =
-        "site/" +
-        fileName;
+  newsList.appendChild(item);
 
+ });
 
-      const {
-        error
-      } =
-        await db.storage
-          .from("site-images")
-          .upload(
-            filePath,
-            file,
-            {
-              upsert: true,
-              contentType: file.type
-            }
-          );
+}
 
 
-      if (error) {
+async function deleteNews(id){
 
-        status.textContent =
-          "Ошибка загрузки: " +
-          error.message;
+ if(!confirm(
+  "Удалить эту новость?"
+ )){
+  return;
+ }
 
-        return;
+ const {
+  error
+ } = await db
+  .from("news")
+  .delete()
+  .eq("id",id);
 
-      }
+ if(error){
 
+  alert(
+   error.message
+  );
 
-      const {
-        data
-      } =
-        db.storage
-          .from("site-images")
-          .getPublicUrl(
-            filePath
-          );
+  return;
 
+ }
 
-      const imageUrl =
-        data.publicUrl;
+ await loadNews();
 
+}
 
-      const {
-        error: dbError
-      } =
-        await db
-          .from("site_settings")
-          .upsert(
-            {
-              key: type,
 
-              value: imageUrl,
+/* =========================================================
+   CHANGES
+========================================================= */
 
-              updated_at:
-                new Date().toISOString()
+changeIcon.addEventListener(
+ "change",
+ ()=>{
 
-            },
-            {
-              onConflict: "key"
-            }
-          );
+  changeIconPreview.innerHTML = "";
 
+  const file =
+   changeIcon.files?.[0];
 
-      if (dbError) {
+  if(!file){
+   return;
+  }
 
-        status.textContent =
-          "Картинка загружена, но ссылка не сохранилась: " +
-          dbError.message;
+  if(file.size > 5 * 1024 * 1024){
 
-        return;
+   setStatus(
+    changeStatus,
+    "Максимальный размер файла — 5 МБ.",
+    true
+   );
 
-      }
+   changeIcon.value = "";
 
+   return;
 
-      const preview =
-        document.getElementById(
-          type + "Preview"
-        );
+  }
 
+  const img =
+   document.createElement("img");
 
-      preview.innerHTML =
-        `<img
-          src="${escapeAttribute(imageUrl)}"
-          alt=""
-        >`;
+  img.src =
+   URL.createObjectURL(file);
 
+  img.alt = "";
 
-      input.value = "";
+  changeIconPreview.appendChild(img);
 
+ }
+);
 
-      status.textContent =
-        "Изображение успешно сохранено.";
 
-    }
+async function uploadChangeIcon(file){
 
+ if(!file){
+  return null;
+ }
 
-    /*
-    =====================================================
-    ПРЕДПРОСМОТР ФОТО НОВОСТИ
-    =====================================================
-    */
+ if(file.size > 5 * 1024 * 1024){
 
-    newsImage.addEventListener(
-      "change",
-      () => {
+  throw new Error(
+   "Максимальный размер иконки — 5 МБ."
+  );
 
-        const file =
-          newsImage.files[0];
+ }
 
+ const extension =
+  file.name
+   .split(".")
+   .pop()
+   .toLowerCase();
 
-        if (!file) {
+ const path =
+  `changes/change-${Date.now()}-${randomString()}.${extension}`;
 
-          newsImagePreview.innerHTML =
-            "Предпросмотр фотографии";
+ const {
+  error
+ } = await db.storage
+  .from("site-images")
+  .upload(
+   path,
+   file,
+   {
+    upsert:false,
+    contentType:file.type
+   }
+  );
 
-          return;
+ if(error){
+  throw error;
+ }
 
-        }
+ const {
+  data
+ } = db.storage
+  .from("site-images")
+  .getPublicUrl(path);
 
+ return data.publicUrl;
 
-        const url =
-          URL.createObjectURL(file);
+}
 
 
-        newsImagePreview.innerHTML =
-          `<img
-            src="${escapeAttribute(url)}"
-            alt=""
-          >`;
+addChangeButton.addEventListener(
+ "click",
+ async()=>{
 
-      }
-    );
+  const title =
+   changeTitle.value.trim();
 
+  const file =
+   changeIcon.files?.[0];
 
-    /*
-    =====================================================
-    ПРЕДПРОСМОТР ИКОНКИ ИЗМЕНЕНИЯ
-    =====================================================
-    */
 
-    changeIcon.addEventListener(
-      "change",
-      () => {
+  if(!title){
 
-        const file =
-          changeIcon.files[0];
+   setStatus(
+    changeStatus,
+    "Введите название изменения.",
+    true
+   );
 
+   return;
 
-        if (!file) {
+  }
 
-          changeIconPreview.innerHTML =
-            "Предпросмотр";
 
-          return;
+  addChangeButton.disabled = true;
 
-        }
+  setStatus(
+   changeStatus,
+   "Добавление изменения..."
+  );
 
 
-        if (file.size > 5 * 1024 * 1024) {
+  try{
 
-          changeIconPreview.innerHTML =
-            "Файл слишком большой";
+   const iconUrl =
+    await uploadChangeIcon(file);
 
-          return;
 
-        }
+   const {
+    error
+   } = await db
+    .from("changes")
+    .insert({
+     title,
+     icon:iconUrl
+    });
 
 
-        const url =
-          URL.createObjectURL(file);
+   if(error){
+    throw error;
+   }
 
 
-        changeIconPreview.innerHTML =
-          `<img
-            src="${escapeAttribute(url)}"
-            alt=""
-          >`;
+   changeTitle.value = "";
+   changeIcon.value = "";
+   changeIconPreview.innerHTML = "";
 
-      }
-    );
 
+   setStatus(
+    changeStatus,
+    "Изменение добавлено."
+   );
 
-    /*
-    =====================================================
-    ЗАГРУЗКА ФОТО НОВОСТИ
-    =====================================================
-    */
 
-    async function uploadNewsImage(file) {
+   await loadChanges();
 
-      if (!file) {
-        return null;
-      }
 
+  }catch(error){
 
-      if (file.size > 5 * 1024 * 1024) {
+   setStatus(
+    changeStatus,
+    error.message,
+    true
+   );
 
-        throw new Error(
-          "Фотография слишком большая. Максимум 5 MB."
-        );
+  }finally{
 
-      }
+   addChangeButton.disabled = false;
 
+  }
 
-      const extension =
-        file.name
-          .split(".")
-          .pop()
-          .toLowerCase();
+ });
 
 
-      const uniqueName =
-        "news-" +
-        Date.now() +
-        "-" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8) +
-        "." +
-        extension;
+async function loadChanges(){
 
+ const {
+  data,
+  error
+ } = await db
+  .from("changes")
+  .select(
+   "id,title,icon,created_at"
+  )
+  .order(
+   "created_at",
+   {
+    ascending:false
+   }
+  );
 
-      const filePath =
-        "news/" +
-        uniqueName;
 
+ if(error){
 
-      const {
-        error
-      } =
-        await db.storage
-          .from("site-images")
-          .upload(
-            filePath,
-            file,
-            {
-              upsert: false,
-              contentType: file.type
-            }
-          );
+  changesList.innerHTML =
+   `<div class="status">${escapeHtml(error.message)}</div>`;
 
+  return;
 
-      if (error) {
+ }
 
-        throw new Error(
-          "Ошибка загрузки фотографии: " +
-          error.message
-        );
 
-      }
+ changesList.innerHTML = "";
 
 
-      const {
-        data
-      } =
-        db.storage
-          .from("site-images")
-          .getPublicUrl(
-            filePath
-          );
+ if(!data?.length){
 
+  changesList.innerHTML =
+   `<div class="status">Изменений пока нет.</div>`;
 
-      return data.publicUrl;
+  return;
 
-    }
+ }
 
 
-    /*
-    =====================================================
-    ЗАГРУЗКА ВСТРОЕННОЙ КАРТИНКИ
-    =====================================================
-    */
+ data.forEach(change=>{
 
-    async function uploadInlineImage(file) {
+  const item =
+   document.createElement("div");
 
-      if (!file) {
-        return null;
-      }
+  item.className =
+   "change-item";
 
 
-      if (file.size > 5 * 1024 * 1024) {
+  const img =
+   document.createElement("img");
 
-        throw new Error(
-          "Изображение слишком большое. Максимум 5 MB."
-        );
+  img.className =
+   "change-icon";
 
-      }
+  img.src =
+   change.icon ||
+   "";
 
+  img.alt = "";
 
-      const allowedTypes = [
-        "image/png",
-        "image/jpeg",
-        "image/webp"
-      ];
 
+  const info =
+   document.createElement("div");
 
-      if (!allowedTypes.includes(file.type)) {
+  info.innerHTML = `
+   <div class="item-title">
+    ${escapeHtml(change.title)}
+   </div>
 
-        throw new Error(
-          "Можно загружать только PNG, JPG или WEBP."
-        );
+   <div class="item-meta">
+    ${formatDate(change.created_at)}
+   </div>
+  `;
 
-      }
 
+  const button =
+   document.createElement("button");
 
-      const extension =
-        file.name
-          .split(".")
-          .pop()
-          .toLowerCase();
+  button.className =
+   "danger-button";
 
+  button.type =
+   "button";
 
-      const uniqueName =
-        "article-" +
-        Date.now() +
-        "-" +
-        Math.random()
-          .toString(36)
-          .substring(2, 9) +
-        "." +
-        extension;
+  button.textContent =
+   "Удалить";
 
 
-      const filePath =
-        "article/" +
-        uniqueName;
+  button.addEventListener(
+   "click",
+   ()=>{
+    deleteChange(change.id);
+   }
+  );
 
 
-      const {
-        error
-      } =
-        await db.storage
-          .from("site-images")
-          .upload(
-            filePath,
-            file,
-            {
-              upsert: false,
-              contentType: file.type
-            }
-          );
+  item.appendChild(img);
+  item.appendChild(info);
+  item.appendChild(button);
 
+  changesList.appendChild(item);
 
-      if (error) {
+ });
 
-        throw new Error(
-          "Ошибка загрузки изображения: " +
-          error.message
-        );
+}
 
-      }
 
+async function deleteChange(id){
 
-      const {
-        data
-      } =
-        db.storage
-          .from("site-images")
-          .getPublicUrl(
-            filePath
-          );
+ if(!confirm(
+  "Удалить это изменение?"
+ )){
+  return;
+ }
 
+ const {
+  error
+ } = await db
+  .from("changes")
+  .delete()
+  .eq("id",id);
 
-      return data.publicUrl;
+ if(error){
 
-    }
+  alert(
+   error.message
+  );
 
+  return;
 
-    /*
-    =====================================================
-    ЗАГРУЗКА ИКОНКИ ИЗМЕНЕНИЯ
-    =====================================================
-    */
+ }
 
-    async function uploadChangeIcon(file) {
+ await loadChanges();
 
-      if (!file) {
-        return null;
-      }
+}
 
 
-      if (file.size > 5 * 1024 * 1024) {
+/* =========================================================
+   COMMENTS
+========================================================= */
 
-        throw new Error(
-          "Иконка слишком большая. Максимум 5 MB."
-        );
+async function loadComments(){
 
-      }
+ setStatus(
+  commentsStatus,
+  "Загрузка комментариев..."
+ );
 
 
-      const extension =
-        file.name
-          .split(".")
-          .pop()
-          .toLowerCase();
+ const {
+  data,
+  error
+ } = await db
+  .from("comments")
+  .select(
+   "id,news_id,author,content,created_at"
+  )
+  .order(
+   "created_at",
+   {
+    ascending:false
+   }
+  )
+  .limit(20);
 
 
-      const uniqueName =
-        "change-" +
-        Date.now() +
-        "-" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8) +
-        "." +
-        extension;
+ if(error){
 
+  setStatus(
+   commentsStatus,
+   error.message,
+   true
+  );
 
-      const filePath =
-        "changes/" +
-        uniqueName;
+  return;
 
+ }
 
-      const {
-        error
-      } =
-        await db.storage
-          .from("site-images")
-          .upload(
-            filePath,
-            file,
-            {
-              upsert: false,
-              contentType: file.type
-            }
-          );
 
+ commentsList.innerHTML = "";
 
-      if (error) {
 
-        throw new Error(
-          "Ошибка загрузки иконки: " +
-          error.message
-        );
+ if(!data?.length){
 
-      }
+  setStatus(
+   commentsStatus,
+   "Комментариев пока нет."
+  );
 
+  return;
 
-      const {
-        data
-      } =
-        db.storage
-          .from("site-images")
-          .getPublicUrl(
-            filePath
-          );
+ }
 
 
-      return data.publicUrl;
+ const newsIds =
+  [
+   ...new Set(
+    data
+     .map(item=>item.news_id)
+     .filter(Boolean)
+   )
+  ];
 
-    }
 
+ let newsMap = {};
 
-    /*
-    =====================================================
-    СОХРАНЕНИЕ ПОЗИЦИИ КУРСОРА
-    =====================================================
-    */
 
-    function saveEditorSelection() {
+ if(newsIds.length){
 
-      const selection =
-        window.getSelection();
+  const {
+   data:newsData
+  } = await db
+   .from("news")
+   .select("id,title")
+   .in("id",newsIds);
 
 
-      if (!selection ||
-          selection.rangeCount === 0) {
+  (newsData || []).forEach(news=>{
+   newsMap[news.id] =
+    news.title;
+  });
 
-        return;
+ }
 
-      }
 
+ data.forEach(comment=>{
 
-      const range =
-        selection.getRangeAt(0);
+  const item =
+   document.createElement("div");
 
+  item.className =
+   "comment-item";
 
-      if (newsEditor.contains(range.commonAncestorContainer)) {
 
-        savedEditorRange =
-          range.cloneRange();
+  const info =
+   document.createElement("div");
 
-      }
 
-    }
+  const newsTitleText =
+   newsMap[comment.news_id] ||
+   "Удалённая новость";
 
 
-    /*
-    =====================================================
-    ВОССТАНОВЛЕНИЕ ПОЗИЦИИ КУРСОРА
-    =====================================================
-    */
+  info.innerHTML = `
 
-    function restoreEditorSelection() {
+   <div class="comment-author">
+    ${escapeHtml(comment.author || "Пользователь")}
+   </div>
 
-      newsEditor.focus();
+   <div class="item-meta">
+    ${escapeHtml(newsTitleText)}
+   </div>
 
+   <div class="comment-content">
+    ${escapeHtml(comment.content || "")}
+   </div>
 
-      const selection =
-        window.getSelection();
+   <div class="comment-date">
+    ${formatDate(comment.created_at)}
+   </div>
 
+  `;
 
-      selection.removeAllRanges();
 
+  const button =
+   document.createElement("button");
 
-      if (savedEditorRange) {
+  button.className =
+   "danger-button";
 
-        selection.addRange(
-          savedEditorRange
-        );
+  button.type =
+   "button";
 
-      } else {
+  button.textContent =
+   "Удалить";
 
-        const range =
-          document.createRange();
 
-        range.selectNodeContents(
-          newsEditor
-        );
+  button.addEventListener(
+   "click",
+   ()=>{
+    deleteComment(comment.id);
+   }
+  );
 
-        range.collapse(false);
 
-        selection.addRange(range);
+  item.appendChild(info);
+  item.appendChild(button);
 
-      }
+  commentsList.appendChild(item);
 
-    }
+ });
 
 
-    /*
-    =====================================================
-    ВЫПОЛНЕНИЕ КОМАНД РЕДАКТОРА
-    =====================================================
-    */
+ setStatus(
+  commentsStatus,
+  `Показаны последние ${data.length} комментариев.`
+ );
 
-    editorToolbar.addEventListener(
-      "mousedown",
-      event => {
+}
 
-        const button =
-          event.target.closest(
-            "button"
-          );
 
+async function deleteComment(id){
 
-        if (!button) {
-          return;
-        }
+ if(!confirm(
+  "Удалить комментарий?"
+ )){
+  return;
+ }
 
 
-        /*
-        Не даём кнопке забрать фокус
-        у contenteditable.
-        */
+ const {
+  error
+ } = await db
+  .from("comments")
+  .delete()
+  .eq("id",id);
 
-        event.preventDefault();
 
-        saveEditorSelection();
+ if(error){
 
-      }
-    );
+  alert(
+   error.message
+  );
 
+  return;
 
-    editorToolbar.addEventListener(
-      "click",
-      event => {
+ }
 
-        const button =
-          event.target.closest(
-            "button"
-          );
 
+ await loadComments();
 
-        if (!button) {
-          return;
-        }
+}
 
 
-        /*
-        Кнопка размера обрабатывается
-        отдельным обработчиком ниже.
-        */
+/* =========================================================
+   DATE
+========================================================= */
 
-        if (
-          button.id === "fontSizeButton"
-        ) {
+function formatDate(value){
 
-          return;
+ if(!value){
+  return "Дата неизвестна";
+ }
 
-        }
+ const date =
+  new Date(value);
 
+ return date.toLocaleString(
+  "ru-RU",
+  {
+   day:"2-digit",
+   month:"2-digit",
+   year:"numeric",
+   hour:"2-digit",
+   minute:"2-digit"
+  }
+ );
 
-        /*
-        Кнопки конкретных размеров
-        тоже обрабатываются отдельно.
-        */
+}
 
-        if (
-          button.classList.contains(
-            "font-size-option"
-          )
-        ) {
 
-          return;
+/* =========================================================
+   MODALS
+========================================================= */
 
-        }
+[
+ linkModal,
+ imageModal
+].forEach(modal=>{
 
+ modal.addEventListener(
+  "mousedown",
+  event=>{
 
-        const command =
-          button.dataset.command;
+   if(event.target === modal){
+    modal.classList.remove("open");
+   }
 
+  }
+ );
 
-        if (!command) {
-          return;
-        }
+});
 
 
-        restoreEditorSelection();
+document.addEventListener(
+ "mousedown",
+ event=>{
 
+  if(
+   !formatPicker.contains(event.target) &&
+   !fontSizePicker.contains(event.target)
+  ){
 
-        try {
+   closePickers();
 
-          document.execCommand(
-            command,
-            false,
-            null
-          );
+  }
 
-        } catch (error) {
+ }
+);
 
-          console.error(
-            "Ошибка команды редактора:",
-            error
-          );
 
-        }
+document.addEventListener(
+ "keydown",
+ event=>{
 
+  if(event.key !== "Escape"){
+   return;
+  }
 
-        newsEditor.focus();
+  closePickers();
 
-      }
-    );
+  linkModal.classList.remove("open");
 
+  imageModal.classList.remove("open");
 
-    /*
-    =====================================================
-    ФОРМАТ ТЕКСТА
-    =====================================================
-    */
+ }
+);
 
-    formatSelect.addEventListener(
-      "change",
-      () => {
 
-        if (!formatSelect.value) {
-          return;
-        }
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
+db.auth.onAuthStateChange(
+ ()=>{
+  checkUser();
+ }
+);
 
-        restoreEditorSelection();
 
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
-        document.execCommand(
-          "formatBlock",
-          false,
-          formatSelect.value
-        );
+checkUser();
 
-
-        formatSelect.value =
-          "p";
-
-
-        newsEditor.focus();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    РАЗМЕР ТЕКСТА — PIXELS
-    =====================================================
-    */
-
-    /*
-    Создаём размеры от 8px до 72px.
-    */
-
-    for (
-      let size = 8;
-      size <= 72;
-      size++
-    ) {
-
-      const option =
-        document.createElement("button");
-
-      option.type =
-        "button";
-
-      option.className =
-        "font-size-option";
-
-      option.dataset.size =
-        size + "px";
-
-
-      const label =
-        document.createElement("span");
-
-      label.textContent =
-        size + "px";
-
-
-      const preview =
-        document.createElement("span");
-
-      preview.className =
-        "size-preview";
-
-      preview.textContent =
-        "Aa";
-
-      preview.style.fontSize =
-        Math.min(
-          Math.max(size, 9),
-          22
-        ) + "px";
-
-
-      option.appendChild(
-        label
-      );
-
-      option.appendChild(
-        preview
-      );
-
-
-      fontSizeMenu.appendChild(
-        option
-      );
-
-    }
-
-
-    /*
-    Открытие меню размера.
-    */
-
-    fontSizeButton.addEventListener(
-      "mousedown",
-      event => {
-
-        event.preventDefault();
-
-        saveEditorSelection();
-
-      }
-    );
-
-
-    fontSizeButton.addEventListener(
-      "click",
-      event => {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        fontSizePicker.classList.toggle(
-          "open"
-        );
-
-      }
-    );
-
-
-    /*
-    Выбор конкретного размера.
-    */
-
-    fontSizeMenu.addEventListener(
-      "mousedown",
-      event => {
-
-        const option =
-          event.target.closest(
-            ".font-size-option"
-          );
-
-
-        if (!option) {
-          return;
-        }
-
-
-        /*
-        Не даём меню забрать
-        выделение текста.
-        */
-
-        event.preventDefault();
-
-      }
-    );
-
-
-    fontSizeMenu.addEventListener(
-      "click",
-      event => {
-
-        const option =
-          event.target.closest(
-            ".font-size-option"
-          );
-
-
-        if (!option) {
-          return;
-        }
-
-
-        const size =
-          option.dataset.size;
-
-
-        if (!size) {
-          return;
-        }
-
-
-        restoreEditorSelection();
-
-
-        applyFontSize(
-          size
-        );
-
-
-        fontSizeButtonText.textContent =
-          size;
-
-
-        document
-          .querySelectorAll(
-            ".font-size-option"
-          )
-          .forEach(
-            item => {
-
-              item.classList.remove(
-                "current"
-              );
-
-            }
-          );
-
-
-        option.classList.add(
-          "current"
-        );
-
-
-        fontSizePicker.classList.remove(
-          "open"
-        );
-
-
-        newsEditor.focus();
-
-      }
-    );
-
-
-    /*
-    Закрытие меню при клике
-    вне него.
-    */
-
-    document.addEventListener(
-      "mousedown",
-      event => {
-
-        if (
-          !fontSizePicker.contains(
-            event.target
-          )
-        ) {
-
-          fontSizePicker.classList.remove(
-            "open"
-          );
-
-        }
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ПРИМЕНЕНИЕ РАЗМЕРА
-    =====================================================
-    */
-
-    function applyFontSize(size) {
-
-      const selection =
-        window.getSelection();
-
-
-      if (
-        !selection ||
-        selection.rangeCount === 0
-      ) {
-
-        return;
-
-      }
-
-
-      const range =
-        selection.getRangeAt(0);
-
-
-      /*
-      Если ничего не выделено,
-      применяем размер к текущему
-      слову/будущему вводу через span.
-      */
-
-      if (range.collapsed) {
-
-        const span =
-          document.createElement(
-            "span"
-          );
-
-
-        span.style.fontSize =
-          size;
-
-
-        span.appendChild(
-          document.createTextNode(
-            "\u200B"
-          )
-        );
-
-
-        range.insertNode(
-          span
-        );
-
-
-        const newRange =
-          document.createRange();
-
-
-        newRange.setStart(
-          span.firstChild,
-          1
-        );
-
-        newRange.collapse(
-          true
-        );
-
-
-        selection.removeAllRanges();
-
-        selection.addRange(
-          newRange
-        );
-
-
-        savedEditorRange =
-          newRange.cloneRange();
-
-
-        return;
-
-      }
-
-
-      /*
-      Если текст выделен — оборачиваем
-      его в span с точным размером.
-      */
-
-      const fragment =
-        range.extractContents();
-
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-
-      span.style.fontSize =
-        size;
-
-
-      span.appendChild(
-        fragment
-      );
-
-
-      range.insertNode(
-        span
-      );
-
-
-      /*
-      Оставляем выделение на
-      изменённом тексте.
-      */
-
-      const newRange =
-        document.createRange();
-
-
-      newRange.selectNodeContents(
-        span
-      );
-
-
-      selection.removeAllRanges();
-
-      selection.addRange(
-        newRange
-      );
-
-
-      savedEditorRange =
-        newRange.cloneRange();
-
-    }
-
-
-    /*
-    =====================================================
-    СОХРАНЕНИЕ ВЫДЕЛЕНИЯ ПЕРЕД ССЫЛКОЙ
-    =====================================================
-    */
-
-    insertLinkButton.addEventListener(
-      "mousedown",
-      event => {
-
-        event.preventDefault();
-
-        saveEditorSelection();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ОТКРЫТИЕ МОДАЛКИ ССЫЛКИ
-    =====================================================
-    */
-
-    insertLinkButton.addEventListener(
-      "click",
-      () => {
-
-        saveEditorSelection();
-
-
-        let selectedText =
-          "";
-
-
-        if (savedEditorRange) {
-
-          selectedText =
-            savedEditorRange
-              .toString()
-              .trim();
-
-        }
-
-
-        linkText.value =
-          selectedText;
-
-
-        linkUrl.value =
-          "";
-
-
-        linkModal.classList.add(
-          "visible"
-        );
-
-
-        setTimeout(
-          () => {
-
-            linkText.focus();
-
-          },
-          50
-        );
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ЗАКРЫТИЕ МОДАЛКИ ССЫЛКИ
-    =====================================================
-    */
-
-    linkCancelButton.addEventListener(
-      "click",
-      () => {
-
-        linkModal.classList.remove(
-          "visible"
-        );
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ВСТАВКА ССЫЛКИ
-    =====================================================
-    */
-
-    linkConfirmButton.addEventListener(
-      "click",
-      () => {
-
-        const text =
-          linkText.value.trim();
-
-        const url =
-          linkUrl.value.trim();
-
-
-        if (!text) {
-
-          alert(
-            "Введите название ссылки."
-          );
-
-          return;
-
-        }
-
-
-        if (!url) {
-
-          alert(
-            "Введите URL."
-          );
-
-          return;
-
-        }
-
-
-        /*
-        Разрешаем обычные безопасные
-        веб-ссылки и mailto.
-        */
-
-        const validUrl =
-          /^(https?:\/\/|mailto:)/i.test(
-            url
-          );
-
-
-        if (!validUrl) {
-
-          alert(
-            "Ссылка должна начинаться с https://, http:// или mailto:"
-          );
-
-          return;
-
-        }
-
-
-        restoreEditorSelection();
-
-
-        const selection =
-          window.getSelection();
-
-
-        let range;
-
-
-        if (savedEditorRange) {
-
-          range =
-            savedEditorRange.cloneRange();
-
-        } else {
-
-          range =
-            document.createRange();
-
-          range.selectNodeContents(
-            newsEditor
-          );
-
-          range.collapse(false);
-
-        }
-
-
-        range.deleteContents();
-
-
-        const link =
-          document.createElement(
-            "a"
-          );
-
-
-        link.href =
-          url;
-
-        link.textContent =
-          text;
-
-        link.target =
-          "_blank";
-
-        link.rel =
-          "noopener noreferrer";
-
-
-        range.insertNode(
-          link
-        );
-
-
-        /*
-        Перемещаем курсор после ссылки.
-        */
-
-        range.setStartAfter(
-          link
-        );
-
-        range.collapse(true);
-
-
-        selection.removeAllRanges();
-
-        selection.addRange(
-          range
-        );
-
-
-        savedEditorRange =
-          range.cloneRange();
-
-
-        linkModal.classList.remove(
-          "visible"
-        );
-
-
-        newsEditor.focus();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ЗАПОМИНАЕМ ПОЗИЦИЮ КУРСОРА ПЕРЕД КАРТИНКОЙ
-    =====================================================
-    */
-
-    insertImageButton.addEventListener(
-      "mousedown",
-      event => {
-
-        event.preventDefault();
-
-        saveEditorSelection();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    КНОПКА ВСТАВКИ КАРТИНКИ
-    =====================================================
-    */
-
-    insertImageButton.addEventListener(
-      "click",
-      () => {
-
-        saveEditorSelection();
-
-        inlineImageFile.click();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ВЫБОР КАРТИНКИ
-    =====================================================
-    */
-
-    inlineImageFile.addEventListener(
-      "change",
-      async () => {
-
-        const file =
-          inlineImageFile.files[0];
-
-
-        if (!file) {
-          return;
-        }
-
-
-        newsStatus.textContent =
-          "Загрузка изображения в новость...";
-
-
-        try {
-
-          const imageUrl =
-            await uploadInlineImage(
-              file
-            );
-
-
-          pendingImageUrl =
-            imageUrl;
-
-
-          imageCaption.value =
-            "";
-
-
-          imageCaptionModal.classList.add(
-            "visible"
-          );
-
-
-          setTimeout(
-            () => {
-
-              imageCaption.focus();
-
-            },
-            50
-          );
-
-
-        } catch (error) {
-
-          newsStatus.textContent =
-            error.message;
-
-        }
-
-
-        inlineImageFile.value =
-          "";
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ОТМЕНА ВСТАВКИ КАРТИНКИ
-    =====================================================
-    */
-
-    imageCaptionCancelButton.addEventListener(
-      "click",
-      () => {
-
-        pendingImageUrl =
-          null;
-
-        imageCaption.value =
-          "";
-
-        imageCaptionModal.classList.remove(
-          "visible"
-        );
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ВСТАВКА КАРТИНКИ В РЕДАКТОР
-    =====================================================
-    */
-
-    imageCaptionConfirmButton.addEventListener(
-      "click",
-      () => {
-
-        if (!pendingImageUrl) {
-
-          imageCaptionModal.classList.remove(
-            "visible"
-          );
-
-          return;
-
-        }
-
-
-        restoreEditorSelection();
-
-
-        const selection =
-          window.getSelection();
-
-
-        let range;
-
-
-        if (savedEditorRange) {
-
-          range =
-            savedEditorRange.cloneRange();
-
-        } else {
-
-          range =
-            document.createRange();
-
-          range.selectNodeContents(
-            newsEditor
-          );
-
-          range.collapse(false);
-
-        }
-
-
-        range.deleteContents();
-
-
-        /*
-        Создаём красивый figure.
-        */
-
-        const figure =
-          document.createElement(
-            "figure"
-          );
-
-
-        figure.className =
-          "news-inline-image";
-
-
-        const img =
-          document.createElement(
-            "img"
-          );
-
-
-        img.src =
-          pendingImageUrl;
-
-        img.alt =
-          imageCaption.value.trim() ||
-          "Изображение новости";
-
-
-        const captionText =
-          imageCaption.value.trim();
-
-
-        figure.appendChild(
-          img
-        );
-
-
-        if (captionText) {
-
-          const caption =
-            document.createElement(
-              "figcaption"
-            );
-
-
-          caption.textContent =
-            captionText;
-
-
-          figure.appendChild(
-            caption
-          );
-
-        }
-
-
-        range.insertNode(
-          figure
-        );
-
-
-        /*
-        Добавляем пустой абзац
-        после изображения,
-        чтобы можно было продолжить писать.
-        */
-
-        const paragraph =
-          document.createElement(
-            "p"
-          );
-
-
-        paragraph.innerHTML =
-          "<br>";
-
-
-        figure.after(
-          paragraph
-        );
-
-
-        const newRange =
-          document.createRange();
-
-
-        newRange.setStart(
-          paragraph,
-          0
-        );
-
-        newRange.collapse(
-          true
-        );
-
-
-        selection.removeAllRanges();
-
-        selection.addRange(
-          newRange
-        );
-
-
-        savedEditorRange =
-          newRange.cloneRange();
-
-
-        pendingImageUrl =
-          null;
-
-
-        imageCaption.value =
-          "";
-
-
-        imageCaptionModal.classList.remove(
-          "visible"
-        );
-
-
-        newsStatus.textContent =
-          "Изображение добавлено в новость.";
-
-
-        newsEditor.focus();
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ДОБАВЛЕНИЕ ИЗМЕНЕНИЯ
-    =====================================================
-    */
-
-    addChangeButton.addEventListener(
-      "click",
-      async () => {
-
-        changeStatus.textContent =
-          "";
-
-
-        const title =
-          document
-            .getElementById("changeTitle")
-            .value
-            .trim();
-
-
-        const iconFile =
-          changeIcon.files[0];
-
-
-        if (!title) {
-
-          changeStatus.textContent =
-            "Введите название изменения.";
-
-          return;
-
-        }
-
-
-        if (!iconFile) {
-
-          changeStatus.textContent =
-            "Выберите иконку изменения.";
-
-          return;
-
-        }
-
-
-        addChangeButton.disabled =
-          true;
-
-        addChangeButton.textContent =
-          "Добавление...";
-
-
-        try {
-
-          const iconUrl =
-            await uploadChangeIcon(
-              iconFile
-            );
-
-
-          const {
-            error
-          } =
-            await db
-              .from("changes")
-              .insert({
-
-                title:
-                  title,
-
-                icon_url:
-                  iconUrl
-
-              });
-
-
-          if (error) {
-
-            throw new Error(
-              "Ошибка создания изменения: " +
-              error.message
-            );
-
-          }
-
-
-          document
-            .getElementById("changeTitle")
-            .value = "";
-
-
-          changeIcon.value = "";
-
-
-          changeIconPreview.innerHTML =
-            "Предпросмотр";
-
-
-          changeStatus.textContent =
-            "Изменение успешно добавлено.";
-
-
-          loadChanges();
-
-        } catch (error) {
-
-          changeStatus.textContent =
-            error.message;
-
-        }
-
-
-        addChangeButton.disabled =
-          false;
-
-        addChangeButton.textContent =
-          "Добавить изменение";
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ЗАГРУЗКА СПИСКА ИЗМЕНЕНИЙ
-    =====================================================
-    */
-
-    async function loadChanges() {
-
-      changesList.innerHTML =
-        `<div class="empty">
-          Загрузка...
-        </div>`;
-
-
-      const {
-        data,
-        error
-      } =
-        await db
-          .from("changes")
-          .select(
-            "id,title,icon_url,created_at"
-          )
-          .order(
-            "created_at",
-            {
-              ascending: false
-            }
-          );
-
-
-      if (error) {
-
-        changesList.innerHTML =
-          `<div class="empty">
-            Ошибка загрузки изменений:
-            ${escapeHtml(error.message)}
-          </div>`;
-
-        return;
-
-      }
-
-
-      if (!data || data.length === 0) {
-
-        changesList.innerHTML =
-          `<div class="empty">
-            Изменений пока нет.
-          </div>`;
-
-        return;
-
-      }
-
-
-      changesList.innerHTML = "";
-
-
-      data.forEach(
-        change => {
-
-          const item =
-            document.createElement("div");
-
-          item.className =
-            "change-item";
-
-
-          const icon =
-            document.createElement("div");
-
-          icon.className =
-            "change-item-icon";
-
-
-          if (change.icon_url) {
-
-            icon.innerHTML =
-              `<img
-                src="${escapeAttribute(change.icon_url)}"
-                alt=""
-              >`;
-
-          }
-
-
-          const info =
-            document.createElement("div");
-
-
-          const title =
-            document.createElement("div");
-
-          title.className =
-            "change-item-title";
-
-          title.textContent =
-            change.title;
-
-
-          const meta =
-            document.createElement("div");
-
-          meta.className =
-            "change-item-meta";
-
-
-          meta.textContent =
-            formatChangeTime(
-              change.created_at
-            );
-
-
-          info.appendChild(title);
-
-          info.appendChild(meta);
-
-
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.className =
-            "delete-button";
-
-          deleteButton.textContent =
-            "Удалить";
-
-
-          deleteButton.addEventListener(
-            "click",
-            () => {
-
-              deleteChange(
-                change.id,
-                change.title
-              );
-
-            }
-          );
-
-
-          item.appendChild(icon);
-
-          item.appendChild(info);
-
-          item.appendChild(deleteButton);
-
-
-          changesList.appendChild(item);
-
-        }
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    ВРЕМЯ ИЗМЕНЕНИЯ
-    =====================================================
-    */
-
-    function formatChangeTime(dateString) {
-
-      const date =
-        new Date(dateString);
-
-      const now =
-        new Date();
-
-      const seconds =
-        Math.floor(
-          (now - date) / 1000
-        );
-
-
-      if (seconds < 60) {
-
-        return "Только что";
-
-      }
-
-
-      const minutes =
-        Math.floor(
-          seconds / 60
-        );
-
-
-      if (minutes < 60) {
-
-        return (
-          minutes +
-          " " +
-          getRussianPlural(
-            minutes,
-            "минуту",
-            "минуты",
-            "минут"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
-
-
-      if (hours < 24) {
-
-        return (
-          hours +
-          " " +
-          getRussianPlural(
-            hours,
-            "час",
-            "часа",
-            "часов"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      const days =
-        Math.floor(
-          hours / 24
-        );
-
-
-      if (days === 1) {
-
-        return "Вчера";
-
-      }
-
-
-      if (days < 7) {
-
-        return (
-          days +
-          " " +
-          getRussianPlural(
-            days,
-            "день",
-            "дня",
-            "дней"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      return date.toLocaleDateString(
-        "ru-RU"
-      );
-
-    }
-
-
-    function getRussianPlural(
-      number,
-      one,
-      few,
-      many
-    ) {
-
-      const mod10 =
-        number % 10;
-
-      const mod100 =
-        number % 100;
-
-
-      if (
-        mod10 === 1 &&
-        mod100 !== 11
-      ) {
-
-        return one;
-
-      }
-
-
-      if (
-        mod10 >= 2 &&
-        mod10 <= 4 &&
-        (
-          mod100 < 10 ||
-          mod100 >= 20
-        )
-      ) {
-
-        return few;
-
-      }
-
-
-      return many;
-
-    }
-
-
-    /*
-    =====================================================
-    УДАЛЕНИЕ ИЗМЕНЕНИЯ
-    =====================================================
-    */
-
-    async function deleteChange(
-      id,
-      title
-    ) {
-
-      const confirmed =
-        confirm(
-          `Удалить изменение "${title}"?`
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      changeStatus.textContent =
-        "Удаление...";
-
-
-      const {
-        error
-      } =
-        await db
-          .from("changes")
-          .delete()
-          .eq(
-            "id",
-            id
-          );
-
-
-      if (error) {
-
-        changeStatus.textContent =
-          "Ошибка удаления: " +
-          error.message;
-
-        return;
-
-      }
-
-
-      changeStatus.textContent =
-        "Изменение удалено.";
-
-
-      loadChanges();
-
-    }
-
-
-    /*
-    =====================================================
-    ПОСЛЕДНИЕ КОММЕНТАРИИ
-    =====================================================
-    */
-
-    async function loadComments() {
-
-      commentsList.innerHTML =
-        `<div class="empty">
-          Загрузка...
-        </div>`;
-
-
-      commentsStatus.textContent =
-        "";
-
-
-      const {
-        data: comments,
-        error
-      } =
-        await db
-          .from("comments")
-          .select(
-            "id,news_id,author,content,created_at"
-          )
-          .order(
-            "created_at",
-            {
-              ascending: false
-            }
-          )
-          .limit(20);
-
-
-      if (error) {
-
-        commentsList.innerHTML =
-          `<div class="empty">
-            Ошибка загрузки комментариев:
-            ${escapeHtml(error.message)}
-          </div>`;
-
-        return;
-
-      }
-
-
-      if (!comments || comments.length === 0) {
-
-        commentsList.innerHTML =
-          `<div class="empty">
-            Комментариев пока нет.
-          </div>`;
-
-        return;
-
-      }
-
-
-      const newsIds =
-        [
-          ...new Set(
-            comments
-              .map(
-                comment =>
-                  comment.news_id
-              )
-              .filter(
-                id =>
-                  id !== null &&
-                  id !== undefined
-              )
-          )
-        ];
-
-
-      let newsMap = {};
-
-
-      if (newsIds.length > 0) {
-
-        const {
-          data: newsData,
-          error: newsError
-        } =
-          await db
-            .from("news")
-            .select(
-              "id,title"
-            )
-            .in(
-              "id",
-              newsIds
-            );
-
-
-        if (!newsError && newsData) {
-
-          newsData.forEach(
-            news => {
-
-              newsMap[news.id] =
-                news.title;
-
-            }
-          );
-
-        }
-
-      }
-
-
-      commentsList.innerHTML = "";
-
-
-      comments.forEach(
-        comment => {
-
-          const item =
-            document.createElement("div");
-
-          item.className =
-            "comment-item";
-
-
-          const info =
-            document.createElement("div");
-
-
-          const author =
-            document.createElement("div");
-
-          author.className =
-            "comment-author";
-
-          author.textContent =
-            comment.author ||
-            "Аноним";
-
-
-          const content =
-            document.createElement("div");
-
-          content.className =
-            "comment-content";
-
-          content.textContent =
-            comment.content ||
-            "";
-
-
-          const newsTitle =
-            newsMap[comment.news_id] ||
-            "Новость не найдена";
-
-
-          const news =
-            document.createElement("div");
-
-          news.className =
-            "comment-news";
-
-          news.innerHTML =
-            `Новость: <span>${escapeHtml(newsTitle)}</span>`;
-
-
-          const meta =
-            document.createElement("div");
-
-          meta.className =
-            "comment-meta";
-
-          meta.textContent =
-            formatCommentTime(
-              comment.created_at
-            );
-
-
-          info.appendChild(author);
-
-          info.appendChild(content);
-
-          info.appendChild(news);
-
-          info.appendChild(meta);
-
-
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.className =
-            "delete-button";
-
-          deleteButton.textContent =
-            "Удалить";
-
-
-          deleteButton.addEventListener(
-            "click",
-            () => {
-
-              deleteComment(
-                comment.id,
-                comment.author,
-                comment.content
-              );
-
-            }
-          );
-
-
-          item.appendChild(info);
-
-          item.appendChild(deleteButton);
-
-
-          commentsList.appendChild(item);
-
-        }
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    ВРЕМЯ КОММЕНТАРИЯ
-    =====================================================
-    */
-
-    function formatCommentTime(
-      dateString
-    ) {
-
-      const date =
-        new Date(dateString);
-
-      const now =
-        new Date();
-
-      const seconds =
-        Math.floor(
-          (now - date) / 1000
-        );
-
-
-      if (seconds < 60) {
-
-        return "Только что";
-
-      }
-
-
-      const minutes =
-        Math.floor(
-          seconds / 60
-        );
-
-
-      if (minutes < 60) {
-
-        return (
-          minutes +
-          " " +
-          getRussianPlural(
-            minutes,
-            "минуту",
-            "минуты",
-            "минут"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
-
-
-      if (hours < 24) {
-
-        return (
-          hours +
-          " " +
-          getRussianPlural(
-            hours,
-            "час",
-            "часа",
-            "часов"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      const days =
-        Math.floor(
-          hours / 24
-        );
-
-
-      if (days === 1) {
-
-        return "Вчера";
-
-      }
-
-
-      if (days < 7) {
-
-        return (
-          days +
-          " " +
-          getRussianPlural(
-            days,
-            "день",
-            "дня",
-            "дней"
-          ) +
-          " назад"
-        );
-
-      }
-
-
-      return date.toLocaleString(
-        "ru-RU",
-        {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    УДАЛЕНИЕ КОММЕНТАРИЯ
-    =====================================================
-    */
-
-    async function deleteComment(
-      id,
-      author,
-      content
-    ) {
-
-      const shortContent =
-        String(
-          content || ""
-        ).length > 60
-          ? String(content).substring(0, 60) + "..."
-          : String(content || "");
-
-
-      const confirmed =
-        confirm(
-          `Удалить комментарий пользователя "${author || "Аноним"}"?\n\n"${shortContent}"`
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      commentsStatus.textContent =
-        "Удаление комментария...";
-
-
-      const {
-        error
-      } =
-        await db
-          .from("comments")
-          .delete()
-          .eq(
-            "id",
-            id
-          );
-
-
-      if (error) {
-
-        commentsStatus.textContent =
-          "Ошибка удаления комментария: " +
-          error.message;
-
-        return;
-
-      }
-
-
-      commentsStatus.textContent =
-        "Комментарий удалён.";
-
-
-      loadComments();
-
-    }
-
-
-    /*
-    =====================================================
-    СОЗДАНИЕ НОВОСТИ
-    =====================================================
-    */
-
-    publishNewsButton.addEventListener(
-      "click",
-      async () => {
-
-        newsStatus.textContent =
-          "";
-
-
-        const title =
-          document
-            .getElementById("newsTitle")
-            .value
-            .trim();
-
-
-        const description =
-          document
-            .getElementById("newsDescription")
-            .value
-            .trim();
-
-
-        /*
-        Получаем HTML редактора.
-        */
-
-        const rawContent =
-          newsEditor.innerHTML.trim();
-
-
-        /*
-        Очищаем HTML от потенциально
-        опасного содержимого.
-        */
-
-        const cleanContent =
-          DOMPurify.sanitize(
-            rawContent,
-            {
-              ALLOWED_TAGS: [
-                "p",
-                "br",
-                "strong",
-                "b",
-                "em",
-                "i",
-                "u",
-                "s",
-                "strike",
-                "span",
-                "h2",
-                "h3",
-                "h4",
-                "ul",
-                "ol",
-                "li",
-                "blockquote",
-                "a",
-                "figure",
-                "figcaption",
-                "img"
-              ],
-
-              ALLOWED_ATTR: [
-                "href",
-                "target",
-                "rel",
-                "src",
-                "alt",
-                "title",
-                "class",
-                "style"
-              ]
-            }
-          );
-
-
-        const category =
-          document
-            .getElementById("newsCategory")
-            .value;
-
-
-        const imageFile =
-          newsImage.files[0];
-
-
-        /*
-        Проверяем реальный текст,
-        а не только наличие HTML.
-        */
-
-        const plainText =
-          newsEditor.innerText
-            .replace(/\u200B/g, "")
-            .trim();
-
-
-        if (!title) {
-
-          newsStatus.textContent =
-            "Введите заголовок.";
-
-          return;
-
-        }
-
-
-        if (!description) {
-
-          newsStatus.textContent =
-            "Введите краткое описание.";
-
-          return;
-
-        }
-
-
-        if (!plainText) {
-
-          newsStatus.textContent =
-            "Введите полный текст новости.";
-
-          return;
-
-        }
-
-
-        if (!imageFile) {
-
-          newsStatus.textContent =
-            "Выберите фотографию.";
-
-          return;
-
-        }
-
-
-        publishNewsButton.disabled =
-          true;
-
-        publishNewsButton.textContent =
-          "Публикация...";
-
-
-        try {
-
-          const imageUrl =
-            await uploadNewsImage(
-              imageFile
-            );
-
-
-          const {
-            error
-          } =
-            await db
-              .from("news")
-              .insert({
-
-                title:
-                  title,
-
-                description:
-                  description,
-
-                content:
-                  cleanContent,
-
-                image_url:
-                  imageUrl,
-
-                category:
-                  category
-
-              });
-
-
-          if (error) {
-
-            throw new Error(
-              "Ошибка создания новости: " +
-              error.message
-            );
-
-          }
-
-
-          document
-            .getElementById("newsTitle")
-            .value = "";
-
-
-          document
-            .getElementById("newsDescription")
-            .value = "";
-
-
-          newsEditor.innerHTML =
-            "";
-
-
-          newsImage.value = "";
-
-
-          newsImagePreview.innerHTML =
-            "Предпросмотр фотографии";
-
-
-          fontSizeButtonText.textContent =
-            "Размер";
-
-
-          document
-            .querySelectorAll(
-              ".font-size-option"
-            )
-            .forEach(
-              item => {
-
-                item.classList.remove(
-                  "current"
-                );
-
-              }
-            );
-
-
-          newsStatus.textContent =
-            "Новость успешно опубликована.";
-
-
-          loadNews();
-
-        } catch (error) {
-
-          newsStatus.textContent =
-            error.message;
-
-        }
-
-
-        publishNewsButton.disabled =
-          false;
-
-        publishNewsButton.textContent =
-          "Опубликовать новость";
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ЗАГРУЗКА СПИСКА НОВОСТЕЙ
-    =====================================================
-    */
-
-    async function loadNews() {
-
-      newsList.innerHTML =
-        `<div class="empty">
-          Загрузка...
-        </div>`;
-
-
-      const {
-        data,
-        error
-      } =
-        await db
-          .from("news")
-          .select(
-            "id,title,description,image_url,category,created_at"
-          )
-          .order(
-            "created_at",
-            {
-              ascending: false
-            }
-          );
-
-
-      if (error) {
-
-        newsList.innerHTML =
-          `<div class="empty">
-            Ошибка загрузки новостей:
-            ${escapeHtml(error.message)}
-          </div>`;
-
-        return;
-
-      }
-
-
-      if (!data || data.length === 0) {
-
-        newsList.innerHTML =
-          `<div class="empty">
-            Новостей пока нет.
-          </div>`;
-
-        return;
-
-      }
-
-
-      newsList.innerHTML = "";
-
-
-      data.forEach(
-        news => {
-
-          const item =
-            document.createElement("div");
-
-          item.className =
-            "news-item";
-
-
-          const image =
-            document.createElement("div");
-
-          image.className =
-            "news-item-image";
-
-
-          if (news.image_url) {
-
-            image.innerHTML =
-              `<img
-                src="${escapeAttribute(news.image_url)}"
-                alt=""
-              >`;
-
-          }
-
-
-          const info =
-            document.createElement("div");
-
-
-          const title =
-            document.createElement("div");
-
-          title.className =
-            "news-item-title";
-
-          title.textContent =
-            news.title;
-
-
-          const meta =
-            document.createElement("div");
-
-          meta.className =
-            "news-item-meta";
-
-
-          const date =
-            new Date(
-              news.created_at
-            ).toLocaleDateString(
-              "ru-RU"
-            );
-
-
-          meta.textContent =
-            news.category +
-            " • " +
-            date;
-
-
-          info.appendChild(title);
-
-          info.appendChild(meta);
-
-
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.className =
-            "delete-button";
-
-          deleteButton.textContent =
-            "Удалить";
-
-
-          deleteButton.addEventListener(
-            "click",
-            () => {
-
-              deleteNews(
-                news.id,
-                news.title
-              );
-
-            }
-          );
-
-
-          item.appendChild(image);
-
-          item.appendChild(info);
-
-          item.appendChild(deleteButton);
-
-
-          newsList.appendChild(item);
-
-        }
-      );
-
-    }
-
-
-    /*
-    =====================================================
-    УДАЛЕНИЕ НОВОСТИ
-    =====================================================
-    */
-
-    async function deleteNews(
-      id,
-      title
-    ) {
-
-      const confirmed =
-        confirm(
-          `Удалить новость "${title}"?`
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      newsStatus.textContent =
-        "Удаление...";
-
-
-      const {
-        error
-      } =
-        await db
-          .from("news")
-          .delete()
-          .eq(
-            "id",
-            id
-          );
-
-
-      if (error) {
-
-        newsStatus.textContent =
-          "Ошибка удаления: " +
-          error.message;
-
-        return;
-
-      }
-
-
-      newsStatus.textContent =
-        "Новость удалена.";
-
-
-      loadNews();
-
-    }
-
-
-    /*
-    =====================================================
-    ЗАЩИТА HTML
-    =====================================================
-    */
-
-    function escapeHtml(text) {
-
-      const div =
-        document.createElement("div");
-
-
-      div.textContent =
-        text || "";
-
-
-      return div.innerHTML;
-
-    }
-
-
-    function escapeAttribute(text) {
-
-      return String(text || "")
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        );
-
-    }
-
-
-    /*
-    =====================================================
-    ЗАКРЫТИЕ МОДАЛОК ПО КЛИКУ НА ФОН
-    =====================================================
-    */
-
-    linkModal.addEventListener(
-      "click",
-      event => {
-
-        if (
-          event.target ===
-          linkModal
-        ) {
-
-          linkModal.classList.remove(
-            "visible"
-          );
-
-        }
-
-      }
-    );
-
-
-    imageCaptionModal.addEventListener(
-      "click",
-      event => {
-
-        if (
-          event.target ===
-          imageCaptionModal
-        ) {
-
-          pendingImageUrl =
-            null;
-
-          imageCaptionModal.classList.remove(
-            "visible"
-          );
-
-        }
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    ESC ДЛЯ ЗАКРЫТИЯ МОДАЛКИ
-    =====================================================
-    */
-
-    document.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Escape"
-        ) {
-
-          linkModal.classList.remove(
-            "visible"
-          );
-
-          imageCaptionModal.classList.remove(
-            "visible"
-          );
-
-          fontSizePicker.classList.remove(
-            "open"
-          );
-
-        }
-
-      }
-    );
-
-
-    /*
-    =====================================================
-    АВТОРИЗАЦИЯ
-    =====================================================
-    */
-
-    db.auth.onAuthStateChange(
-      () => {
-
-        checkUser();
-
-      }
-    );
-
-
-    checkUser();
-
-  </script>
+</script>
 
 </body>
 </html>
