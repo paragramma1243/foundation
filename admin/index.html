@@ -514,153 +514,6 @@
 
     <main>
 
-      <!-- ОФОРМЛЕНИЕ -->
-
-      <div class="panel">
-
-        <h1>
-          Настройки оформления
-        </h1>
-
-        <p class="muted">
-          Управление изображениями сайта.
-        </p>
-
-      </div>
-
-
-      <div class="panel">
-
-        <h2>
-          Изображения
-        </h2>
-
-
-        <!-- LOGO -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Логотип
-            </h3>
-
-            <p class="muted">
-              Основной логотип сайта.
-            </p>
-
-            <input
-              type="file"
-              id="logoFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('logo')"
-            >
-              Загрузить логотип
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="logoPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <!-- BACKGROUND -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Фон
-            </h3>
-
-            <p class="muted">
-              Фоновое изображение сайта.
-            </p>
-
-            <input
-              type="file"
-              id="backgroundFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('background')"
-            >
-              Загрузить фон
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="backgroundPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <!-- BANNER -->
-
-        <div class="upload-row">
-
-          <div>
-
-            <h3>
-              Баннер
-            </h3>
-
-            <p class="muted">
-              Большое изображение для оформления сайта.
-            </p>
-
-            <input
-              type="file"
-              id="bannerFile"
-              accept="image/png,image/jpeg,image/webp"
-            >
-
-            <button
-              style="margin-top:10px"
-              onclick="uploadImage('banner')"
-            >
-              Загрузить баннер
-            </button>
-
-          </div>
-
-          <div
-            class="preview"
-            id="bannerPreview"
-          >
-            Нет изображения
-          </div>
-
-        </div>
-
-
-        <div
-          class="status"
-          id="status"
-        ></div>
-
-      </div>
-
-
       <!-- СОЗДАНИЕ НОВОСТИ -->
 
       <div class="panel">
@@ -908,6 +761,144 @@
             Загрузка...
           </div>
         </div>
+
+      </div>
+
+
+      <!-- ОФОРМЛЕНИЕ / ИЗОБРАЖЕНИЯ -->
+
+      <div class="panel">
+
+        <h2>
+          Изображения
+        </h2>
+
+        <p class="muted">
+          Управление изображениями сайта.
+        </p>
+
+
+        <!-- LOGO -->
+
+        <div class="upload-row">
+
+          <div>
+
+            <h3>
+              Логотип
+            </h3>
+
+            <p class="muted">
+              Основной логотип сайта.
+            </p>
+
+            <input
+              type="file"
+              id="logoFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('logo')"
+            >
+              Загрузить логотип
+            </button>
+
+          </div>
+
+          <div
+            class="preview"
+            id="logoPreview"
+          >
+            Нет изображения
+          </div>
+
+        </div>
+
+
+        <!-- BACKGROUND -->
+
+        <div class="upload-row">
+
+          <div>
+
+            <h3>
+              Фон
+            </h3>
+
+            <p class="muted">
+              Фоновое изображение сайта.
+            </p>
+
+            <input
+              type="file"
+              id="backgroundFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('background')"
+            >
+              Загрузить фон
+            </button>
+
+          </div>
+
+          <div
+            class="preview"
+            id="backgroundPreview"
+          >
+            Нет изображения
+          </div>
+
+        </div>
+
+
+        <!-- BANNER -->
+
+        <div class="upload-row">
+
+          <div>
+
+            <h3>
+              Баннер
+            </h3>
+
+            <p class="muted">
+              Большое изображение для оформления сайта.
+            </p>
+
+            <input
+              type="file"
+              id="bannerFile"
+              accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+              style="margin-top:10px"
+              onclick="uploadImage('banner')"
+            >
+              Загрузить баннер
+            </button>
+
+          </div>
+
+          <div
+            class="preview"
+            id="bannerPreview"
+          >
+            Нет изображения
+          </div>
+
+        </div>
+
+
+        <div
+          class="status"
+          id="status"
+        ></div>
 
       </div>
 
@@ -1190,12 +1181,6 @@
       }
 
 
-      /*
-      ===============================
-      ЛОГОТИП
-      ===============================
-      */
-
       if (settings.logo) {
 
         const preview =
@@ -1212,12 +1197,6 @@
       }
 
 
-      /*
-      ===============================
-      ФОН
-      ===============================
-      */
-
       if (settings.background) {
 
         const preview =
@@ -1233,12 +1212,6 @@
 
       }
 
-
-      /*
-      ===============================
-      БАННЕР
-      ===============================
-      */
 
       if (settings.banner) {
 
@@ -1571,11 +1544,11 @@
       const {
         data
       } =
-      db.storage
-        .from("site-images")
-        .getPublicUrl(
-          filePath
-        );
+        db.storage
+          .from("site-images")
+          .getPublicUrl(
+            filePath
+          );
 
 
       return data.publicUrl;
@@ -1656,11 +1629,11 @@
       const {
         data
       } =
-      db.storage
-        .from("site-images")
-        .getPublicUrl(
-          filePath
-        );
+        db.storage
+          .from("site-images")
+          .getPublicUrl(
+            filePath
+          );
 
 
       return data.publicUrl;
@@ -2218,12 +2191,6 @@
 
       }
 
-
-      /*
-      ==============================================
-      ЗАГРУЖАЕМ НАЗВАНИЯ НОВОСТЕЙ
-      ==============================================
-      */
 
       const newsIds =
         [
