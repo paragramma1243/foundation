@@ -1896,42 +1896,87 @@ function randomString(){
 
 async function checkUser(){
 
- const {
-  data,
-  error
- } = await db.auth.getSession();
+ try{
 
- if(error){
+  const {
+   data,
+   error
+  } = await db.auth.getSession();
 
-  setStatus(
-   loginStatus,
-   error.message,
-   true
-  );
+  if(error){
 
-  return;
+   console.error("GET SESSION ERROR:", error);
+
+   loginScreen.style.display = "flex";
+   adminScreen.classList.remove("visible");
+
+   setStatus(
+    loginStatus,
+    "Ошибка проверки сессии: " + error.message,
+    true
+   );
+
+   return;
+  }
+
+  const session =
+   data?.session || null;
+
+  console.log("CURRENT SESSION:", session);
+
+  if(session){
+
+   loginScreen.style.display = "none";
+   adminScreen.classList.add("visible");
+
+   setStatus(
+    loginStatus,
+    ""
+   );
+
+   try{
+
+    await Promise.all([
+     loadSiteSettings(),
+     loadNews(),
+     loadChanges(),
+     loadComments()
+    ]);
+
+   }catch(error){
+
+    console.error(
+     "ADMIN DATA LOAD ERROR:",
+     error
+    );
+
+   }
+
+  }else{
+
+   loginScreen.style.display = "flex";
+   adminScreen.classList.remove("visible");
+
+  }
 
  }
 
- const session =
-  data?.session || null;
 
- if(session){
+ catch(error){
 
-  loginScreen.style.display = "none";
-  adminScreen.classList.add("visible");
-
-  await Promise.all([
-   loadSiteSettings(),
-   loadNews(),
-   loadChanges(),
-   loadComments()
-  ]);
-
- }else{
+  console.error(
+   "CHECK USER ERROR:",
+   error
+  );
 
   loginScreen.style.display = "flex";
   adminScreen.classList.remove("visible");
+
+  setStatus(
+   loginStatus,
+   error.message || "Ошибка авторизации.",
+   true
+  );
 
  }
 
@@ -1948,53 +1993,145 @@ loginButton.addEventListener(
   const password =
    passwordInput.value;
 
-  if(!email || !password){
+  if(!email){
 
    setStatus(
     loginStatus,
-    "Введите email и пароль.",
+    "Введите email.",
     true
    );
+
+   emailInput.focus();
 
    return;
 
   }
+
+  if(!password){
+
+   setStatus(
+    loginStatus,
+    "Введите пароль.",
+    true
+   );
+
+   passwordInput.focus();
+
+   return;
+
+  }
+
+  loginButton.disabled = true;
 
   setStatus(
    loginStatus,
    "Проверка доступа..."
   );
 
-  loginButton.disabled = true;
 
-  const {
-   error
-  } = await db.auth.signInWithPassword({
-   email,
-   password
-  });
+  try{
 
-  loginButton.disabled = false;
+   console.log(
+    "LOGIN ATTEMPT:",
+    email
+   );
 
-  if(error){
+   const {
+    data,
+    error
+   } = await db.auth.signInWithPassword({
+    email:email,
+    password:password
+   });
+
+
+   console.log(
+    "LOGIN RESULT:",
+    data,
+    error
+   );
+
+
+   if(error){
+
+    console.error(
+     "SUPABASE LOGIN ERROR:",
+     error
+    );
+
+    setStatus(
+     loginStatus,
+     error.message ||
+      "Не удалось войти.",
+     true
+    );
+
+    return;
+
+   }
+
+
+   if(!data?.session){
+
+    setStatus(
+     loginStatus,
+     "Supabase не вернул активную сессию.",
+     true
+    );
+
+    return;
+
+   }
+
 
    setStatus(
     loginStatus,
-    error.message,
-    true
+    "Доступ разрешён."
    );
 
-   return;
+
+   loginScreen.style.display =
+    "none";
+
+   adminScreen.classList.add(
+    "visible"
+   );
+
+
+   await Promise.all([
+    loadSiteSettings(),
+    loadNews(),
+    loadChanges(),
+    loadComments()
+   ]);
 
   }
 
-  setStatus(
-   loginStatus,
-   "Доступ разрешён."
-  );
 
- }
-);
+  catch(error){
+
+   console.error(
+    "LOGIN EXCEPTION:",
+    error
+   );
+
+   setStatus(
+    loginStatus,
+    error.message ||
+     "Произошла ошибка при входе.",
+    true
+   );
+
+  }
+
+
+  finally{
+
+   loginButton.disabled = false;
+
+  }
+
+ });
 
 
 passwordInput.addEventListener(
@@ -2002,24 +2139,42 @@ passwordInput.addEventListener(
  event=>{
 
   if(event.key === "Enter"){
+
+   event.preventDefault();
+
    loginButton.click();
+
   }
 
- }
-);
+ });
 
 
 logoutButton.addEventListener(
  "click",
  async()=>{
 
-  await db.auth.signOut();
+  try{
 
-  location.reload();
+   const {
+    error
+   } = await db.auth.signOut();
 
- }
-);
+   if(error){
 
+    console.error(
+     "LOGOUT ERROR:",
+     error
+    );
+
+   }
+
+  }finally{
+
+   location.reload();
+
+  }
+
+ });
 
 /* =========================================================
    SITE SETTINGS
