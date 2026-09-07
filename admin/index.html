@@ -2941,13 +2941,177 @@ function applyFontSize(size){
 
 
 /* =========================================================
-   TOOLBAR COMMANDS
+   EDITOR HISTORY / COMMANDS
 ========================================================= */
+
+let editorHistory = [newsEditor.innerHTML];
+let editorHistoryIndex = 0;
+let historyTimer = null;
+let restoringHistory = false;
+
+function recordEditorHistory(force=false){
+ if(restoringHistory){
+  return;
+ }
+
+ const html = newsEditor.innerHTML;
+
+ if(
+  !force &&
+  editorHistory[editorHistoryIndex] === html
+ ){
+  return;
+ }
+
+ if(
+  editorHistory[editorHistoryIndex] === html
+ ){
+  return;
+ }
+
+ editorHistory =
+  editorHistory.slice(
+   0,
+   editorHistoryIndex + 1
+  );
+
+ editorHistory.push(html);
+
+ if(editorHistory.length > 100){
+  editorHistory.shift();
+ }else{
+  editorHistoryIndex++;
+ }
+
+ updateHistoryButtons();
+}
+
+function scheduleEditorHistory(){
+ clearTimeout(historyTimer);
+
+ historyTimer = setTimeout(
+  ()=>{
+   recordEditorHistory();
+  },
+  350
+ );
+}
+
+function flushEditorHistory(){
+ clearTimeout(historyTimer);
+ historyTimer = null;
+ recordEditorHistory();
+}
+
+function restoreEditorHistory(index){
+ if(
+  index < 0 ||
+  index >= editorHistory.length ||
+  index === editorHistoryIndex
+ ){
+  return;
+ }
+
+ clearTimeout(historyTimer);
+ historyTimer = null;
+
+ restoringHistory = true;
+
+ newsEditor.innerHTML =
+  editorHistory[index];
+
+ editorHistoryIndex = index;
+
+ restoringHistory = false;
+
+ newsEditor.focus();
+
+ const selection =
+  window.getSelection();
+
+ const range =
+  document.createRange();
+
+ range.selectNodeContents(newsEditor);
+ range.collapse(false);
+
+ selection.removeAllRanges();
+ selection.addRange(range);
+
+ savedEditorRange =
+  range.cloneRange();
+
+ updateToolbarState();
+ updateHistoryButtons();
+}
+
+function updateHistoryButtons(){
+ const undoButton =
+  editorToolbar.querySelector(
+   '[data-command="undo"]'
+  );
+
+ const redoButton =
+  editorToolbar.querySelector(
+   '[data-command="redo"]'
+  );
+
+ if(undoButton){
+  undoButton.disabled =
+   editorHistoryIndex <= 0;
+  undoButton.classList.toggle(
+   "active",
+   editorHistoryIndex > 0
+  );
+ }
+
+ if(redoButton){
+  redoButton.disabled =
+   editorHistoryIndex >= editorHistory.length - 1;
+  redoButton.classList.toggle(
+   "active",
+   editorHistoryIndex <
+    editorHistory.length - 1
+  );
+ }
+}
+
+function executeEditorCommand(command){
+ flushEditorHistory();
+
+ if(
+  command === "undo" ||
+  command === "redo"
+ ){
+  if(command === "undo"){
+   restoreEditorHistory(
+    editorHistoryIndex - 1
+   );
+  }else{
+   restoreEditorHistory(
+    editorHistoryIndex + 1
+   );
+  }
+
+  return;
+ }
+
+ restoreEditorSelection();
+
+ document.execCommand(
+  command,
+  false,
+  null
+ );
+
+ saveEditorSelection();
+ updateToolbarState();
+ scheduleEditorHistory();
+}
 
 editorToolbar.addEventListener(
  "click",
  event=>{
-
   const button =
    event.target.closest(
     "[data-command]"
@@ -2957,24 +3121,170 @@ editorToolbar.addEventListener(
    return;
   }
 
-  restoreEditorSelection();
+  event.preventDefault();
+  event.stopImmediatePropagation();
 
-  const command =
-   button.dataset.command;
-
-  document.execCommand(
-   command,
-   false,
-   null
+  executeEditorCommand(
+   button.dataset.command
   );
+ },
+ true
+);
 
-  updateToolbarState();
+/* =========================================================
+   RESET FORMAT AFTER ENTER
+========================================================= */
 
-  saveEditorSelection();
+function getEditorBlock(node){
+ if(node?.nodeType === Node.TEXT_NODE){
+  node = node.parentElement;
+ }
 
+ return node?.closest(
+  "p,h2,h3,blockquote,div,li"
+ );
+}
+
+function clearInlineFormatting(element){
+ if(!element){
+  return;
+ }
+
+ const children =
+  [...element.childNodes];
+
+ children.forEach(child=>{
+  if(child.nodeType === Node.ELEMENT_NODE){
+   if(
+    child.tagName === "BR"
+   ){
+    return;
+   }
+
+   clearInlineFormatting(child);
+
+   const fragment =
+    document.createDocumentFragment();
+
+   while(child.firstChild){
+    fragment.appendChild(
+     child.firstChild
+    );
+   }
+
+   child.replaceWith(fragment);
+  }
+ });
+}
+
+newsEditor.addEventListener(
+ "keydown",
+ event=>{
+  if(
+   event.key !== "Enter" ||
+   event.shiftKey
+  ){
+   return;
+  }
+
+  const selection =
+   window.getSelection();
+
+  if(!selection.rangeCount){
+   return;
+  }
+
+  const range =
+   selection.getRangeAt(0);
+
+  if(
+   !newsEditor.contains(
+    range.commonAncestorContainer
+   )
+  ){
+   return;
+  }
+
+  /*
+   Let the browser create the new paragraph first,
+   then completely reset its inline formatting.
+  */
+  setTimeout(
+   ()=>{
+    const currentSelection =
+     window.getSelection();
+
+    if(!currentSelection.rangeCount){
+     return;
+    }
+
+    let node =
+     currentSelection.anchorNode;
+
+    if(
+     node?.nodeType === Node.TEXT_NODE
+    ){
+     node = node.parentElement;
+    }
+
+    if(
+     !node ||
+     !newsEditor.contains(node)
+    ){
+     return;
+    }
+
+    let block =
+     getEditorBlock(node);
+
+    if(!block){
+     return;
+    }
+
+    if(
+     block.tagName !== "P"
+    ){
+     const paragraph =
+      document.createElement("p");
+
+     while(block.firstChild){
+      paragraph.appendChild(
+       block.firstChild
+      );
+     }
+
+     block.replaceWith(paragraph);
+     block = paragraph;
+    }
+
+    clearInlineFormatting(block);
+
+    block.style.fontSize = "14px";
+    block.style.fontWeight = "normal";
+    block.style.fontStyle = "normal";
+    block.style.textDecoration = "none";
+    block.style.textAlign = "left";
+
+    updateToolbarState();
+    saveEditorSelection();
+    scheduleEditorHistory();
+   },
+   0
+  );
  }
 );
 
+/* Keep history updated when typing/pasting. */
+newsEditor.addEventListener(
+ "input",
+ ()=>{
+  if(!restoringHistory){
+   scheduleEditorHistory();
+  }
+ }
+);
+
+updateHistoryButtons();
 
 /* =========================================================
    TOOLBAR ACTIVE STATE
@@ -4595,4 +4905,49 @@ checkUser();
 </script>
 
 </body>
-</html>
+</html .editor-toolbar .align-left::before,
+.editor-toolbar .align-center::before,
+.editor-toolbar .align-right::before{
+ display:block;
+ width:18px;
+ font-size:16px;
+ line-height:1;
+ letter-spacing:-2px;
+}
+.editor-toolbar .align-left::before{content:"≡"; text-align:left;}
+.editor-toolbar .align-center::before{content:"≡"; text-align:center;}
+.editor-toolbar .align-right::before{content:"≡"; text-align:right;}
+.editor-toolbar .align-left,
+.editor-toolbar .align-center,
+.editor-toolbar .align-right{
+ color:transparent;
+}
+
+.news-inline-image{
+ width:100%;
+ max-width:100%;
+ min-width:140px;
+ resize:both;
+ overflow:auto;
+ box-sizing:border-box;
+ cursor:default;
+}
+
+.news-inline-image img{
+ width:100%;
+ height:auto;
+ max-height:none;
+ object-fit:contain;
+}
+
+.news-inline-image figcaption{
+ padding:9px 9px 5px;
+ color:#a0a6ab;
+ text-align:center;
+ font-size:11px;
+ line-height:1.5;
+ border-top:1px solid #242a30;
+ margin-top:7px;
+}
+
+>
