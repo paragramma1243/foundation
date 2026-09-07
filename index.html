@@ -312,6 +312,334 @@ nav a.active:before{
 }
 
 
+/* ================= AUTH ================= */
+
+.auth-area{
+  position:relative;
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  margin-left:auto;
+}
+
+.login-button{
+  border:1px solid #d5b42e;
+  background:#d5b42e;
+  color:#0a0a0a;
+  padding:10px 15px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-radius:5px;
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+}
+
+.login-button:hover{
+  background:#f0ce43;
+  border-color:#f0ce43;
+  transform:translateY(-1px);
+  box-shadow:
+    0 6px 16px rgba(213,180,46,.14),
+    0 0 15px rgba(213,180,46,.06);
+}
+
+.login-button:active{
+  transform:translateY(0) scale(.98);
+}
+
+
+/* USER */
+
+.auth-user{
+  position:relative;
+  display:none;
+}
+
+.auth-user-button{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:#0c0d0d;
+  border:1px solid #303233;
+  color:#ddd;
+  padding:5px 9px 5px 5px;
+  cursor:pointer;
+  border-radius:5px;
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.auth-user-button:hover{
+  border-color:#555;
+  background:#111313;
+  box-shadow:0 0 12px rgba(213,180,46,.04);
+}
+
+.auth-avatar{
+  width:30px;
+  height:30px;
+  object-fit:cover;
+  border-radius:4px;
+  background:#151616;
+  display:block;
+}
+
+.auth-name{
+  max-width:120px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#ccc;
+  font-size:10px;
+  font-weight:700;
+}
+
+
+/* USER MENU */
+
+.auth-menu{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  width:220px;
+  background:#080909;
+  border:1px solid #292a2b;
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.55),
+    0 0 20px rgba(213,180,46,.025);
+  padding:15px;
+  display:none;
+  z-index:100;
+  border-radius:5px;
+}
+
+.auth-menu.open{
+  display:block;
+}
+
+.auth-menu-info{
+  padding-bottom:13px;
+  border-bottom:1px solid #202122;
+}
+
+.auth-menu-label{
+  color:#d5b42e;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:7px;
+}
+
+.auth-menu-name{
+  color:#ddd;
+  font-size:11px;
+  font-weight:700;
+  word-break:break-word;
+}
+
+.auth-logout{
+  width:100%;
+  margin-top:12px;
+  padding:9px 10px;
+  background:#0c0d0d;
+  border:1px solid #303233;
+  color:#888;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-radius:4px;
+  transition:
+    color .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.auth-logout:hover{
+  color:#ddd;
+  border-color:#555;
+  background:#151616;
+}
+
+
+/* ================= AUTH MODAL ================= */
+
+.auth-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(7px);
+  z-index:1000;
+}
+
+.auth-modal.open{
+  display:flex;
+}
+
+.auth-modal-box{
+  width:min(440px,100%);
+  position:relative;
+  background:#0b0c0c;
+  border:1px solid #303233;
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.7),
+    0 0 30px rgba(213,180,46,.025);
+  overflow:hidden;
+  border-radius:6px;
+  animation:authModalIn .2s ease-out;
+}
+
+@keyframes authModalIn{
+
+  from{
+    opacity:0;
+    transform:translateY(8px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+}
+
+.auth-modal-header{
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  border-bottom:1px solid #242526;
+  background:#050606;
+}
+
+.auth-modal-title{
+  color:#bbb;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.auth-modal-code{
+  color:#555;
+  font-size:8px;
+  letter-spacing:1.5px;
+  font-family:monospace;
+}
+
+.auth-modal-close{
+  position:absolute;
+  top:9px;
+  right:12px;
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:transparent;
+  color:#666;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  z-index:2;
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.auth-modal-close:hover{
+  color:#ddd;
+  transform:rotate(90deg);
+}
+
+.auth-modal-body{
+  padding:34px;
+}
+
+.auth-system{
+  color:#d5b42e;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:11px;
+}
+
+.auth-modal-body h3{
+  color:#eee;
+  font-size:30px;
+  line-height:1;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+.auth-modal-body p{
+  color:#777;
+  font-size:11px;
+  line-height:1.7;
+  margin-bottom:25px;
+}
+
+.discord-login-button{
+  width:100%;
+  padding:13px 18px;
+  border:1px solid #d5b42e;
+  background:#d5b42e;
+  color:#0a0a0a;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-radius:5px;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.discord-login-button:hover{
+  background:#f0ce43;
+  transform:translateY(-1px);
+  box-shadow:
+    0 7px 18px rgba(213,180,46,.14),
+    0 0 18px rgba(213,180,46,.05);
+}
+
+.discord-login-button:active{
+  transform:translateY(0) scale(.98);
+}
+
+.discord-login-button.loading{
+  opacity:.65;
+  pointer-events:none;
+}
+
+.auth-modal-footer{
+  margin-top:17px;
+  padding-top:14px;
+  border-top:1px solid #202122;
+  color:#454748;
+  font-size:8px;
+  letter-spacing:1.4px;
+  text-align:center;
+}
+
+
 /* ================= HERO ================= */
 
 .hero{
@@ -1964,6 +2292,33 @@ footer{
     letter-spacing:2px;
   }
 
+  .auth-area{
+    margin-left:0;
+  }
+
+  .login-button{
+    padding:8px 10px;
+    font-size:8px;
+    letter-spacing:.8px;
+  }
+
+  .auth-name{
+    display:none;
+  }
+
+  .auth-user-button{
+    padding:4px;
+  }
+
+  .auth-avatar{
+    width:29px;
+    height:29px;
+  }
+
+  .auth-menu{
+    width:200px;
+  }
+
   .hero{
     height:390px;
   }
@@ -2079,6 +2434,14 @@ footer{
     height:180px;
   }
 
+  .auth-modal-body{
+    padding:27px 22px;
+  }
+
+  .auth-modal-body h3{
+    font-size:27px;
+  }
+
 }
 
 
@@ -2182,9 +2545,155 @@ footer{
 
     </details>
 
+
+    <!-- ================= AUTH BUTTON ================= -->
+
+    <div class="auth-area">
+
+      <button
+        id="loginButton"
+        class="login-button"
+        type="button"
+      >
+        Войти
+      </button>
+
+
+      <div
+        id="authUser"
+        class="auth-user"
+      >
+
+        <button
+          id="authUserButton"
+          class="auth-user-button"
+          type="button"
+          aria-label="Открыть меню пользователя"
+        >
+
+          <img
+            id="authAvatar"
+            class="auth-avatar"
+            src=""
+            alt=""
+          >
+
+          <span
+            id="authName"
+            class="auth-name"
+          >
+            Пользователь
+          </span>
+
+        </button>
+
+
+        <div
+          id="authMenu"
+          class="auth-menu"
+        >
+
+          <div class="auth-menu-info">
+
+            <div class="auth-menu-label">
+              DISCORD ACCOUNT
+            </div>
+
+            <div
+              id="authMenuName"
+              class="auth-menu-name"
+            >
+              Пользователь
+            </div>
+
+          </div>
+
+
+          <button
+            id="logoutButton"
+            class="auth-logout"
+            type="button"
+          >
+            Выйти
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
 </header>
+
+
+<!-- ================= AUTH MODAL ================= -->
+
+<div
+  id="authModal"
+  class="auth-modal"
+>
+
+  <div class="auth-modal-box">
+
+    <div class="auth-modal-header">
+
+      <div class="auth-modal-title">
+        ACCESS AUTHORIZATION
+      </div>
+
+      <div class="auth-modal-code">
+        CB2 / AUTH
+      </div>
+
+    </div>
+
+
+    <button
+      id="authModalClose"
+      class="auth-modal-close"
+      type="button"
+      aria-label="Закрыть"
+    >
+      ×
+    </button>
+
+
+    <div class="auth-modal-body">
+
+      <div class="auth-system">
+        FOUNDATION ACCESS SYSTEM
+      </div>
+
+      <h3>
+        Вход в систему
+      </h3>
+
+      <p>
+        Авторизуйтесь через Discord, чтобы получить
+        возможность оставлять комментарии под новостями.
+      </p>
+
+
+      <button
+        id="discordLoginButton"
+        class="discord-login-button"
+        type="button"
+      >
+        Войти через Discord
+      </button>
+
+
+      <div class="auth-modal-footer">
+        AUTHENTICATION PROVIDED BY DISCORD
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
 
 <section class="hero">
@@ -2695,11 +3204,563 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
+
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
   );
+
+
+/* ================= DISCORD AUTH ================= */
+
+const loginButton =
+  document.getElementById(
+    "loginButton"
+  );
+
+const authUser =
+  document.getElementById(
+    "authUser"
+  );
+
+const authUserButton =
+  document.getElementById(
+    "authUserButton"
+  );
+
+const authAvatar =
+  document.getElementById(
+    "authAvatar"
+  );
+
+const authName =
+  document.getElementById(
+    "authName"
+  );
+
+const authMenu =
+  document.getElementById(
+    "authMenu"
+  );
+
+const authMenuName =
+  document.getElementById(
+    "authMenuName"
+  );
+
+const logoutButton =
+  document.getElementById(
+    "logoutButton"
+  );
+
+const authModal =
+  document.getElementById(
+    "authModal"
+  );
+
+const authModalClose =
+  document.getElementById(
+    "authModalClose"
+  );
+
+const discordLoginButton =
+  document.getElementById(
+    "discordLoginButton"
+  );
+
+
+/* ================= OPEN AUTH MODAL ================= */
+
+function openAuthModal(){
+
+  if(!authModal){
+    return;
+  }
+
+  authModal.classList.add(
+    "open"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+/* ================= CLOSE AUTH MODAL ================= */
+
+function closeAuthModal(){
+
+  if(!authModal){
+    return;
+  }
+
+  authModal.classList.remove(
+    "open"
+  );
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+if(loginButton){
+
+  loginButton.addEventListener(
+    "click",
+    function(){
+
+      openAuthModal();
+
+    }
+  );
+
+}
+
+
+if(authModalClose){
+
+  authModalClose.addEventListener(
+    "click",
+    function(){
+
+      closeAuthModal();
+
+    }
+  );
+
+}
+
+
+/* ================= CLOSE MODAL BY BACKDROP ================= */
+
+if(authModal){
+
+  authModal.addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target ===
+        authModal
+      ){
+
+        closeAuthModal();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= ESC ================= */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeAuthModal();
+
+      if(authMenu){
+
+        authMenu.classList.remove(
+          "open"
+        );
+
+      }
+
+    }
+
+  }
+);
+
+
+/* ================= DISCORD LOGIN ================= */
+
+async function loginWithDiscord(){
+
+  if(!discordLoginButton){
+    return;
+  }
+
+
+  discordLoginButton.classList.add(
+    "loading"
+  );
+
+  discordLoginButton.textContent =
+    "ПОДКЛЮЧЕНИЕ...";
+
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signInWithOAuth({
+
+        provider:"discord",
+
+        options:{
+          redirectTo:
+            window.location.origin
+        }
+
+      });
+
+
+    if(error){
+
+      console.error(
+        "Ошибка Discord OAuth:",
+        error
+      );
+
+      alert(
+        "Не удалось открыть авторизацию Discord."
+      );
+
+      discordLoginButton.classList.remove(
+        "loading"
+      );
+
+      discordLoginButton.textContent =
+        "Войти через Discord";
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Ошибка авторизации:",
+      error
+    );
+
+    alert(
+      "Произошла ошибка при авторизации."
+    );
+
+    discordLoginButton.classList.remove(
+      "loading"
+    );
+
+    discordLoginButton.textContent =
+      "Войти через Discord";
+
+  }
+
+}
+
+
+if(discordLoginButton){
+
+  discordLoginButton.addEventListener(
+    "click",
+    loginWithDiscord
+  );
+
+}
+
+
+/* ================= RENDER USER ================= */
+
+function renderAuthUser(
+  user
+){
+
+  if(
+    !user ||
+    !user.user_metadata
+  ){
+
+    if(loginButton){
+
+      loginButton.style.display =
+        "block";
+
+    }
+
+    if(authUser){
+
+      authUser.style.display =
+        "none";
+
+    }
+
+    return;
+
+  }
+
+
+  const metadata =
+    user.user_metadata;
+
+
+  const username =
+    metadata.full_name ||
+    metadata.name ||
+    metadata.preferred_username ||
+    "Discord пользователь";
+
+
+  const avatar =
+    metadata.avatar_url ||
+    "https://cdn.discordapp.com/embed/avatars/0.png";
+
+
+  if(loginButton){
+
+    loginButton.style.display =
+      "none";
+
+  }
+
+
+  if(authUser){
+
+    authUser.style.display =
+      "block";
+
+  }
+
+
+  if(authAvatar){
+
+    authAvatar.src =
+      avatar;
+
+    authAvatar.alt =
+      username;
+
+  }
+
+
+  if(authName){
+
+    authName.textContent =
+      username;
+
+  }
+
+
+  if(authMenuName){
+
+    authMenuName.textContent =
+      username;
+
+  }
+
+
+  closeAuthModal();
+
+}
+
+
+/* ================= CHECK AUTH ================= */
+
+async function checkAuth(){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if(error){
+
+      console.error(
+        "Ошибка проверки авторизации:",
+        error
+      );
+
+      renderAuthUser(
+        null
+      );
+
+      return;
+
+    }
+
+
+    renderAuthUser(
+      data.user
+    );
+
+  }catch(error){
+
+    console.error(
+      "Ошибка auth:",
+      error
+    );
+
+    renderAuthUser(
+      null
+    );
+
+  }
+
+}
+
+
+/* ================= USER MENU ================= */
+
+if(authUserButton){
+
+  authUserButton.addEventListener(
+    "click",
+    function(event){
+
+      event.stopPropagation();
+
+      if(authMenu){
+
+        authMenu.classList.toggle(
+          "open"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= CLOSE USER MENU ================= */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    if(
+      authUser &&
+      authMenu &&
+      !authUser.contains(event.target)
+    ){
+
+      authMenu.classList.remove(
+        "open"
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= LOGOUT ================= */
+
+if(logoutButton){
+
+  logoutButton.addEventListener(
+    "click",
+    async function(){
+
+      try{
+
+        const {
+          error
+        } =
+          await supabaseClient.auth.signOut();
+
+
+        if(error){
+
+          console.error(
+            "Ошибка выхода:",
+            error
+          );
+
+          return;
+
+        }
+
+
+        if(authMenu){
+
+          authMenu.classList.remove(
+            "open"
+          );
+
+        }
+
+
+        renderAuthUser(
+          null
+        );
+
+      }catch(error){
+
+        console.error(
+          "Ошибка выхода:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= AUTH STATE ================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(
+    event,
+    session
+  ){
+
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
+
+
+    if(
+      session &&
+      session.user
+    ){
+
+      renderAuthUser(
+        session.user
+      );
+
+    }else{
+
+      renderAuthUser(
+        null
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= INITIAL AUTH CHECK ================= */
+
+checkAuth();
 
 
 /* ================= SITE SETTINGS ================= */
