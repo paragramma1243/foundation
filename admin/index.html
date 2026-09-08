@@ -44,6 +44,144 @@ button:disabled{
  display:none!important;
 }
 
+
+/* =========================
+   ADMIN WELCOME SPLASH
+========================= */
+
+#adminWelcomeSplash{
+ position:fixed;
+ inset:0;
+ z-index:99999;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#07090c;
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none;
+ transition:
+  opacity .45s ease,
+  visibility .45s ease;
+}
+
+#adminWelcomeSplash.show{
+ opacity:1;
+ visibility:visible;
+ pointer-events:auto;
+}
+
+#adminWelcomeSplash.finish{
+ opacity:0;
+ visibility:hidden;
+ transition:
+  opacity .7s ease,
+  visibility .7s ease;
+}
+
+.adminWelcomeSplash-content{
+ width:100%;
+ text-align:center;
+ padding:20px;
+}
+
+.adminWelcomeSplash-greeting{
+ opacity:0;
+ transform:translateY(12px);
+ color:#fff;
+ font-size:clamp(25px,4vw,46px);
+ font-weight:700;
+ letter-spacing:7px;
+ text-transform:uppercase;
+ text-shadow:
+  0 0 10px rgba(255,255,255,.10),
+  0 0 25px rgba(255,255,255,.04);
+}
+
+#adminWelcomeSplash.show
+.adminWelcomeSplash-greeting{
+ animation:
+  adminWelcomeGreetingIn .7s
+  cubic-bezier(.22,1,.36,1)
+  1s forwards;
+}
+
+.adminWelcomeSplash-name{
+ margin-top:18px;
+ opacity:0;
+ transform:translateY(10px) scale(.97);
+ color:#b76cff;
+ font-size:clamp(24px,3.5vw,40px);
+ font-weight:700;
+ letter-spacing:3px;
+ text-shadow:
+  0 0 7px rgba(183,108,255,.35),
+  0 0 18px rgba(183,108,255,.25),
+  0 0 38px rgba(183,108,255,.12);
+}
+
+#adminWelcomeSplash.show
+.adminWelcomeSplash-name{
+ animation:
+  adminWelcomeNameIn .7s
+  cubic-bezier(.22,1,.36,1)
+  2s forwards,
+  adminWelcomeNamePulse 2.2s
+  ease-in-out
+  2.7s
+  infinite;
+}
+
+@keyframes adminWelcomeGreetingIn{
+
+ 0%{
+  opacity:0;
+  transform:translateY(12px);
+ }
+
+ 100%{
+  opacity:1;
+  transform:translateY(0);
+ }
+
+}
+
+@keyframes adminWelcomeNameIn{
+
+ 0%{
+  opacity:0;
+  transform:translateY(10px) scale(.97);
+ }
+
+ 100%{
+  opacity:1;
+  transform:translateY(0) scale(1);
+ }
+
+}
+
+@keyframes adminWelcomeNamePulse{
+
+ 0%,
+ 100%{
+  opacity:.88;
+  text-shadow:
+   0 0 7px rgba(183,108,255,.35),
+   0 0 18px rgba(183,108,255,.25),
+   0 0 38px rgba(183,108,255,.12);
+ }
+
+ 50%{
+  opacity:1;
+  text-shadow:
+   0 0 9px rgba(183,108,255,.60),
+   0 0 22px rgba(183,108,255,.43),
+   0 0 45px rgba(183,108,255,.20);
+ }
+
+}
+
+
 /* =========================
    LOGIN
 ========================= */
@@ -88,6 +226,7 @@ button:disabled{
  line-height:1.7;
  margin:0 0 24px;
 }
+
 
 /* =========================
    FORM
@@ -208,6 +347,7 @@ button:disabled{
  font-size:10px;
  line-height:1.5;
 }
+
 
 /* =========================
    ADMIN
@@ -359,6 +499,7 @@ button:disabled{
  border-radius:5px;
  padding:4px;
 }
+
 
 /* =========================
    EDITOR
@@ -577,6 +718,7 @@ button:disabled{
  background:rgba(213,180,46,.35);
 }
 
+
 /* =========================
    INLINE IMAGES
 ========================= */
@@ -691,6 +833,7 @@ button:disabled{
  line-height:1.6;
 }
 
+
 /* =========================
    MODALS
 ========================= */
@@ -767,6 +910,7 @@ button:disabled{
  gap:8px;
  margin-top:18px;
 }
+
 
 /* =========================
    LISTS
@@ -897,6 +1041,7 @@ button:disabled{
  margin:18px 0;
 }
 
+
 /* =========================
    MOBILE
 ========================= */
@@ -940,6 +1085,7 @@ button:disabled{
  .comment-actions{
   justify-content:flex-start;
  }
+
 }
 
 @media(max-width:550px){
@@ -991,11 +1137,39 @@ button:disabled{
  .modal-body{
   padding:15px;
  }
+
 }
 </style>
 </head>
 
 <body>
+
+
+<!-- =========================
+     ADMIN WELCOME SPLASH
+========================= -->
+
+<div
+ id="adminWelcomeSplash"
+ aria-hidden="true"
+>
+ <div class="adminWelcomeSplash-content">
+
+  <div
+   id="adminWelcomeSplashGreeting"
+   class="adminWelcomeSplash-greeting"
+  >
+   ДОБРО ПОЖАЛОВАТЬ
+  </div>
+
+  <div
+   id="adminWelcomeSplashName"
+   class="adminWelcomeSplash-name"
+  ></div>
+
+ </div>
+</div>
+
 
 <div id="loginScreen" class="login-screen">
 
@@ -1585,27 +1759,6 @@ const SUPABASE_KEY =
 const { createClient } = supabase;
 
 
-/*
- * ВАЖНО:
- *
- * Админская авторизация хранится в отдельном
- * browser storage namespace.
- *
- * Это полностью отделяет email/password-сессию
- * админки от Discord-сессии публичного сайта.
- *
- * news.html использует:
- *
- * scp_cb2_discord_auth
- *
- * admin.html использует:
- *
- * scp_cb2_admin_auth
- *
- * Поэтому две страницы могут быть открыты
- * одновременно в одном браузере.
- */
-
 const db = createClient(
  SUPABASE_URL,
  SUPABASE_KEY,
@@ -1613,16 +1766,7 @@ const db = createClient(
   auth:{
    persistSession:true,
    autoRefreshToken:true,
-
-   /*
-    * OAuth здесь не используется.
-    * Админ входит только через email/password.
-    */
    detectSessionInUrl:false,
-
-   /*
-    * Отдельное хранилище для админской сессии.
-    */
    storageKey:"scp_cb2_admin_auth"
   }
 );
@@ -1631,15 +1775,6 @@ const db = createClient(
 /* =========================================================
    ADMINISTRATORS
 ========================================================= */
-
-/*
- * ВАЖНО:
- * Здесь находятся только UUID и отображаемые ники.
- * Пароли здесь НЕ хранятся.
- *
- * Пароли обоих администраторов находятся
- * в Supabase Authentication.
- */
 
 const ADMINS = {
  "bf784edb-644c-457b-b25f-cc3b5bad8c47": "Master Figher",
@@ -1674,6 +1809,16 @@ const logoutButton =
 
 const adminWelcome =
  document.getElementById("adminWelcome");
+
+const adminWelcomeSplash =
+ document.getElementById(
+  "adminWelcomeSplash"
+ );
+
+const adminWelcomeSplashName =
+ document.getElementById(
+  "adminWelcomeSplashName"
+ );
 
 const newsImage =
  document.getElementById("newsImage");
@@ -1810,6 +1955,98 @@ let resizingImage = false;
 let resizeStartX = 0;
 let resizeStartWidth = 0;
 
+let adminWelcomeShown = false;
+
+
+/* =========================================================
+   ADMIN WELCOME SPLASH
+========================================================= */
+
+function playAdminWelcomeSplash(adminName){
+
+ if(
+  !adminName ||
+  !adminWelcomeSplash ||
+  !adminWelcomeSplashName
+ ){
+  return;
+ }
+
+ if(adminWelcomeShown){
+  return;
+ }
+
+ adminWelcomeShown = true;
+
+ adminWelcomeSplashName.textContent =
+  adminName;
+
+ adminWelcomeSplash.classList.remove(
+  "show",
+  "finish"
+ );
+
+ /*
+  * Принудительно пересоздаём animation timeline,
+  * чтобы заставка каждый раз запускалась с нуля.
+  */
+
+ void adminWelcomeSplash.offsetWidth;
+
+ adminWelcomeSplash.classList.add(
+  "show"
+ );
+
+ /*
+  * 1 секунда:
+  * появляется "ДОБРО ПОЖАЛОВАТЬ"
+  *
+  * 2 секунды:
+  * появляется имя администратора.
+  *
+  * 5.3 секунды:
+  * начинается плавное исчезновение.
+  *
+  * 6 секунд:
+  * заставка полностью закрыта.
+  */
+
+ setTimeout(
+  ()=>{
+   if(
+    adminWelcomeSplash
+   ){
+    adminWelcomeSplash.classList.add(
+     "finish"
+    );
+   }
+  },
+  5300
+ );
+
+ setTimeout(
+  ()=>{
+   if(
+    adminWelcomeSplash
+   ){
+
+    adminWelcomeSplash.classList.remove(
+     "show",
+     "finish"
+    );
+
+    adminWelcomeSplash.setAttribute(
+     "aria-hidden",
+     "true"
+    );
+
+   }
+  },
+  6000
+ );
+
+}
+
 
 /* =========================================================
    UTILS
@@ -1935,10 +2172,6 @@ async function checkUser(){
    data?.session || null;
 
 
-  /*
-   * Нет активной сессии.
-   */
-
   if(!session){
 
    loginScreen.style.display =
@@ -1956,14 +2189,6 @@ async function checkUser(){
   }
 
 
-  /*
-   * Проверяем UUID.
-   *
-   * Даже если пользователь успешно
-   * вошёл в Supabase Auth, без UUID
-   * администратора доступа не будет.
-   */
-
   const adminName =
    getAdminName(
     session.user.id
@@ -1977,16 +2202,6 @@ async function checkUser(){
     session.user.id
    );
 
-
-   /*
-    * ВАЖНО:
-    *
-    * signOut() здесь относится только
-    * к storageKey "scp_cb2_admin_auth".
-    *
-    * Discord-сессия публичного сайта
-    * при этом НЕ затрагивается.
-    */
 
    await db.auth.signOut({
     scope:"local"
@@ -2015,11 +2230,20 @@ async function checkUser(){
 
 
   /*
-   * Всё хорошо — это администратор.
+   * Администратор подтверждён.
    */
 
   showAdminWelcome(
    session.user.id
+  );
+
+  /*
+   * Запускаем большую заставку только
+   * один раз за текущую загрузку страницы.
+   */
+
+  playAdminWelcomeSplash(
+   adminName
   );
 
   loginScreen.style.display =
@@ -2118,12 +2342,6 @@ loginButton.addEventListener(
 
   try{
 
-   /*
-    * Авторизация через Supabase Auth.
-    *
-    * Email и пароль проверяются самим Supabase.
-    */
-
    const {
     data,
     error
@@ -2145,10 +2363,6 @@ loginButton.addEventListener(
    }
 
 
-   /*
-    * Проверяем именно UUID администратора.
-    */
-
    const adminName =
     getAdminName(
      data.session.user.id
@@ -2156,14 +2370,6 @@ loginButton.addEventListener(
 
 
    if(!adminName){
-
-    /*
-     * Пароль был правильным,
-     * но аккаунт не является администраторским.
-     *
-     * Выходим только из локальной
-     * админской сессии.
-     */
 
     await db.auth.signOut({
      scope:"local"
@@ -2192,6 +2398,10 @@ loginButton.addEventListener(
 
    showAdminWelcome(
     data.session.user.id
+   );
+
+   playAdminWelcomeSplash(
+    adminName
    );
 
    loginScreen.style.display =
@@ -2259,11 +2469,6 @@ logoutButton.addEventListener(
  async()=>{
 
   try{
-
-   /*
-    * Выход только из админской сессии.
-    * Discord-сессия news.html не затрагивается.
-    */
 
    await db.auth.signOut({
     scope:"local"
