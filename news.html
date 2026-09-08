@@ -449,6 +449,13 @@ nav a.active:after{
  box-shadow:0 5px 18px rgba(88,101,242,.18);
 }
 
+.discord-login-button:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+ transform:none;
+ box-shadow:none;
+}
+
 .auth-modal-footer{
  margin-top:18px;
  text-align:center;
@@ -1502,6 +1509,7 @@ DISCORD ACCOUNT
 
 </header>
 
+
 <div
  id="authModal"
  class="auth-modal">
@@ -1559,6 +1567,7 @@ AUTHENTICATION PROVIDED BY DISCORD
 
 </div>
 
+
 <main>
 
 <div class="wrap">
@@ -1579,6 +1588,7 @@ AUTHENTICATION PROVIDED BY DISCORD
 
 </div>
 
+
 <section
  class="comments"
  id="comments">
@@ -1596,6 +1606,7 @@ AUTHENTICATION PROVIDED BY DISCORD
 </span>
 
 </div>
+
 
 <div
  id="commentLogin"
@@ -1622,6 +1633,7 @@ FOUNDATION ACCESS
 
 </div>
 
+
 <div
  id="commentUser"
  class="comment-user">
@@ -1647,6 +1659,7 @@ FOUNDATION ACCESS
 </div>
 
 </div>
+
 
 <form
  class="comment-form"
@@ -1685,6 +1698,7 @@ FOUNDATION ACCESS
 
 </form>
 
+
 <div
  class="comment-limit"
  id="commentLimit">
@@ -1696,6 +1710,7 @@ FOUNDATION ACCESS
 Для этой новости уже опубликовано максимальное количество комментариев — 20.
 
 </div>
+
 
 <div
  class="comment-list"
@@ -1714,6 +1729,7 @@ FOUNDATION ACCESS
 </div>
 
 </main>
+
 
 <footer>
 
@@ -1742,6 +1758,7 @@ SCP: CB2 Multiplayer.
 
 </div>
 
+
 <div>
 
 <h4>Навигация</h4>
@@ -1763,6 +1780,7 @@ SCP: CB2 Multiplayer.
 </div>
 
 </div>
+
 
 <div>
 
@@ -1792,6 +1810,7 @@ Steam
 
 </div>
 
+
 <div class="bottom">
 
 © 2026 SCP: CB2 Multiplayer.
@@ -1800,6 +1819,7 @@ Steam
 </div>
 
 </footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1815,6 +1835,18 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
+
+/*
+ * ВАЖНО:
+ *
+ * news.html использует только Discord OAuth.
+ *
+ * PKCE нужен для OAuth callback с ?code=...
+ *
+ * persistSession сохраняет Discord-сессию
+ * между переходами по страницам.
+ */
+
 const db =
 window.supabase.createClient(
  SUPABASE_URL,
@@ -1824,7 +1856,7 @@ window.supabase.createClient(
    persistSession:true,
    autoRefreshToken:true,
    detectSessionInUrl:true,
-   flowType:"implicit"
+   flowType:"pkce"
   }
  }
 );
@@ -2067,6 +2099,18 @@ async function loginWithDiscord(){
 
  try{
 
+  /*
+   * При запуске OAuth
+   * redirectTo сохраняет текущую новость.
+   *
+   * Например:
+   *
+   * news.html?id=6
+   *
+   * после Discord вернётся обратно
+   * на эту же новость.
+   */
+
   const redirectUrl =
    getCurrentPageUrl();
 
@@ -2093,19 +2137,23 @@ async function loginWithDiscord(){
     error
    );
 
+
    discordLoginButton.disabled =
     false;
 
    discordLoginButton.textContent =
     "Войти через Discord";
 
+
    alert(
     "Не удалось выполнить вход через Discord."
    );
 
+
    return;
 
   }
+
 
   console.log(
    "OAuth запущен:",
@@ -2120,11 +2168,13 @@ async function loginWithDiscord(){
    error
   );
 
+
   discordLoginButton.disabled =
    false;
 
   discordLoginButton.textContent =
    "Войти через Discord";
+
 
   alert(
    "Произошла ошибка при подключении Discord."
@@ -2139,6 +2189,49 @@ discordLoginButton.addEventListener(
  "click",
  loginWithDiscord
 );
+
+
+/* ==========================================
+   ПРОВЕРКА DISCORD
+========================================== */
+
+function isDiscordUser(user){
+
+ if(!user){
+  return false;
+ }
+
+
+ /*
+  * Основной способ определения:
+  * app_metadata.provider
+  */
+
+ const provider =
+  user?.app_metadata?.provider ||
+  "";
+
+
+ if(provider === "discord"){
+  return true;
+ }
+
+
+ /*
+  * Дополнительная проверка
+  * через identities.
+  */
+
+ const identities =
+  user?.identities || [];
+
+
+ return identities.some(
+  identity =>
+   identity?.provider === "discord"
+ );
+
+}
 
 
 /* ==========================================
@@ -2185,21 +2278,26 @@ function renderAuthUser(user){
   loginButton.style.display =
    "block";
 
+
   authUser.classList.remove(
    "visible"
   );
+
 
   commentLogin.classList.add(
    "visible"
   );
 
+
   commentUser.classList.remove(
    "visible"
   );
 
+
   commentForm.classList.remove(
    "visible"
   );
+
 
   return;
 
@@ -2214,6 +2312,7 @@ function renderAuthUser(user){
 
  loginButton.style.display =
   "none";
+
 
  authUser.classList.add(
   "visible"
@@ -2239,9 +2338,11 @@ function renderAuthUser(user){
   "visible"
  );
 
+
  commentUser.classList.add(
   "visible"
  );
+
 
  commentForm.classList.add(
   "visible"
@@ -2268,6 +2369,115 @@ async function checkAuth(){
 
  try{
 
+  /*
+   * PKCE callback:
+   *
+   * Discord возвращает:
+   *
+   * ?code=XXXXXXXX&id=6
+   *
+   * Сначала меняем code на полноценную
+   * Supabase-сессию.
+   */
+
+  const params =
+   new URLSearchParams(
+    window.location.search
+   );
+
+
+  const code =
+   params.get("code");
+
+
+  if(code){
+
+   console.log(
+    "OAuth code найден. Обмениваем на Discord-сессию..."
+   );
+
+
+   const {
+    data,
+    error
+   } =
+    await db.auth.exchangeCodeForSession(
+     code
+    );
+
+
+   if(error){
+
+    console.error(
+     "Ошибка обмена OAuth code:",
+     error
+    );
+
+
+    renderAuthUser(null);
+
+
+    return null;
+
+   }
+
+
+   console.log(
+    "OAuth-сессия создана:",
+    data?.session?.user
+   );
+
+
+   /*
+    * Убираем только code.
+    *
+    * id новости сохраняется.
+    *
+    * Было:
+    * news.html?code=XXX&id=6
+    *
+    * Станет:
+    * news.html?id=6
+    */
+
+   params.delete(
+    "code"
+   );
+
+
+   /*
+    * Если Supabase/браузер оставил
+    * другие OAuth-параметры,
+    * удаляем только code,
+    * остальные параметры сохраняем.
+    */
+
+   const newQuery =
+    params.toString();
+
+
+   const newUrl =
+    window.location.pathname +
+    (
+     newQuery
+      ? "?" + newQuery
+      : ""
+    );
+
+
+   window.history.replaceState(
+    {},
+    document.title,
+    newUrl
+   );
+
+  }
+
+
+  /*
+   * Получаем текущую сессию.
+   */
+
   const {
    data,
    error
@@ -2282,9 +2492,11 @@ async function checkAuth(){
     error
    );
 
+
    renderAuthUser(
     null
    );
+
 
    return null;
 
@@ -2297,6 +2509,41 @@ async function checkAuth(){
 
   const user =
    session?.user || null;
+
+
+  /*
+   * ВАЖНО:
+   *
+   * news.html разрешает только Discord.
+   *
+   * Если в браузере осталась сессия
+   * email/password администратора из admin.html,
+   * она не будет использована.
+   */
+
+  if(
+   user &&
+   !isDiscordUser(user)
+  ){
+
+   console.log(
+    "Обнаружена не-Discord сессия. Выполняем локальный выход."
+   );
+
+
+   await db.auth.signOut({
+    scope:"local"
+   });
+
+
+   renderAuthUser(
+    null
+   );
+
+
+   return null;
+
+  }
 
 
   renderAuthUser(
@@ -2314,9 +2561,11 @@ async function checkAuth(){
    error
   );
 
+
   renderAuthUser(
    null
   );
+
 
   return null;
 
@@ -2338,17 +2587,79 @@ db.auth.onAuthStateChange(
   );
 
 
+  const user =
+   session?.user || null;
+
+
+  /*
+   * Если Supabase передал
+   * email/password аккаунт,
+   * news.html его не принимает.
+   */
+
+  if(
+   user &&
+   !isDiscordUser(user)
+  ){
+
+   console.log(
+    "SIGNED_IN от не-Discord аккаунта. Выполняем локальный выход."
+   );
+
+
+   /*
+    * Выносим signOut из callback,
+    * чтобы не создавать конфликт
+    * внутри onAuthStateChange.
+    */
+
+   setTimeout(
+    async function(){
+
+     try{
+
+      await db.auth.signOut({
+       scope:"local"
+      });
+
+     }
+     catch(error){
+
+      console.error(
+       "Ошибка локального выхода:",
+       error
+      );
+
+     }
+
+    },
+    0
+   );
+
+
+   renderAuthUser(
+    null
+   );
+
+
+   return;
+
+  }
+
+
   renderAuthUser(
-   session?.user || null
+   user
   );
 
 
-  if(session?.user){
+  if(user){
 
    closeAuthModal();
 
+
    discordLoginButton.disabled =
     false;
+
 
    discordLoginButton.textContent =
     "Войти через Discord";
@@ -2368,6 +2679,7 @@ authUserButton.addEventListener(
  function(event){
 
   event.stopPropagation();
+
 
   authMenu.classList.toggle(
    "open"
@@ -2408,7 +2720,9 @@ logoutButton.addEventListener(
   const {
    error
   } =
-   await db.auth.signOut();
+   await db.auth.signOut({
+    scope:"local"
+   });
 
 
   if(error){
@@ -2417,6 +2731,7 @@ logoutButton.addEventListener(
     "Ошибка выхода:",
     error
    );
+
 
    return;
 
@@ -2461,6 +2776,7 @@ async function loadSiteSettings(){
    error
   );
 
+
   return;
 
  }
@@ -2504,14 +2820,18 @@ async function loadSiteSettings(){
   document.body.style.backgroundImage =
    `url("${settings.background}?v=${Date.now()}")`;
 
+
   document.body.style.backgroundSize =
    "cover";
+
 
   document.body.style.backgroundAttachment =
    "fixed";
 
+
   document.body.style.backgroundPosition =
    "center";
+
 
   document.body.style.backgroundRepeat =
    "no-repeat";
@@ -2530,17 +2850,22 @@ function categoryClass(category){
  if(category === "Обновления")
   return "purple";
 
+
  if(category === "Сообщество")
   return "community";
+
 
  if(category === "Сервера")
   return "blue";
 
+
  if(category === "Разработка")
   return "green";
 
+
  if(category === "События")
   return "orange";
+
 
  return "blue";
 
@@ -2556,8 +2881,10 @@ function formatTime(dateString){
  const date =
   new Date(dateString);
 
+
  const now =
   new Date();
+
 
  const seconds =
   Math.floor(
@@ -2570,33 +2897,43 @@ function formatTime(dateString){
 
 
  const minutes =
-  Math.floor(seconds / 60);
+  Math.floor(
+   seconds / 60
+  );
 
 
  if(minutes < 60)
   return minutes +
    " " +
-   (minutes === 1
-    ? "минуту"
-    : "минут") +
+   (
+    minutes === 1
+     ? "минуту"
+     : "минут"
+   ) +
    " назад";
 
 
  const hours =
-  Math.floor(minutes / 60);
+  Math.floor(
+   minutes / 60
+  );
 
 
  if(hours < 24)
   return hours +
    " " +
-   (hours === 1
-    ? "час"
-    : "часов") +
+   (
+    hours === 1
+     ? "час"
+     : "часов"
+   ) +
    " назад";
 
 
  const days =
-  Math.floor(hours / 24);
+  Math.floor(
+   hours / 24
+  );
 
 
  if(days === 1)
@@ -2606,9 +2943,11 @@ function formatTime(dateString){
  if(days < 7)
   return days +
    " " +
-   (days < 5
-    ? "дня"
-    : "дней") +
+   (
+    days < 5
+     ? "дня"
+     : "дней"
+   ) +
    " назад";
 
 
@@ -2635,7 +2974,10 @@ function getNewsId(){
    window.location.search
   );
 
- return params.get("id");
+
+ return params.get(
+  "id"
+ );
 
 }
 
@@ -2664,7 +3006,9 @@ async function loadNews(){
    </div>
   `;
 
+
   hideComments();
+
 
   return;
 
@@ -2707,7 +3051,9 @@ async function loadNews(){
    </div>
   `;
 
+
   hideComments();
+
 
   return;
 
@@ -2723,6 +3069,7 @@ async function loadNews(){
    "article"
   );
 
+
  articleElement.className =
   "article";
 
@@ -2731,6 +3078,7 @@ async function loadNews(){
   document.createElement(
    "div"
   );
+
 
  image.className =
   "article-image";
@@ -2760,6 +3108,7 @@ async function loadNews(){
    "div"
   );
 
+
  content.className =
   "article-content";
 
@@ -2768,6 +3117,7 @@ async function loadNews(){
   document.createElement(
    "div"
   );
+
 
  top.className =
   "article-top";
@@ -2778,11 +3128,13 @@ async function loadNews(){
    "span"
   );
 
+
  tag.className =
   "tag " +
   categoryClass(
    data.category
   );
+
 
  tag.textContent =
   data.category ||
@@ -2794,8 +3146,10 @@ async function loadNews(){
    "span"
   );
 
+
  time.className =
   "time";
+
 
  time.textContent =
   formatTime(
@@ -2803,14 +3157,21 @@ async function loadNews(){
   );
 
 
- top.appendChild(tag);
- top.appendChild(time);
+ top.appendChild(
+  tag
+ );
+
+
+ top.appendChild(
+  time
+ );
 
 
  const title =
   document.createElement(
    "h1"
   );
+
 
  title.textContent =
   data.title ||
@@ -2822,8 +3183,10 @@ async function loadNews(){
    "p"
   );
 
+
  description.className =
   "article-description";
+
 
  description.textContent =
   data.description ||
@@ -2835,16 +3198,24 @@ async function loadNews(){
    "div"
   );
 
+
  text.className =
   "article-text";
+
 
  text.innerHTML =
   data.content ||
   "";
 
 
- content.appendChild(top);
- content.appendChild(title);
+ content.appendChild(
+  top
+ );
+
+
+ content.appendChild(
+  title
+ );
 
 
  if(data.description){
@@ -2865,6 +3236,7 @@ async function loadNews(){
   image
  );
 
+
  articleElement.appendChild(
   content
  );
@@ -2876,7 +3248,10 @@ async function loadNews(){
 
 
  document.title =
-  (data.title || "Новость") +
+  (
+   data.title ||
+   "Новость"
+  ) +
   " — SCP: CB2 Multiplayer";
 
 
@@ -2943,7 +3318,9 @@ function updateCommentsCount(number){
  commentsCount.textContent =
   number +
   " " +
-  commentsWord(number);
+  commentsWord(
+   number
+  );
 
 }
 
@@ -2960,8 +3337,10 @@ function updateCommentLimit(number){
    "visible"
   );
 
+
   commentLimit.style.display =
    "block";
+
 
   return;
 
@@ -3010,6 +3389,7 @@ function createCommentElement(comment){
    "div"
   );
 
+
  element.className =
   "comment";
 
@@ -3018,6 +3398,7 @@ function createCommentElement(comment){
   document.createElement(
    "div"
   );
+
 
  head.className =
   "comment-head";
@@ -3028,6 +3409,7 @@ function createCommentElement(comment){
    "div"
   );
 
+
  authorBox.className =
   "comment-author-box";
 
@@ -3037,12 +3419,15 @@ function createCommentElement(comment){
    "img"
   );
 
+
  avatar.className =
   "comment-avatar";
+
 
  avatar.src =
   comment.avatar_url ||
   "https://cdn.discordapp.com/embed/avatars/0.png";
+
 
  avatar.alt =
   comment.author ||
@@ -3054,8 +3439,10 @@ function createCommentElement(comment){
    "span"
   );
 
+
  author.className =
   "comment-author";
+
 
  author.textContent =
   comment.author ||
@@ -3065,6 +3452,7 @@ function createCommentElement(comment){
  authorBox.appendChild(
   avatar
  );
+
 
  authorBox.appendChild(
   author
@@ -3076,8 +3464,10 @@ function createCommentElement(comment){
    "span"
   );
 
+
  date.className =
   "comment-date";
+
 
  date.textContent =
   formatTime(
@@ -3089,6 +3479,7 @@ function createCommentElement(comment){
   authorBox
  );
 
+
  head.appendChild(
   date
  );
@@ -3099,8 +3490,10 @@ function createCommentElement(comment){
    "div"
   );
 
+
  content.className =
   "comment-content";
+
 
  content.textContent =
   comment.content;
@@ -3109,6 +3502,7 @@ function createCommentElement(comment){
  element.appendChild(
   head
  );
+
 
  element.appendChild(
   content
@@ -3179,7 +3573,11 @@ async function loadComments(newsId){
    </div>
   `;
 
-  updateCommentsCount(0);
+
+  updateCommentsCount(
+   0
+  );
+
 
   return;
 
@@ -3204,6 +3602,7 @@ async function loadComments(newsId){
    "visible"
   );
 
+
   commentLimit.style.display =
    "block";
 
@@ -3223,6 +3622,7 @@ async function loadComments(newsId){
     Пока нет комментариев. Будьте первым!
    </div>
   `;
+
 
   return;
 
@@ -3276,7 +3676,9 @@ commentForm.addEventListener(
     null
    );
 
+
    openAuthModal();
+
 
    return;
 
@@ -3285,6 +3687,31 @@ commentForm.addEventListener(
 
   const user =
    sessionData.session.user;
+
+
+  /*
+   * Дополнительная защита:
+   * комментарий разрешён только Discord-пользователю.
+   */
+
+  if(!isDiscordUser(user)){
+
+   await db.auth.signOut({
+    scope:"local"
+   });
+
+
+   renderAuthUser(
+    null
+   );
+
+
+   openAuthModal();
+
+
+   return;
+
+  }
 
 
   const newsId =
@@ -3302,6 +3729,7 @@ commentForm.addEventListener(
     true
    );
 
+
    return;
 
   }
@@ -3314,7 +3742,9 @@ commentForm.addEventListener(
     true
    );
 
+
    commentContent.focus();
+
 
    return;
 
@@ -3327,6 +3757,7 @@ commentForm.addEventListener(
     "Комментарий слишком длинный.",
     true
    );
+
 
    return;
 
@@ -3369,10 +3800,12 @@ commentForm.addEventListener(
     countError
    );
 
+
    showCommentStatus(
     "Не удалось проверить лимит комментариев.",
     true
    );
+
 
    return;
 
@@ -3385,12 +3818,15 @@ commentForm.addEventListener(
     count
    );
 
+
    commentForm.classList.remove(
     "visible"
    );
 
+
    commentLimit.style.display =
     "block";
+
 
    return;
 
@@ -3399,6 +3835,7 @@ commentForm.addEventListener(
 
   commentSubmit.disabled =
    true;
+
 
   commentSubmit.textContent =
    "Отправка...";
@@ -3458,8 +3895,10 @@ commentForm.addEventListener(
    commentSubmit.disabled =
     false;
 
+
    commentSubmit.textContent =
     "Отправить";
+
 
    return;
 
@@ -3468,6 +3907,7 @@ commentForm.addEventListener(
 
   commentContent.value =
    "";
+
 
   commentChars.textContent =
    "0 / 1000";
@@ -3487,6 +3927,7 @@ commentForm.addEventListener(
 
   commentSubmit.disabled =
    false;
+
 
   commentSubmit.textContent =
    "Отправить";
