@@ -2662,11 +2662,7 @@ formatPickerMenu.addEventListener(
 
   restoreEditorSelection();
 
-  document.execCommand(
-   "formatBlock",
-   false,
-   format
-  );
+  applyBlockFormat(format);
 
   formatPickerText.textContent =
    formatNames[format];
@@ -2693,6 +2689,197 @@ formatPickerMenu.addEventListener(
   scheduleEditorHistory();
 
  });
+
+
+/* =========================================================
+   SAFE BLOCK FORMATTING
+========================================================= */
+
+function getEditorBlockElement(node){
+
+ if(
+  node &&
+  node.nodeType === Node.TEXT_NODE
+ ){
+  node =
+   node.parentElement;
+ }
+
+ if(
+  !node ||
+  !newsEditor.contains(node)
+ ){
+  return null;
+ }
+
+ return node.closest(
+  "p,h2,h3,blockquote"
+ );
+
+}
+
+
+function replaceBlockTag(block,tagName){
+
+ if(
+  !block ||
+  !block.parentNode ||
+  ![
+   "p",
+   "h2",
+   "h3",
+   "blockquote"
+  ].includes(tagName)
+ ){
+  return block;
+ }
+
+ if(
+  block.tagName.toLowerCase() ===
+  tagName
+ ){
+  return block;
+ }
+
+ const replacement =
+  document.createElement(tagName);
+
+ /*
+  * Переносим только необходимые
+  * атрибуты самого блока.
+  */
+ Array.from(
+  block.attributes
+ ).forEach(attribute=>{
+  replacement.setAttribute(
+   attribute.name,
+   attribute.value
+  );
+ });
+
+ while(block.firstChild){
+  replacement.appendChild(
+   block.firstChild
+  );
+ }
+
+ block.replaceWith(
+  replacement
+ );
+
+ return replacement;
+}
+
+
+function getSelectedEditorBlocks(range){
+
+ const blocks = [];
+
+ newsEditor
+  .querySelectorAll(
+   "p,h2,h3,blockquote"
+  )
+  .forEach(block=>{
+
+   try{
+
+    if(range.intersectsNode(block)){
+     blocks.push(block);
+    }
+
+   }catch(error){}
+
+  });
+
+ return blocks;
+}
+
+
+function applyBlockFormat(format){
+
+ if(
+  ![
+   "p",
+   "h2",
+   "h3",
+   "blockquote"
+  ].includes(format)
+ ){
+  return;
+ }
+
+ const selection =
+  window.getSelection();
+
+ if(!selection.rangeCount){
+  return;
+ }
+
+ const range =
+  selection.getRangeAt(0);
+
+ if(
+  !newsEditor.contains(
+   range.commonAncestorContainer
+  )
+ ){
+  return;
+ }
+
+ let blocks =
+  getSelectedEditorBlocks(range);
+
+ if(!blocks.length){
+
+  const block =
+   getEditorBlockElement(
+    selection.anchorNode
+   );
+
+  if(block){
+   blocks = [block];
+  }
+
+ }
+
+ /*
+  * Меняем каждый существующий блок отдельно.
+  * Это принципиально важно: execCommand("formatBlock")
+  * мог создавать неправильные вложенные h2/p/list.
+  */
+ blocks.forEach(block=>{
+  replaceBlockTag(
+   block,
+   format
+  );
+ });
+
+ /*
+  * Если редактор содержит обычный текст
+  * без блочного элемента — помещаем его в p.
+  */
+ if(
+  !blocks.length &&
+  newsEditor.textContent.trim()
+ ){
+
+  const paragraph =
+   document.createElement("p");
+
+  paragraph.textContent =
+   newsEditor.textContent;
+
+  newsEditor.innerHTML = "";
+
+  newsEditor.appendChild(
+   paragraph
+  );
+
+  blocks = [paragraph];
+
+ }
+
+}
 
 
 /* =========================================================
@@ -3272,7 +3459,7 @@ function getEditorBlock(node){
  }
 
  return node.closest(
-  "p,h2,h3,blockquote,li,div"
+  "p,h2,h3,blockquote,li"
  );
 
 }
@@ -3292,6 +3479,10 @@ function resetBlockFormatting(block){
   return;
  }
 
+ /*
+  * Новый абзац всегда начинается
+  * с базового форматирования.
+  */
  block.style.fontSize =
   "14px";
 
@@ -3307,40 +3498,48 @@ function resetBlockFormatting(block){
  block.style.textAlign =
   "left";
 
- const formattingTags =
-  block.querySelectorAll(
-   "strong,b,em,i,u,s,strike,span"
-  );
+ /*
+  * Убираем форматирование,
+  * которое браузер мог перенести
+  * в новый блок после Enter.
+  */
+ block
+  .querySelectorAll(
+   "strong,b,em,i,u,s,strike"
+  )
+  .forEach(element=>{
+   element.replaceWith(
+    ...element.childNodes
+   );
+  });
 
- formattingTags.forEach(element=>{
+ block
+  .querySelectorAll(
+   "span"
+  )
+  .forEach(span=>{
 
-  if(element.tagName === "SPAN" &&
-     element.style.fontSize){
-
-   element.style.fontSize =
+   span.style.fontSize =
     "14px";
 
-   element.style.fontWeight =
+   span.style.fontWeight =
     "normal";
 
-   element.style.fontStyle =
+   span.style.fontStyle =
     "normal";
 
-   element.style.textDecoration =
+   span.style.textDecoration =
     "none";
 
    if(
-    !element.attributes.length
+    !span.attributes.length
    ){
-    element.replaceWith(
-     ...element.childNodes
+    span.replaceWith(
+     ...span.childNodes
     );
    }
 
-   return;
-  }
-
- });
+  });
 
 }
 
@@ -3356,19 +3555,12 @@ newsEditor.addEventListener(
    return;
   }
 
-  /*
-   * Полностью забираем Enter под свой контроль.
-   * Благодаря этому браузер не оставляет
-   * старое форматирование и не создаёт
-   * непредсказуемый блок.
-   */
-
-  event.preventDefault();
-
   const selection =
    window.getSelection();
 
-  if(!selection.rangeCount){
+  if(
+   !selection.rangeCount
+  ){
    return;
   }
 
@@ -3382,13 +3574,6 @@ newsEditor.addEventListener(
   ){
    return;
   }
-
-
-  /*
-   * Если курсор находится в списке,
-   * используем стандартный insertParagraph,
-   * чтобы не ломать структуру списка.
-   */
 
   let node =
    selection.anchorNode;
@@ -3404,11 +3589,16 @@ newsEditor.addEventListener(
   const currentBlock =
    getEditorBlock(node);
 
-
+  /*
+   * В списках Enter должен работать
+   * как обычный Enter браузера.
+   */
   if(
    currentBlock &&
    currentBlock.matches("li")
   ){
+
+   event.preventDefault();
 
    document.execCommand(
     "insertParagraph",
@@ -3418,171 +3608,94 @@ newsEditor.addEventListener(
 
    requestAnimationFrame(
     ()=>{
+
      saveEditorSelection();
+
      updateToolbarState();
+
      scheduleEditorHistory();
+
     }
    );
 
    return;
-
   }
 
-
   /*
-   * Для обычного текста создаём новый <p>.
-   * Сначала отделяем содержимое после курсора.
+   * Для p/h2/h3/blockquote тоже используем
+   * настоящий insertParagraph. В отличие от
+   * ручного extractContents() он корректно
+   * разделяет текущий блок и не переносит
+   * последующие p/ul/ol внутрь h2.
    */
+  event.preventDefault();
 
-  const paragraph =
-   document.createElement(
-    "p"
-   );
-
-  paragraph.style.fontSize =
-   "14px";
-
-  paragraph.style.fontWeight =
-   "normal";
-
-  paragraph.style.fontStyle =
-   "normal";
-
-  paragraph.style.textDecoration =
-   "none";
-
-  paragraph.style.textAlign =
-   "left";
-
-
-  const afterRange =
-   range.cloneRange();
-
-  afterRange.selectNodeContents(
-   currentBlock || newsEditor
+  document.execCommand(
+   "insertParagraph",
+   false,
+   null
   );
 
-  afterRange.setStart(
-   range.endContainer,
-   range.endOffset
-  );
+  requestAnimationFrame(
+   ()=>{
 
+    const currentSelection =
+     window.getSelection();
 
-  const afterFragment =
-   afterRange.extractContents();
+    if(
+     currentSelection &&
+     currentSelection.rangeCount
+    ){
 
+     let newNode =
+      currentSelection.anchorNode;
 
-  /*
-   * Удаляем выделенный текст,
-   * если Enter был на выделении.
-   */
+     if(
+      newNode &&
+      newNode.nodeType === Node.TEXT_NODE
+     ){
+      newNode =
+       newNode.parentElement;
+     }
 
-  range.deleteContents();
+     let newBlock =
+      getEditorBlock(newNode);
 
+     /*
+      * После Enter в заголовке браузер
+      * иногда создаёт второй h2/h3.
+      * Превращаем именно новый блок
+      * в обычный p.
+      */
+     if(
+      newBlock &&
+      newBlock.matches(
+       "h2,h3,blockquote"
+      )
+     ){
 
-  if(afterFragment.textContent ||
-     afterFragment.childNodes.length){
+      newBlock =
+       replaceBlockTag(
+        newBlock,
+        "p"
+       );
 
-   paragraph.appendChild(
-    afterFragment
-   );
+     }
 
-  }else{
+     resetBlockFormatting(
+      newBlock
+     );
 
-   paragraph.innerHTML =
-    "<br>";
+    }
 
-  }
+    saveEditorSelection();
 
+    updateToolbarState();
 
-  if(currentBlock){
-
-   currentBlock.after(
-    paragraph
-   );
-
-  }else{
-
-   newsEditor.appendChild(
-    paragraph
-   );
-
-  }
-
-
-  /*
-   * Удаляем случайные inline-форматы
-   * из нового абзаца.
-   */
-
-  const formattingElements =
-   paragraph.querySelectorAll(
-    "strong,b,em,i,u,s,strike"
-   );
-
-  formattingElements.forEach(element=>{
-   element.replaceWith(
-    ...element.childNodes
-   );
-  });
-
-
-  const spans =
-   paragraph.querySelectorAll(
-    "span"
-   );
-
-  spans.forEach(span=>{
-
-   span.style.fontSize =
-    "14px";
-
-   span.style.fontWeight =
-    "normal";
-
-   span.style.fontStyle =
-    "normal";
-
-   span.style.textDecoration =
-    "none";
-
-   if(!span.attributes.length){
-
-    span.replaceWith(
-     ...span.childNodes
-    );
+    scheduleEditorHistory();
 
    }
-
-  });
-
-
-  /*
-   * Ставим курсор в начало нового абзаца.
-   */
-
-  const newRange =
-   document.createRange();
-
-  newRange.selectNodeContents(
-   paragraph
   );
-
-  newRange.collapse(true);
-
-  selection.removeAllRanges();
-
-  selection.addRange(
-   newRange
-  );
-
-  savedEditorRange =
-   newRange.cloneRange();
-
-
-  updateToolbarState();
-
-  scheduleEditorHistory();
 
  });
 
@@ -4505,17 +4618,249 @@ imageConfirm.addEventListener(
    PREPARE EDITOR HTML FOR DATABASE
 ========================================================= */
 
+function removeEmptyEditorParagraphs(root){
+
+ root
+  .querySelectorAll(
+   "p"
+  )
+  .forEach(paragraph=>{
+
+   /*
+    * Оставляем <p><br></p>, только если это
+    * единственный способ сохранить пустую
+    * строку между элементами.
+    */
+   const text =
+    paragraph.textContent
+     .replace(/\u200B/g,"")
+     .trim();
+
+   const hasImage =
+    paragraph.querySelector(
+     "img,figure"
+    );
+
+   const hasMeaningfulContent =
+    paragraph.querySelector(
+     "a,strong,b,em,i,u,s,strike"
+    );
+
+   if(
+    !text &&
+    !hasImage &&
+    !hasMeaningfulContent
+   ){
+    paragraph.remove();
+   }
+
+  });
+
+}
+
+
+function unwrapInvalidNestedBlocks(root){
+
+ const blockSelector =
+  "p,h2,h3,h4,blockquote,ul,ol,figure";
+
+ /*
+  * Старый редактор мог создать структуру
+  * вроде:
+  *
+  * <h2>
+  *   текст
+  *   <p>...</p>
+  *   <ul>...</ul>
+  * </h2>
+  *
+  * Такие блочные элементы не могут находиться
+  * внутри h2/p. Выносим их наружу.
+  */
+ root
+  .querySelectorAll(
+   "p p,p h2,p h3,p h4,p blockquote,p ul,p ol,p figure," +
+   "h2 p,h2 h2,h2 h3,h2 h4,h2 blockquote,h2 ul,h2 ol,h2 figure," +
+   "h3 p,h3 h2,h3 h3,h3 h4,h3 blockquote,h3 ul,h3 ol,h3 figure," +
+   "h4 p,h4 h2,h4 h3,h4 h4,h4 blockquote,h4 ul,h4 ol,h4 figure," +
+   "blockquote p,blockquote h2,blockquote h3,blockquote h4,blockquote blockquote,blockquote ul,blockquote ol,blockquote figure"
+  )
+  .forEach(nested=>{
+
+   const parent =
+    nested.parentElement;
+
+   if(
+    !parent ||
+    !parent.matches(
+     "p,h2,h3,h4,blockquote"
+    )
+   ){
+    return;
+   }
+
+   const parentParent =
+    parent.parentNode;
+
+   if(!parentParent){
+    return;
+   }
+
+   /*
+    * Если вложенный блок не последний,
+    * переносим последующие узлы в новый
+    * блок того же типа.
+    */
+   const following = [];
+
+   let sibling =
+    nested.nextSibling;
+
+   while(sibling){
+    const next =
+     sibling.nextSibling;
+
+    following.push(
+     sibling
+    );
+
+    sibling = next;
+   }
+
+   following.forEach(node=>{
+    node.remove();
+   });
+
+   const afterBlock =
+    following.length
+     ? document.createElement(
+        parent.tagName.toLowerCase()
+       )
+     : null;
+
+   if(afterBlock){
+
+    Array.from(
+     parent.attributes
+    ).forEach(attribute=>{
+     afterBlock.setAttribute(
+      attribute.name,
+      attribute.value
+     );
+    });
+
+    following.forEach(node=>{
+     afterBlock.appendChild(node);
+    });
+
+   }
+
+   parentParent.insertBefore(
+    nested,
+    parent.nextSibling
+   );
+
+   if(afterBlock){
+    parentParent.insertBefore(
+     afterBlock,
+     nested.nextSibling
+    );
+   }
+
+  });
+
+ /*
+  * Убираем возможные пустые контейнеры,
+  * оставшиеся после исправления.
+  */
+ root
+  .querySelectorAll(
+   "p,h2,h3,h4,blockquote"
+  )
+  .forEach(block=>{
+
+   if(
+    !block.textContent.trim() &&
+    !block.querySelector(
+     "img,figure,br"
+    )
+   ){
+    block.remove();
+   }
+
+  });
+
+}
+
+
+function normalizeEditorHtml(html){
+
+ const wrapper =
+  document.createElement("div");
+
+ wrapper.innerHTML =
+  html;
+
+ /*
+  * Сначала удаляем неправильную
+  * вложенность блоков.
+  */
+ unwrapInvalidNestedBlocks(
+  wrapper
+ );
+
+ /*
+  * Затем убираем пустые технические
+  * абзацы.
+  */
+ removeEmptyEditorParagraphs(
+  wrapper
+ );
+
+ /*
+  * Удаляем пустые span и стили,
+  * которые браузер добавляет сам.
+  */
+ wrapper
+  .querySelectorAll(
+   "span"
+  )
+  .forEach(span=>{
+
+   if(
+    !span.textContent &&
+    !span.querySelector(
+     "img"
+    )
+   ){
+    span.remove();
+    return;
+   }
+
+   if(
+    !span.attributes.length
+   ){
+    span.replaceWith(
+     ...span.childNodes
+    );
+   }
+
+  });
+
+ return wrapper.innerHTML.trim();
+
+}
+
+
 function prepareEditorHtml(){
 
  const clone =
   newsEditor.cloneNode(true);
 
-
  /*
   * Удаляем все служебные элементы
   * управления картинками.
   */
-
  clone
   .querySelectorAll(
    ".image-controls,.image-delete-button,.image-resize-handle"
@@ -4524,12 +4869,9 @@ function prepareEditorHtml(){
    element.remove();
   });
 
-
  /*
-  * Убираем contenteditable/draggable,
-  * которые нужны только админке.
+  * Убираем служебные атрибуты картинок.
   */
-
  clone
   .querySelectorAll(
    ".news-inline-image"
@@ -4549,7 +4891,6 @@ function prepareEditorHtml(){
    );
 
   });
-
 
  const clean =
   DOMPurify.sanitize(
@@ -4604,7 +4945,9 @@ function prepareEditorHtml(){
    }
   );
 
- return clean;
+ return normalizeEditorHtml(
+  clean
+ );
 
 }
 
