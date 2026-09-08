@@ -1584,9 +1584,47 @@ const SUPABASE_KEY =
 
 const { createClient } = supabase;
 
+
+/*
+ * ВАЖНО:
+ *
+ * Админская авторизация хранится в отдельном
+ * browser storage namespace.
+ *
+ * Это полностью отделяет email/password-сессию
+ * админки от Discord-сессии публичного сайта.
+ *
+ * news.html использует:
+ *
+ * scp_cb2_discord_auth
+ *
+ * admin.html использует:
+ *
+ * scp_cb2_admin_auth
+ *
+ * Поэтому две страницы могут быть открыты
+ * одновременно в одном браузере.
+ */
+
 const db = createClient(
  SUPABASE_URL,
- SUPABASE_KEY
+ SUPABASE_KEY,
+ {
+  auth:{
+   persistSession:true,
+   autoRefreshToken:true,
+
+   /*
+    * OAuth здесь не используется.
+    * Админ входит только через email/password.
+    */
+   detectSessionInUrl:false,
+
+   /*
+    * Отдельное хранилище для админской сессии.
+    */
+   storageKey:"scp_cb2_admin_auth"
+  }
 );
 
 
@@ -1939,7 +1977,21 @@ async function checkUser(){
     session.user.id
    );
 
-   await db.auth.signOut();
+
+   /*
+    * ВАЖНО:
+    *
+    * signOut() здесь относится только
+    * к storageKey "scp_cb2_admin_auth".
+    *
+    * Discord-сессия публичного сайта
+    * при этом НЕ затрагивается.
+    */
+
+   await db.auth.signOut({
+    scope:"local"
+   });
+
 
    loginScreen.style.display =
     "flex";
@@ -2108,9 +2160,14 @@ loginButton.addEventListener(
     /*
      * Пароль был правильным,
      * но аккаунт не является администраторским.
+     *
+     * Выходим только из локальной
+     * админской сессии.
      */
 
-    await db.auth.signOut();
+    await db.auth.signOut({
+     scope:"local"
+    });
 
     loginScreen.style.display =
      "flex";
@@ -2202,9 +2259,20 @@ logoutButton.addEventListener(
  async()=>{
 
   try{
-   await db.auth.signOut();
+
+   /*
+    * Выход только из админской сессии.
+    * Discord-сессия news.html не затрагивается.
+    */
+
+   await db.auth.signOut({
+    scope:"local"
+   });
+
   }catch(error){
+
    console.error(error);
+
   }
 
   location.reload();
