@@ -273,6 +273,20 @@ button:disabled{
  letter-spacing:1px;
 }
 
+.admin-welcome{
+ margin-left:auto;
+ color:#8b9298;
+ font-size:9px;
+ letter-spacing:.3px;
+ text-align:right;
+ white-space:nowrap;
+}
+
+.admin-welcome strong{
+ color:#d5b42e;
+ font-weight:bold;
+}
+
 .admin-main{
  width:min(1100px,calc(100% - 30px));
  margin:30px auto 70px;
@@ -952,6 +966,10 @@ button:disabled{
   display:none;
  }
 
+ .admin-welcome{
+  display:none;
+ }
+
  .editor-toolbar{
   position:relative;
   padding:6px;
@@ -1031,6 +1049,8 @@ button:disabled{
    </div>
 
   </div>
+
+  <div id="adminWelcome" class="admin-welcome"></div>
 
   <button id="logoutButton" class="secondary-button" type="button">
    Выйти
@@ -1571,6 +1591,25 @@ const db = createClient(
 
 
 /* =========================================================
+   ADMINISTRATORS
+========================================================= */
+
+/*
+ * ВАЖНО:
+ * Здесь находятся только UUID и отображаемые ники.
+ * Пароли здесь НЕ хранятся.
+ *
+ * Пароли обоих администраторов находятся
+ * в Supabase Authentication.
+ */
+
+const ADMINS = {
+ "bf784edb-644c-457b-b25f-cc3b5bad8c47": "Master Figher",
+ "1799bcaf-bf04-472b-a789-fa92ddd9a0f9": "Felty"
+};
+
+
+/* =========================================================
    DOM
 ========================================================= */
 
@@ -1594,6 +1633,9 @@ const loginStatus =
 
 const logoutButton =
  document.getElementById("logoutButton");
+
+const adminWelcome =
+ document.getElementById("adminWelcome");
 
 const newsImage =
  document.getElementById("newsImage");
@@ -1795,6 +1837,46 @@ function formatDate(value){
 
 
 /* =========================================================
+   ADMIN ACCESS
+========================================================= */
+
+function getAdminName(userId){
+
+ return ADMINS[userId] || null;
+
+}
+
+
+function isAdmin(userId){
+
+ return Boolean(
+  getAdminName(userId)
+ );
+
+}
+
+
+function showAdminWelcome(userId){
+
+ const adminName =
+  getAdminName(userId);
+
+ if(!adminName){
+
+  adminWelcome.textContent =
+   "";
+
+  return;
+
+ }
+
+ adminWelcome.innerHTML =
+  `Добро пожаловать, <strong>${escapeHtml(adminName)}</strong>`;
+
+}
+
+
+/* =========================================================
    AUTH
 ========================================================= */
 
@@ -1814,23 +1896,12 @@ async function checkUser(){
   const session =
    data?.session || null;
 
-  if(session){
 
-   loginScreen.style.display =
-    "none";
+  /*
+   * Нет активной сессии.
+   */
 
-   adminScreen.classList.add(
-    "visible"
-   );
-
-   await Promise.all([
-    loadSiteSettings(),
-    loadNews(),
-    loadChanges(),
-    loadComments()
-   ]);
-
-  }else{
+  if(!session){
 
    loginScreen.style.display =
     "flex";
@@ -1839,7 +1910,86 @@ async function checkUser(){
     "visible"
    );
 
+   adminWelcome.textContent =
+    "";
+
+   return;
+
   }
+
+
+  /*
+   * Проверяем UUID.
+   *
+   * Даже если пользователь успешно
+   * вошёл в Supabase Auth, без UUID
+   * администратора доступа не будет.
+   */
+
+  const adminName =
+   getAdminName(
+    session.user.id
+   );
+
+
+  if(!adminName){
+
+   console.warn(
+    "UNAUTHORIZED ADMIN ACCESS:",
+    session.user.id
+   );
+
+   await db.auth.signOut();
+
+   loginScreen.style.display =
+    "flex";
+
+   adminScreen.classList.remove(
+    "visible"
+   );
+
+   adminWelcome.textContent =
+    "";
+
+   setStatus(
+    loginStatus,
+    "Нет доступа. Эта панель доступна только администраторам.",
+    true
+   );
+
+   return;
+
+  }
+
+
+  /*
+   * Всё хорошо — это администратор.
+   */
+
+  showAdminWelcome(
+   session.user.id
+  );
+
+  loginScreen.style.display =
+   "none";
+
+  adminScreen.classList.add(
+   "visible"
+  );
+
+  setStatus(
+   loginStatus,
+   ""
+  );
+
+
+  await Promise.all([
+   loadSiteSettings(),
+   loadNews(),
+   loadChanges(),
+   loadComments()
+  ]);
+
 
  }catch(error){
 
@@ -1854,6 +2004,9 @@ async function checkUser(){
   adminScreen.classList.remove(
    "visible"
   );
+
+  adminWelcome.textContent =
+   "";
 
   setStatus(
    loginStatus,
@@ -1913,6 +2066,12 @@ loginButton.addEventListener(
 
   try{
 
+   /*
+    * Авторизация через Supabase Auth.
+    *
+    * Email и пароль проверяются самим Supabase.
+    */
+
    const {
     data,
     error
@@ -1933,6 +2092,51 @@ loginButton.addEventListener(
 
    }
 
+
+   /*
+    * Проверяем именно UUID администратора.
+    */
+
+   const adminName =
+    getAdminName(
+     data.session.user.id
+    );
+
+
+   if(!adminName){
+
+    /*
+     * Пароль был правильным,
+     * но аккаунт не является администраторским.
+     */
+
+    await db.auth.signOut();
+
+    loginScreen.style.display =
+     "flex";
+
+    adminScreen.classList.remove(
+     "visible"
+    );
+
+    adminWelcome.textContent =
+     "";
+
+    throw new Error(
+     "Нет доступа. Эта учётная запись не является администраторской."
+    );
+
+   }
+
+
+   /*
+    * Администратор подтверждён.
+    */
+
+   showAdminWelcome(
+    data.session.user.id
+   );
+
    loginScreen.style.display =
     "none";
 
@@ -1945,6 +2149,7 @@ loginButton.addEventListener(
     ""
    );
 
+
    await Promise.all([
     loadSiteSettings(),
     loadNews(),
@@ -1952,26 +2157,27 @@ loginButton.addEventListener(
     loadComments()
    ]);
 
-  }catch(error){
 
-   console.error(
-    "LOGIN ERROR:",
-    error
-   );
+ }catch(error){
 
-   setStatus(
-    loginStatus,
-    error.message ||
-     "Не удалось войти.",
-    true
-   );
+  console.error(
+   "LOGIN ERROR:",
+   error
+  );
 
-  }finally{
+  setStatus(
+   loginStatus,
+   error.message ||
+    "Не удалось войти.",
+   true
+  );
 
-   loginButton.disabled =
-    false;
+ }finally{
 
-  }
+  loginButton.disabled =
+   false;
+
+ }
 
  });
 
@@ -2212,9 +2418,11 @@ document
   button.addEventListener(
    "click",
    ()=>{
+
     uploadImage(
      button.dataset.imageType
     );
+
    }
   );
 
@@ -2436,10 +2644,12 @@ formatPickerMenu.addEventListener(
     "#formatPickerMenu .editor-picker-option"
    )
    .forEach(item=>{
+
     item.classList.toggle(
      "active",
      item.dataset.format === format
     );
+
    });
 
   closePickers();
@@ -2501,16 +2711,20 @@ function replaceBlockTag(block,tagName){
  Array.from(
   block.attributes
  ).forEach(attribute=>{
+
   replacement.setAttribute(
    attribute.name,
    attribute.value
   );
+
  });
 
  while(block.firstChild){
+
   replacement.appendChild(
    block.firstChild
   );
+
  }
 
  block.replaceWith(
@@ -2595,10 +2809,12 @@ function applyBlockFormat(format){
  }
 
  blocks.forEach(block=>{
+
   replaceBlockTag(
    block,
    format
   );
+
  });
 
  if(
@@ -2637,7 +2853,9 @@ for(let size=8;size<=72;size++){
  option.dataset.size = size;
  option.textContent = `${size} px`;
 
- fontSizeMenu.appendChild(option);
+ fontSizeMenu.appendChild(
+  option
+ );
 
 }
 
@@ -2713,10 +2931,12 @@ function updateFontSizeState(){
    "#fontSizeMenu .editor-picker-option"
   )
   .forEach(option=>{
+
    option.classList.toggle(
     "active",
     Number(option.dataset.size) === size
    );
+
   });
 
 }
@@ -2795,10 +3015,12 @@ fontSizeMenu.addEventListener(
     "#fontSizeMenu .editor-picker-option"
    )
    .forEach(item=>{
+
     item.classList.toggle(
      "active",
      Number(item.dataset.size) === size
     );
+
    });
 
   closePickers();
@@ -2848,7 +3070,11 @@ function applyFontSize(size){
   const newRange =
    document.createRange();
 
-  newRange.setStart(text,1);
+  newRange.setStart(
+   text,
+   1
+  );
+
   newRange.collapse(true);
 
   selection.removeAllRanges();
@@ -2996,7 +3222,10 @@ function restoreEditorHistory(index){
  const range =
   document.createRange();
 
- range.selectNodeContents(newsEditor);
+ range.selectNodeContents(
+  newsEditor
+ );
+
  range.collapse(false);
 
  selection.removeAllRanges();
@@ -3024,14 +3253,18 @@ function updateHistoryButtons(){
   );
 
  if(undoButton){
+
   undoButton.disabled =
    editorHistoryIndex <= 0;
+
  }
 
  if(redoButton){
+
   redoButton.disabled =
    editorHistoryIndex >=
    editorHistory.length - 1;
+
  }
 
 }
@@ -3042,17 +3275,23 @@ function executeEditorCommand(command){
  flushEditorHistory();
 
  if(command === "undo"){
+
   restoreEditorHistory(
    editorHistoryIndex - 1
   );
+
   return;
+
  }
 
  if(command === "redo"){
+
   restoreEditorHistory(
    editorHistoryIndex + 1
   );
+
   return;
+
  }
 
  restoreEditorSelection();
@@ -3147,9 +3386,11 @@ function resetBlockFormatting(block){
    "strong,b,em,i,u,s,strike"
   )
   .forEach(element=>{
+
    element.replaceWith(
     ...element.childNodes
    );
+
   });
 
  block
@@ -3162,9 +3403,11 @@ function resetBlockFormatting(block){
    span.style.textDecoration = "none";
 
    if(!span.attributes.length){
+
     span.replaceWith(
      ...span.childNodes
     );
+
    }
 
   });
@@ -3214,6 +3457,7 @@ newsEditor.addEventListener(
   const currentBlock =
    getEditorBlock(node);
 
+
   if(
    currentBlock &&
    currentBlock.matches("li")
@@ -3228,14 +3472,17 @@ newsEditor.addEventListener(
    );
 
    requestAnimationFrame(()=>{
+
     saveEditorSelection();
     updateToolbarState();
     scheduleEditorHistory();
+
    });
 
    return;
 
   }
+
 
   event.preventDefault();
 
@@ -3262,12 +3509,15 @@ newsEditor.addEventListener(
      newNode &&
      newNode.nodeType === Node.TEXT_NODE
     ){
+
      newNode =
       newNode.parentElement;
+
     }
 
     let newBlock =
      getEditorBlock(newNode);
+
 
     if(
      newBlock &&
@@ -3283,6 +3533,7 @@ newsEditor.addEventListener(
       );
 
     }
+
 
     resetBlockFormatting(
      newBlock
@@ -3336,7 +3587,9 @@ newsEditor.addEventListener(
 newsEditor.addEventListener(
  "focus",
  ()=>{
+
   updateToolbarState();
+
  });
 
 
@@ -3395,7 +3648,9 @@ function updateToolbarState(){
 
   });
 
+
  updateFontSizeState();
+
 
  const selection =
   window.getSelection();
@@ -3411,7 +3666,10 @@ function updateToolbarState(){
   node &&
   node.nodeType === Node.TEXT_NODE
  ){
-  node = node.parentElement;
+
+  node =
+   node.parentElement;
+
  }
 
  if(
@@ -3420,6 +3678,7 @@ function updateToolbarState(){
  ){
   return;
  }
+
 
  const block =
   node.closest(
@@ -3430,19 +3689,23 @@ function updateToolbarState(){
   block?.tagName?.toLowerCase() ||
   "p";
 
+
  formatPickerText.textContent =
   formatNames[tag] ||
   "Обычный текст";
+
 
  document
   .querySelectorAll(
    "#formatPickerMenu .editor-picker-option"
   )
   .forEach(option=>{
+
    option.classList.toggle(
     "active",
     option.dataset.format === tag
    );
+
   });
 
 }
@@ -3488,7 +3751,9 @@ insertLinkButton.addEventListener(
 
 function closeLinkModal(){
 
- linkModal.classList.remove("open");
+ linkModal.classList.remove(
+  "open"
+ );
 
 }
 
@@ -3554,10 +3819,17 @@ linkConfirm.addEventListener(
   const link =
    document.createElement("a");
 
-  link.href = url;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.textContent = text;
+  link.href =
+   url;
+
+  link.target =
+   "_blank";
+
+  link.rel =
+   "noopener noreferrer";
+
+  link.textContent =
+   text;
 
   range.insertNode(link);
 
@@ -3600,6 +3872,7 @@ insertImageButton.addEventListener(
   restoreEditorSelection();
 
   inlineImageFile.value = "";
+
   inlineImageFile.click();
 
  });
@@ -3623,6 +3896,7 @@ inlineImageFile.addEventListener(
    );
 
    inlineImageFile.value = "";
+
    return;
 
   }
@@ -3640,6 +3914,7 @@ inlineImageFile.addEventListener(
    );
 
    inlineImageFile.value = "";
+
    return;
 
   }
@@ -3655,7 +3930,9 @@ inlineImageFile.addEventListener(
    imageCaption.value =
     "";
 
-   imageModal.classList.add("open");
+   imageModal.classList.add(
+    "open"
+   );
 
    setTimeout(
     ()=>imageCaption.focus(),
@@ -3714,7 +3991,9 @@ async function uploadInlineImage(file){
 
 function closeImageModal(){
 
- imageModal.classList.remove("open");
+ imageModal.classList.remove(
+  "open"
+ );
 
  pendingImageUrl =
   null;
@@ -3756,13 +4035,21 @@ function selectInlineImage(figure){
  selectedInlineImage =
   figure;
 
- figure.classList.add("selected");
+ figure.classList.add(
+  "selected"
+ );
 
  const controls =
-  figure.querySelector(".image-controls");
+  figure.querySelector(
+   ".image-controls"
+  );
 
  if(!controls){
-  createImageControls(figure);
+
+  createImageControls(
+   figure
+  );
+
  }
 
 }
@@ -3771,7 +4058,9 @@ function selectInlineImage(figure){
 function createImageControls(figure){
 
  if(
-  figure.querySelector(".image-controls")
+  figure.querySelector(
+   ".image-controls"
+  )
  ){
   return;
  }
@@ -3789,7 +4078,9 @@ function createImageControls(figure){
  const deleteButton =
   document.createElement("button");
 
- deleteButton.type = "button";
+ deleteButton.type =
+  "button";
+
  deleteButton.className =
   "image-delete-button";
 
@@ -3803,8 +4094,10 @@ function createImageControls(figure){
  deleteButton.addEventListener(
   "mousedown",
   event=>{
+
    event.preventDefault();
    event.stopPropagation();
+
   }
  );
 
@@ -3829,8 +4122,10 @@ function createImageControls(figure){
    if(
     selectedInlineImage === figure
    ){
+
     selectedInlineImage =
      null;
+
    }
 
    saveEditorSelection();
@@ -3873,10 +4168,17 @@ function createImageControls(figure){
   });
 
 
- controls.appendChild(deleteButton);
- controls.appendChild(resizeHandle);
+ controls.appendChild(
+  deleteButton
+ );
 
- figure.appendChild(controls);
+ controls.appendChild(
+  resizeHandle
+ );
+
+ figure.appendChild(
+  controls
+ );
 
  figure.contentEditable =
   "false";
@@ -4048,9 +4350,13 @@ imageConfirm.addEventListener(
   figure.appendChild(img);
   figure.appendChild(figcaption);
 
-  createImageControls(figure);
+  createImageControls(
+   figure
+  );
 
-  range.insertNode(figure);
+  range.insertNode(
+   figure
+  );
 
 
   const paragraph =
@@ -4074,13 +4380,18 @@ imageConfirm.addEventListener(
   paragraph.innerHTML =
    "<br>";
 
-  figure.after(paragraph);
+  figure.after(
+   paragraph
+  );
 
 
   const newRange =
    document.createRange();
 
-  newRange.selectNodeContents(paragraph);
+  newRange.selectNodeContents(
+   paragraph
+  );
+
   newRange.collapse(true);
 
   selection.removeAllRanges();
@@ -4128,7 +4439,9 @@ function removeEmptyEditorParagraphs(root){
     !hasImage &&
     !hasMeaningfulContent
    ){
+
     paragraph.remove();
+
    }
 
   });
@@ -4178,7 +4491,9 @@ function unwrapInvalidNestedBlocks(root){
     const next =
      sibling.nextSibling;
 
-    following.push(sibling);
+    following.push(
+     sibling
+    );
 
     sibling = next;
 
@@ -4200,14 +4515,20 @@ function unwrapInvalidNestedBlocks(root){
     Array.from(
      parent.attributes
     ).forEach(attribute=>{
+
      afterBlock.setAttribute(
       attribute.name,
       attribute.value
      );
+
     });
 
     following.forEach(node=>{
-     afterBlock.appendChild(node);
+
+     afterBlock.appendChild(
+      node
+     );
+
     });
 
    }
@@ -4241,7 +4562,9 @@ function unwrapInvalidNestedBlocks(root){
      "img,figure,br"
     )
    ){
+
     block.remove();
+
    }
 
   });
@@ -4273,14 +4596,19 @@ function normalizeEditorHtml(html){
     !span.textContent &&
     !span.querySelector("img")
    ){
+
     span.remove();
+
     return;
+
    }
 
    if(!span.attributes.length){
+
     span.replaceWith(
      ...span.childNodes
     );
+
    }
 
   });
@@ -4300,7 +4628,9 @@ function prepareEditorHtml(){
    ".image-controls,.image-delete-button,.image-resize-handle"
   )
   .forEach(element=>{
+
    element.remove();
+
   });
 
 
@@ -4392,15 +4722,19 @@ function prepareEditorHtml(){
 async function uploadNewsImage(file){
 
  if(!file){
+
   throw new Error(
    "Главное изображение не выбрано."
   );
+
  }
 
  if(file.size > 5 * 1024 * 1024){
+
   throw new Error(
    "Максимальный размер изображения — 5 МБ."
   );
+
  }
 
  if(
@@ -4410,9 +4744,11 @@ async function uploadNewsImage(file){
    "image/webp"
   ].includes(file.type)
  ){
+
   throw new Error(
    "Разрешены PNG, JPG и WEBP."
   );
+
  }
 
  const extension =
@@ -4588,10 +4924,12 @@ publishNewsButton.addEventListener(
      "#formatPickerMenu .editor-picker-option"
     )
     .forEach(option=>{
+
      option.classList.toggle(
       "active",
       option.dataset.format === "p"
      );
+
     });
 
    updateToolbarState();
@@ -4720,7 +5058,9 @@ async function deleteNews(id){
  if(!confirm(
   "Удалить эту новость?"
  )){
+
   return;
+
  }
 
  try{
@@ -4731,7 +5071,10 @@ async function deleteNews(id){
   } = await db
    .from("news")
    .delete()
-   .eq("id",id)
+   .eq(
+    "id",
+    id
+   )
    .select("id");
 
   if(error){
@@ -4773,7 +5116,8 @@ changeIcon.addEventListener(
  "change",
  ()=>{
 
-  changeIconPreview.innerHTML = "";
+  changeIconPreview.innerHTML =
+   "";
 
   const file =
    changeIcon.files?.[0];
@@ -4804,7 +5148,9 @@ changeIcon.addEventListener(
 
   img.alt = "";
 
-  changeIconPreview.appendChild(img);
+  changeIconPreview.appendChild(
+   img
+  );
 
  });
 
@@ -4816,9 +5162,11 @@ async function uploadChangeIcon(file){
  }
 
  if(file.size > 5 * 1024 * 1024){
+
   throw new Error(
    "Максимальный размер иконки — 5 МБ."
   );
+
  }
 
  if(
@@ -4828,9 +5176,11 @@ async function uploadChangeIcon(file){
    "image/webp"
   ].includes(file.type)
  ){
+
   throw new Error(
    "Разрешены PNG, JPG и WEBP."
   );
+
  }
 
  const extension =
@@ -4903,7 +5253,9 @@ addChangeButton.addEventListener(
   try{
 
    const iconUrl =
-    await uploadChangeIcon(file);
+    await uploadChangeIcon(
+     file
+    );
 
    const {
     error
@@ -5052,7 +5404,9 @@ async function deleteChange(id){
  if(!confirm(
   "Удалить это изменение?"
  )){
+
   return;
+
  }
 
  try{
@@ -5063,7 +5417,10 @@ async function deleteChange(id){
   } = await db
    .from("changes")
    .delete()
-   .eq("id",id)
+   .eq(
+    "id",
+    id
+   )
    .select("id");
 
   if(error){
@@ -5098,7 +5455,7 @@ async function deleteChange(id){
 
 
 /* =========================================================
-   COMMENTS MODERATION — FIXED
+   COMMENTS MODERATION
 ========================================================= */
 
 async function loadComments(){
@@ -5193,8 +5550,10 @@ async function loadComments(){
 
    (newsData || [])
     .forEach(news=>{
+
      newsMap[news.id] =
       news.title;
+
     });
 
   }
@@ -5227,15 +5586,19 @@ async function loadComments(){
   title.textContent =
    `На проверке — ${pending.length}`;
 
-  commentsList.appendChild(title);
+  commentsList.appendChild(
+   title
+  );
 
   pending.forEach(
    comment=>{
+
     renderComment(
      comment,
      newsMap,
      true
     );
+
    }
   );
 
@@ -5253,7 +5616,9 @@ async function loadComments(){
   divider.className =
    "comments-divider";
 
-  commentsList.appendChild(divider);
+  commentsList.appendChild(
+   divider
+  );
 
  }
 
@@ -5269,15 +5634,19 @@ async function loadComments(){
   title.textContent =
    `Одобрены — ${approved.length}`;
 
-  commentsList.appendChild(title);
+  commentsList.appendChild(
+   title
+  );
 
   approved.forEach(
    comment=>{
+
     renderComment(
      comment,
      newsMap,
      false
     );
+
    }
   );
 
@@ -5414,17 +5783,9 @@ function renderComment(
 }
 
 
-/*
- * ИСПРАВЛЕНО:
- *
- * .select("id,status") после UPDATE позволяет проверить,
- * действительно ли Supabase изменил строку.
- *
- * Если RLS запрещает UPDATE, Supabase вернёт ошибку.
- *
- * Если UPDATE разрешён, но строка не видна текущему пользователю,
- * .single() / отсутствие data также покажет проблему.
- */
+/* =========================================================
+   APPROVE COMMENT
+========================================================= */
 
 async function approveComment(
  id,
@@ -5531,12 +5892,9 @@ async function approveComment(
 }
 
 
-/*
- * ИСПРАВЛЕНО:
- *
- * После DELETE запрашиваем удалённый id через .select().
- * Если массив пустой — Supabase не удалил строку.
- */
+/* =========================================================
+   DELETE COMMENT
+========================================================= */
 
 async function deleteComment(
  id,
@@ -5550,7 +5908,9 @@ async function deleteComment(
  if(!confirm(
   "Удалить комментарий?"
  )){
+
   return;
+
  }
 
  if(button){
@@ -5721,9 +6081,13 @@ db.auth.onAuthStateChange(
   authCheckRunning = true;
 
   try{
+
    await checkUser();
+
   }finally{
+
    authCheckRunning = false;
+
   }
 
  });
