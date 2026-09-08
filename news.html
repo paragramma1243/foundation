@@ -2842,15 +2842,17 @@ async function loadNews(){
 
 
  /*
-  * ВАЖНО:
-  *
   * admin.html сохраняет главную
   * фотографию новости в поле "image".
-  *
-  * Поэтому используем data.image.
   */
 
- if(data.image){
+ const newsImage =
+  data.image ||
+  data.image_url ||
+  "";
+
+
+ if(newsImage){
 
   image.style.backgroundImage =
    `linear-gradient(
@@ -2858,7 +2860,7 @@ async function loadNews(){
      rgba(0,0,0,.05),
      rgba(0,0,0,.3)
     ),
-    url("${data.image}")`;
+    url("${newsImage}")`;
 
  }
 
@@ -2939,12 +2941,8 @@ async function loadNews(){
 
 
  /*
-  * ОСНОВНОЙ ТЕКСТ НОВОСТИ
-  *
-  * ВАЖНО:
-  * Используем innerHTML, а не textContent.
-  * Контент из редактора содержит HTML-разметку:
-  * <p>, <h2>, <ul>, <img>, <a> и т.д.
+  * Основной текст новости.
+  * Контент из редактора содержит HTML-разметку.
   */
 
  const text =
@@ -3250,6 +3248,22 @@ async function loadComments(newsId){
  `;
 
 
+ /*
+  * ВАЖНО:
+  *
+  * Показываем ТОЛЬКО комментарии,
+  * которые администратор одобрил
+  * в admin.html.
+  *
+  * admin.html использует:
+  *
+  * comments.status
+  *
+  * Одобренный комментарий:
+  *
+  * status = "approved"
+  */
+
  const {
   data,
   error
@@ -3263,11 +3277,16 @@ async function loadComments(newsId){
     author,
     avatar_url,
     content,
-    created_at
+    created_at,
+    status
    `)
    .eq(
     "news_id",
     newsId
+   )
+   .eq(
+    "status",
+    "approved"
    )
    .order(
     "created_at",
@@ -3298,8 +3317,12 @@ async function loadComments(newsId){
  }
 
 
+ /*
+  * Здесь находятся только approved.
+  */
+
  const comments =
-  data.slice(
+  (data || []).slice(
    0,
    MAX_COMMENTS
   );
@@ -3310,6 +3333,11 @@ async function loadComments(newsId){
  );
 
 
+ /*
+  * Лимит считается только
+  * среди опубликованных комментариев.
+  */
+
  if(comments.length >= MAX_COMMENTS){
 
   commentForm.classList.remove(
@@ -3318,6 +3346,12 @@ async function loadComments(newsId){
 
   commentLimit.style.display =
    "block";
+
+ }
+ else{
+
+  commentLimit.style.display =
+   "none";
 
  }
 
@@ -3455,6 +3489,8 @@ commentForm.addEventListener(
 
   /*
    * ПРОВЕРЯЕМ ЛИМИТ
+   *
+   * Считаем ТОЛЬКО approved.
    */
 
   const {
@@ -3473,6 +3509,10 @@ commentForm.addEventListener(
     .eq(
      "news_id",
      Number(newsId)
+    )
+    .eq(
+     "status",
+     "approved"
     );
 
 
@@ -3529,7 +3569,16 @@ commentForm.addEventListener(
 
 
   /*
-   * ОТПРАВЛЯЕМ
+   * ОТПРАВЛЯЕМ КОММЕНТАРИЙ
+   *
+   * ВАЖНО:
+   *
+   * Новый комментарий получает
+   * status = "pending".
+   *
+   * Поэтому news.html НЕ покажет его,
+   * пока администратор не нажмёт
+   * "Одобрить" в admin.html.
    */
 
   const {
@@ -3553,7 +3602,10 @@ commentForm.addEventListener(
       discordData.avatar,
 
      content:
-      content
+      content,
+
+     status:
+      "pending"
 
     })
     .select()
@@ -3591,6 +3643,11 @@ commentForm.addEventListener(
 
   /*
    * УСПЕШНО
+   *
+   * data специально НЕ добавляем
+   * в commentList.
+   *
+   * Он пока pending.
    */
 
   commentContent.value =
@@ -3601,96 +3658,34 @@ commentForm.addEventListener(
 
 
   showCommentStatus(
-   "Комментарий опубликован.",
+   "Комментарий отправлен на модерацию.",
    false,
    true
   );
 
 
   /*
-   * УБИРАЕМ EMPTY
+   * Счётчик НЕ увеличиваем.
+   *
+   * Новый комментарий пока не approved,
+   * поэтому опубликованных комментариев
+   * стало столько же.
    */
-
-  if(
-   commentList.querySelector(
-    ".comments-empty"
-   )
-  ){
-
-   commentList.innerHTML =
-    "";
-
-  }
-
-
-  /*
-   * ДОБАВЛЯЕМ КОММЕНТАРИЙ
-   */
-
-  if(data){
-
-   commentList.appendChild(
-    createCommentElement(
-     data
-    )
-   );
-
-  }
-
-
-  /*
-   * ОБНОВЛЯЕМ КОЛИЧЕСТВО
-   */
-
-  const currentCount =
-   commentList.querySelectorAll(
-    ".comment"
-   ).length;
-
 
   updateCommentsCount(
-   currentCount
+   count || 0
   );
-
-
-  /*
-   * ДОСТИГНУТ ЛИМИТ
-   */
-
-  if(
-   currentCount >= MAX_COMMENTS
-  ){
-
-   commentForm.classList.remove(
-    "visible"
-   );
-
-   commentLimit.style.display =
-    "block";
-
-   showCommentStatus(
-    "",
-    false
-   );
-
-  }
 
 
   /*
    * РАЗБЛОКИРОВКА
    */
 
-  if(
-   currentCount < MAX_COMMENTS
-  ){
+  commentSubmit.disabled =
+   false;
 
-   commentSubmit.disabled =
-    false;
-
-   commentSubmit.textContent =
-    "Отправить";
-
-  }
+  commentSubmit.textContent =
+   "Отправить";
 
  }
 );
