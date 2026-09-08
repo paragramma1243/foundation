@@ -449,13 +449,6 @@ nav a.active:after{
  box-shadow:0 5px 18px rgba(88,101,242,.18);
 }
 
-.discord-login-button:disabled{
- opacity:.65;
- cursor:wait;
- transform:none;
- box-shadow:none;
-}
-
 .auth-modal-footer{
  margin-top:18px;
  text-align:center;
@@ -627,6 +620,11 @@ main{
  overflow-wrap:anywhere;
 }
 
+
+/* ==========================================
+   NEWS PARAGRAPHS
+========================================== */
+
 .article-text p{
  margin:0 0 18px;
 }
@@ -634,6 +632,11 @@ main{
 .article-text p:last-child{
  margin-bottom:0;
 }
+
+
+/* ==========================================
+   NEWS HEADINGS
+========================================== */
 
 .article-text h2{
  color:#fff;
@@ -656,6 +659,11 @@ main{
  margin:20px 0 10px;
 }
 
+
+/* ==========================================
+   TEXT FORMATTING
+========================================== */
+
 .article-text strong,
 .article-text b{
  color:#fff;
@@ -676,6 +684,11 @@ main{
  text-decoration:line-through;
 }
 
+
+/* ==========================================
+   LINKS
+========================================== */
+
 .article-text a{
  color:#f4ca28;
  text-decoration:underline;
@@ -685,6 +698,11 @@ main{
 .article-text a:hover{
  color:#ffd83d;
 }
+
+
+/* ==========================================
+   LISTS
+========================================== */
 
 .article-text ul,
 .article-text ol{
@@ -704,9 +722,19 @@ main{
  margin-bottom:5px;
 }
 
+
+/* ==========================================
+   LINE BREAKS
+========================================== */
+
 .article-text br{
  line-height:1.85;
 }
+
+
+/* ==========================================
+   INLINE IMAGES
+========================================== */
 
 .article-text img{
  max-width:100%;
@@ -714,6 +742,11 @@ main{
  display:block;
  border-radius:6px;
 }
+
+
+/* ==========================================
+   NEWS FIGURES
+========================================== */
 
 .article-text figure.news-inline-image{
  display:block;
@@ -735,6 +768,11 @@ main{
  line-height:1.5;
 }
 
+
+/* ==========================================
+   BLOCKQUOTE
+========================================== */
+
 .article-text blockquote{
  margin:20px 0;
  padding:12px 18px;
@@ -743,11 +781,21 @@ main{
  color:#aaa;
 }
 
+
+/* ==========================================
+   HORIZONTAL LINE
+========================================== */
+
 .article-text hr{
  border:0;
  border-top:1px solid #292b2c;
  margin:25px 0;
 }
+
+
+/* ==========================================
+   EMPTY CONTENT
+========================================== */
 
 .article-text:empty{
  display:none;
@@ -1347,11 +1395,6 @@ footer{
 
 <body>
 
-
-<!-- ==========================================
-     HEADER
-========================================== -->
-
 <header>
 
 <div class="wrap head">
@@ -1370,7 +1413,6 @@ CB2
 
 </a>
 
-
 <nav>
 
 <a class="active" href="index.html">
@@ -1387,15 +1429,11 @@ CB2
 
 </nav>
 
-
 <button
  class="search"
  aria-label="Поиск"
  type="button">
 </button>
-
-
-<!-- AUTH -->
 
 <div class="auth-area">
 
@@ -1405,7 +1443,6 @@ CB2
  type="button">
 Войти
 </button>
-
 
 <div
  id="authUser"
@@ -1429,7 +1466,6 @@ CB2
 </span>
 
 </button>
-
 
 <div
  id="authMenu"
@@ -1466,11 +1502,6 @@ DISCORD ACCOUNT
 
 </header>
 
-
-<!-- ==========================================
-     AUTH MODAL
-========================================== -->
-
 <div
  id="authModal"
  class="auth-modal">
@@ -1489,7 +1520,6 @@ CB2 / AUTH
 
 </div>
 
-
 <button
  id="authModalClose"
  class="auth-modal-close"
@@ -1497,7 +1527,6 @@ CB2 / AUTH
  aria-label="Закрыть">
 ×
 </button>
-
 
 <div class="auth-modal-body">
 
@@ -1513,14 +1542,12 @@ FOUNDATION ACCESS SYSTEM
 Авторизуйтесь через Discord, чтобы получить возможность оставлять комментарии под новостями.
 </p>
 
-
 <button
  id="discordLoginButton"
  class="discord-login-button"
  type="button">
 Войти через Discord
 </button>
-
 
 <div class="auth-modal-footer">
 AUTHENTICATION PROVIDED BY DISCORD
@@ -1531,12 +1558,6 @@ AUTHENTICATION PROVIDED BY DISCORD
 </div>
 
 </div>
-
-
-
-<!-- ==========================================
-     ARTICLE
-========================================== -->
 
 <main>
 
@@ -1550,7 +1571,6 @@ AUTHENTICATION PROVIDED BY DISCORD
 ← Все новости
 </a>
 
-
 <div id="article">
 
 <div class="article-loading">
@@ -1558,11 +1578,6 @@ AUTHENTICATION PROVIDED BY DISCORD
 </div>
 
 </div>
-
-
-<!-- ==========================================
-     COMMENTS
-========================================== -->
 
 <section
  class="comments"
@@ -1581,9 +1596,6 @@ AUTHENTICATION PROVIDED BY DISCORD
 </span>
 
 </div>
-
-
-<!-- LOGIN MESSAGE -->
 
 <div
  id="commentLogin"
@@ -1609,9 +1621,6 @@ FOUNDATION ACCESS
 </button>
 
 </div>
-
-
-<!-- CURRENT USER -->
 
 <div
  id="commentUser"
@@ -1639,9 +1648,6 @@ FOUNDATION ACCESS
 
 </div>
 
-
-<!-- COMMENT FORM -->
-
 <form
  class="comment-form"
  id="commentForm"
@@ -1655,7 +1661,6 @@ FOUNDATION ACCESS
  required
 ></textarea>
 
-
 <div class="comment-bottom">
 
 <span
@@ -1663,7 +1668,6 @@ FOUNDATION ACCESS
  id="commentChars">
 0 / 1000
 </span>
-
 
 <button
  class="comment-submit"
@@ -1674,16 +1678,12 @@ FOUNDATION ACCESS
 
 </div>
 
-
 <div
  class="comment-status"
  id="commentStatus">
 </div>
 
 </form>
-
-
-<!-- LIMIT -->
 
 <div
  class="comment-limit"
@@ -1697,9 +1697,6 @@ FOUNDATION ACCESS
 
 </div>
 
-
-<!-- COMMENT LIST -->
-
 <div
  class="comment-list"
  id="commentList">
@@ -1712,23 +1709,15 @@ FOUNDATION ACCESS
 
 </section>
 
-
 </div>
 
 </div>
 
 </main>
 
-
-
-<!-- ==========================================
-     FOOTER
-========================================== -->
-
 <footer>
 
 <div class="wrap foot">
-
 
 <div>
 
@@ -1753,7 +1742,6 @@ SCP: CB2 Multiplayer.
 
 </div>
 
-
 <div>
 
 <h4>Навигация</h4>
@@ -1775,7 +1763,6 @@ SCP: CB2 Multiplayer.
 </div>
 
 </div>
-
 
 <div>
 
@@ -1803,9 +1790,7 @@ Steam
 
 </div>
 
-
 </div>
-
 
 <div class="bottom">
 
@@ -1815,12 +1800,6 @@ Steam
 </div>
 
 </footer>
-
-
-
-<!-- ==========================================
-     SUPABASE
-========================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1836,23 +1815,6 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
-
-/*
- * ВАЖНО:
- *
- * Используем PKCE вместо принудительного
- * implicit flow.
- *
- * persistSession:
- * сохраняет Discord-сессию.
- *
- * autoRefreshToken:
- * автоматически обновляет сессию.
- *
- * detectSessionInUrl:
- * обрабатывает возврат после Discord.
- */
-
 const db =
 window.supabase.createClient(
  SUPABASE_URL,
@@ -1862,7 +1824,7 @@ window.supabase.createClient(
    persistSession:true,
    autoRefreshToken:true,
    detectSessionInUrl:true,
-   flowType:"pkce"
+   flowType:"implicit"
   }
  }
 );
@@ -2105,18 +2067,6 @@ async function loginWithDiscord(){
 
  try{
 
-  /*
-   * Сохраняем текущую страницу,
-   * включая ?id=новости.
-   *
-   * Например:
-   *
-   * https://site.com/news.html?id=15
-   *
-   * После авторизации Discord
-   * пользователь вернётся сюда же.
-   */
-
   const redirectUrl =
    getCurrentPageUrl();
 
@@ -2157,12 +2107,10 @@ async function loginWithDiscord(){
 
   }
 
-
   console.log(
-   "Discord OAuth запущен:",
+   "OAuth запущен:",
    data
   );
-
 
  }
  catch(error){
@@ -2287,8 +2235,6 @@ function renderAuthUser(user){
   userData.name;
 
 
- /* COMMENTS */
-
  commentLogin.classList.remove(
   "visible"
  );
@@ -2380,175 +2326,6 @@ async function checkAuth(){
 
 
 /* ==========================================
-   OAUTH CALLBACK
-========================================== */
-
-async function handleOAuthCallback(){
-
- /*
-  * Сначала даём Supabase завершить
-  * внутреннюю инициализацию.
-  *
-  * Это особенно важно после возврата
-  * из Discord.
-  */
-
- await new Promise(
-  resolve =>
-   setTimeout(
-    resolve,
-    150
-   )
- );
-
-
- /*
-  * Получаем уже восстановленную
-  * сессию.
-  */
-
- const {
-  data,
-  error
- } =
-  await db.auth.getSession();
-
-
- if(error){
-
-  console.error(
-   "Ошибка восстановления OAuth-сессии:",
-   error
-  );
-
-  renderAuthUser(
-   null
-  );
-
-  return null;
-
- }
-
-
- const session =
-  data?.session || null;
-
-
- const user =
-  session?.user || null;
-
-
- /*
-  * Показываем пользователя только
-  * после успешного восстановления
-  * сессии.
-  */
-
- renderAuthUser(
-  user
- );
-
-
- if(user){
-
-  closeAuthModal();
-
-  discordLoginButton.disabled =
-   false;
-
-  discordLoginButton.textContent =
-   "Войти через Discord";
-
-
-  /*
-   * После успешной авторизации
-   * можно очистить OAuth-параметры
-   * из адресной строки.
-   *
-   * Важно:
-   * делаем это ТОЛЬКО после того,
-   * как сессия уже получена.
-   */
-
-  const url =
-   new URL(
-    window.location.href
-   );
-
-
-  let changed =
-   false;
-
-
-  if(
-   url.searchParams.has(
-    "code"
-   )
-  ){
-
-   url.searchParams.delete(
-    "code"
-   );
-
-   changed =
-    true;
-
-  }
-
-
-  if(
-   url.hash &&
-   (
-    url.hash.includes(
-     "access_token"
-    ) ||
-    url.hash.includes(
-     "refresh_token"
-    ) ||
-    url.hash.includes(
-     "provider_token"
-    ) ||
-    url.hash.includes(
-     "expires_at"
-    ) ||
-    url.hash.includes(
-     "expires_in"
-    ) ||
-    url.hash.includes(
-     "token_type"
-    )
-   )
-  ){
-
-   url.hash =
-    "";
-
-   changed =
-    true;
-
-  }
-
-
-  if(changed){
-
-   window.history.replaceState(
-    {},
-    document.title,
-    url.pathname +
-    url.search
-   );
-
-  }
-
- }
-
-
- return user;
-
-}
-
-
-/* ==========================================
    AUTH STATE
 ========================================== */
 
@@ -2557,21 +2334,9 @@ db.auth.onAuthStateChange(
 
   console.log(
    "Auth state:",
-   event,
-   session?.user?.id || null
+   event
   );
 
-
-  /*
-   * ВАЖНО:
-   *
-   * Никогда не вызываем signOut
-   * здесь автоматически.
-   *
-   * Если Supabase сообщает,
-   * что сессия существует —
-   * показываем пользователя.
-   */
 
   renderAuthUser(
    session?.user || null
@@ -2640,10 +2405,6 @@ logoutButton.addEventListener(
  "click",
  async function(){
 
-  logoutButton.disabled =
-   true;
-
-
   const {
    error
   } =
@@ -2657,9 +2418,6 @@ logoutButton.addEventListener(
     error
    );
 
-   logoutButton.disabled =
-    false;
-
    return;
 
   }
@@ -2668,10 +2426,6 @@ logoutButton.addEventListener(
   authMenu.classList.remove(
    "open"
   );
-
-
-  logoutButton.disabled =
-   false;
 
  }
 );
@@ -2981,11 +2735,6 @@ async function loadNews(){
  image.className =
   "article-image";
 
-
- /*
-  * Главная фотография новости
-  * хранится в поле image.
-  */
 
  const newsImage =
   data.image ||
@@ -3519,7 +3268,7 @@ commentForm.addEventListener(
 
   if(
    sessionError ||
-   !sessionData?.session ||
+   !sessionData.session ||
    !sessionData.session.user
   ){
 
@@ -3662,6 +3411,7 @@ commentForm.addEventListener(
 
 
   const {
+   data,
    error
   } =
    await db
@@ -3686,7 +3436,9 @@ commentForm.addEventListener(
      status:
       "pending"
 
-    });
+    })
+    .select()
+    .single();
 
 
   if(error){
@@ -3784,24 +3536,14 @@ function showCommentStatus(
 
 
 /* ==========================================
-   INITIALIZE AUTH
+   ОБРАБОТКА OAUTH CALLBACK
 ========================================== */
 
 async function initializeAuth(){
 
- /*
-  * Сначала ждём, пока Supabase
-  * закончит восстановление OAuth-сессии.
-  */
-
  const user =
-  await handleOAuthCallback();
+  await checkAuth();
 
-
- /*
-  * Если пользователь уже вошёл,
-  * модальное окно не показываем.
-  */
 
  if(user){
 
