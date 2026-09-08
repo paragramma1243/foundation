@@ -2578,7 +2578,7 @@ async function loadNews(){
     title,
     description,
     content,
-    image,
+    image_url,
     category
    `)
    .eq(
@@ -2631,7 +2631,7 @@ async function loadNews(){
   "article-image";
 
 
- if(data.image){
+ if(data.image_url){
 
   image.style.backgroundImage =
    `linear-gradient(
@@ -2639,7 +2639,7 @@ async function loadNews(){
      rgba(0,0,0,.05),
      rgba(0,0,0,.3)
     ),
-    url("${data.image}")`;
+    url("${data.image_url}")`;
 
  }
 
@@ -2727,7 +2727,7 @@ async function loadNews(){
  text.className =
   "article-text";
 
- text.innerHTML =
+ text.textContent =
   data.content ||
   "";
 
