@@ -1837,14 +1837,18 @@ const SUPABASE_KEY =
 
 
 /*
+ * Публичная страница использует
+ * только Discord OAuth.
+ *
+ * PKCE обрабатывает callback
+ * с параметром ?code=...
+ *
  * ВАЖНО:
+ * exchangeCodeForSession() здесь
+ * НЕ вызывается вручную.
  *
- * news.html использует только Discord OAuth.
- *
- * PKCE нужен для OAuth callback с ?code=...
- *
- * persistSession сохраняет Discord-сессию
- * между переходами по страницам.
+ * Supabase сам обрабатывает OAuth
+ * благодаря detectSessionInUrl:true.
  */
 
 const db =
@@ -2100,15 +2104,53 @@ async function loginWithDiscord(){
  try{
 
   /*
-   * При запуске OAuth
-   * redirectTo сохраняет текущую новость.
+   * Если в браузере осталась
+   * старая email/password сессия
+   * администратора, удаляем только
+   * локальную сессию перед Discord OAuth.
+   *
+   * Это НЕ удаляет аккаунт.
+   * Это только очищает текущую
+   * локальную сессию браузера.
+   */
+
+  const {
+   data:currentSessionData
+  } =
+   await db.auth.getSession();
+
+
+  const currentUser =
+   currentSessionData?.session?.user ||
+   null;
+
+
+  if(
+   currentUser &&
+   !isDiscordUser(currentUser)
+  ){
+
+   console.log(
+    "Перед Discord OAuth обнаружена не-Discord сессия. Очищаем её."
+   );
+
+
+   await db.auth.signOut({
+    scope:"local"
+   });
+
+  }
+
+
+  /*
+   * Сохраняем текущую страницу.
    *
    * Например:
    *
    * news.html?id=6
    *
-   * после Discord вернётся обратно
-   * на эту же новость.
+   * После Discord пользователь
+   * вернётся именно сюда.
    */
 
   const redirectUrl =
@@ -2203,8 +2245,9 @@ function isDiscordUser(user){
 
 
  /*
-  * Основной способ определения:
-  * app_metadata.provider
+  * Основной способ:
+  * Supabase указывает провайдера
+  * в app_metadata.provider.
   */
 
  const provider =
@@ -2212,14 +2255,19 @@ function isDiscordUser(user){
   "";
 
 
- if(provider === "discord"){
+ if(
+  provider.toLowerCase() ===
+  "discord"
+ ){
+
   return true;
+
  }
 
 
  /*
-  * Дополнительная проверка
-  * через identities.
+  * Дополнительная проверка:
+  * identity provider.
   */
 
  const identities =
@@ -2227,8 +2275,13 @@ function isDiscordUser(user){
 
 
  return identities.some(
-  identity =>
-   identity?.provider === "discord"
+  function(identity){
+
+   return (
+    identity?.provider || ""
+   ).toLowerCase() === "discord";
+
+  }
  );
 
 }
@@ -2268,36 +2321,59 @@ function getDiscordUserData(user){
 
 
 /* ==========================================
-   RENDER AUTH USER
+   LOGGED OUT UI
+========================================== */
+
+function renderLoggedOut(){
+
+ loginButton.style.display =
+  "block";
+
+
+ authUser.classList.remove(
+  "visible"
+ );
+
+
+ authMenu.classList.remove(
+  "open"
+ );
+
+
+ commentLogin.classList.add(
+  "visible"
+ );
+
+
+ commentUser.classList.remove(
+  "visible"
+ );
+
+
+ commentForm.classList.remove(
+  "visible"
+ );
+
+}
+
+
+/* ==========================================
+   LOGGED IN UI
 ========================================== */
 
 function renderAuthUser(user){
 
- if(!user){
+ /*
+  * На публичной странице принимаем
+  * только Discord пользователя.
+  */
 
-  loginButton.style.display =
-   "block";
+ if(
+  !user ||
+  !isDiscordUser(user)
+ ){
 
-
-  authUser.classList.remove(
-   "visible"
-  );
-
-
-  commentLogin.classList.add(
-   "visible"
-  );
-
-
-  commentUser.classList.remove(
-   "visible"
-  );
-
-
-  commentForm.classList.remove(
-   "visible"
-  );
-
+  renderLoggedOut();
 
   return;
 
@@ -2370,112 +2446,14 @@ async function checkAuth(){
  try{
 
   /*
-   * PKCE callback:
+   * НЕ вызываем
+   * exchangeCodeForSession().
    *
-   * Discord возвращает:
+   * Supabase сам обрабатывает
+   * ?code=... благодаря:
    *
-   * ?code=XXXXXXXX&id=6
-   *
-   * Сначала меняем code на полноценную
-   * Supabase-сессию.
-   */
-
-  const params =
-   new URLSearchParams(
-    window.location.search
-   );
-
-
-  const code =
-   params.get("code");
-
-
-  if(code){
-
-   console.log(
-    "OAuth code найден. Обмениваем на Discord-сессию..."
-   );
-
-
-   const {
-    data,
-    error
-   } =
-    await db.auth.exchangeCodeForSession(
-     code
-    );
-
-
-   if(error){
-
-    console.error(
-     "Ошибка обмена OAuth code:",
-     error
-    );
-
-
-    renderAuthUser(null);
-
-
-    return null;
-
-   }
-
-
-   console.log(
-    "OAuth-сессия создана:",
-    data?.session?.user
-   );
-
-
-   /*
-    * Убираем только code.
-    *
-    * id новости сохраняется.
-    *
-    * Было:
-    * news.html?code=XXX&id=6
-    *
-    * Станет:
-    * news.html?id=6
-    */
-
-   params.delete(
-    "code"
-   );
-
-
-   /*
-    * Если Supabase/браузер оставил
-    * другие OAuth-параметры,
-    * удаляем только code,
-    * остальные параметры сохраняем.
-    */
-
-   const newQuery =
-    params.toString();
-
-
-   const newUrl =
-    window.location.pathname +
-    (
-     newQuery
-      ? "?" + newQuery
-      : ""
-    );
-
-
-   window.history.replaceState(
-    {},
-    document.title,
-    newUrl
-   );
-
-  }
-
-
-  /*
-   * Получаем текущую сессию.
+   * detectSessionInUrl:true
+   * flowType:"pkce"
    */
 
   const {
@@ -2493,10 +2471,7 @@ async function checkAuth(){
    );
 
 
-   renderAuthUser(
-    null
-   );
-
+   renderLoggedOut();
 
    return null;
 
@@ -2512,13 +2487,10 @@ async function checkAuth(){
 
 
   /*
-   * ВАЖНО:
-   *
-   * news.html разрешает только Discord.
-   *
-   * Если в браузере осталась сессия
-   * email/password администратора из admin.html,
-   * она не будет использована.
+   * Если это не Discord,
+   * например старая email/password
+   * сессия администратора,
+   * публичный сайт её не принимает.
    */
 
   if(
@@ -2531,15 +2503,24 @@ async function checkAuth(){
    );
 
 
-   await db.auth.signOut({
-    scope:"local"
-   });
+   try{
+
+    await db.auth.signOut({
+     scope:"local"
+    });
+
+   }
+   catch(error){
+
+    console.error(
+     "Ошибка удаления не-Discord сессии:",
+     error
+    );
+
+   }
 
 
-   renderAuthUser(
-    null
-   );
-
+   renderLoggedOut();
 
    return null;
 
@@ -2562,10 +2543,7 @@ async function checkAuth(){
   );
 
 
-  renderAuthUser(
-   null
-  );
-
+  renderLoggedOut();
 
   return null;
 
@@ -2592,9 +2570,44 @@ db.auth.onAuthStateChange(
 
 
   /*
-   * Если Supabase передал
-   * email/password аккаунт,
-   * news.html его не принимает.
+   * Если Supabase сообщил о входе
+   * через Discord — показываем аккаунт.
+   */
+
+  if(
+   user &&
+   isDiscordUser(user)
+  ){
+
+   renderAuthUser(
+    user
+   );
+
+
+   closeAuthModal();
+
+
+   discordLoginButton.disabled =
+    false;
+
+
+   discordLoginButton.textContent =
+    "Войти через Discord";
+
+
+   return;
+
+  }
+
+
+  /*
+   * Если это не Discord аккаунт,
+   * например email/password админ,
+   * не показываем его на публичном сайте.
+   *
+   * signOut выполняем через setTimeout,
+   * чтобы не вызывать изменение auth state
+   * непосредственно внутри callback.
    */
 
   if(
@@ -2607,11 +2620,8 @@ db.auth.onAuthStateChange(
    );
 
 
-   /*
-    * Выносим signOut из callback,
-    * чтобы не создавать конфликт
-    * внутри onAuthStateChange.
-    */
+   renderLoggedOut();
+
 
    setTimeout(
     async function(){
@@ -2637,34 +2647,23 @@ db.auth.onAuthStateChange(
    );
 
 
-   renderAuthUser(
-    null
-   );
-
-
    return;
 
   }
 
 
-  renderAuthUser(
-   user
-  );
+  /*
+   * SIGNED_OUT / INITIAL_SESSION без пользователя.
+   */
+
+  renderLoggedOut();
 
 
-  if(user){
+  discordLoginButton.disabled =
+   false;
 
-   closeAuthModal();
-
-
-   discordLoginButton.disabled =
-    false;
-
-
-   discordLoginButton.textContent =
-    "Войти через Discord";
-
-  }
+  discordLoginButton.textContent =
+   "Войти через Discord";
 
  }
 );
@@ -2717,30 +2716,45 @@ logoutButton.addEventListener(
  "click",
  async function(){
 
-  const {
-   error
-  } =
-   await db.auth.signOut({
-    scope:"local"
-   });
+  try{
+
+   const {
+    error
+   } =
+    await db.auth.signOut({
+     scope:"local"
+    });
 
 
-  if(error){
+   if(error){
+
+    console.error(
+     "Ошибка выхода:",
+     error
+    );
+
+
+    return;
+
+   }
+
+
+   authMenu.classList.remove(
+    "open"
+   );
+
+
+   renderLoggedOut();
+
+  }
+  catch(error){
 
    console.error(
     "Ошибка выхода:",
     error
    );
 
-
-   return;
-
   }
-
-
-  authMenu.classList.remove(
-   "open"
-  );
 
  }
 );
@@ -3672,10 +3686,7 @@ commentForm.addEventListener(
    !sessionData.session.user
   ){
 
-   renderAuthUser(
-    null
-   );
-
+   renderLoggedOut();
 
    openAuthModal();
 
@@ -3690,8 +3701,8 @@ commentForm.addEventListener(
 
 
   /*
-   * Дополнительная защита:
-   * комментарий разрешён только Discord-пользователю.
+   * Комментарии разрешены
+   * только Discord-пользователям.
    */
 
   if(!isDiscordUser(user)){
@@ -3701,10 +3712,7 @@ commentForm.addEventListener(
    });
 
 
-   renderAuthUser(
-    null
-   );
-
+   renderLoggedOut();
 
    openAuthModal();
 
@@ -3977,10 +3985,18 @@ function showCommentStatus(
 
 
 /* ==========================================
-   ОБРАБОТКА OAUTH CALLBACK
+   ОБРАБОТКА AUTH
 ========================================== */
 
 async function initializeAuth(){
+
+ /*
+  * Ждём, пока Supabase обработает
+  * OAuth callback.
+  *
+  * Ручного exchangeCodeForSession()
+  * здесь больше НЕТ.
+  */
 
  const user =
   await checkAuth();
