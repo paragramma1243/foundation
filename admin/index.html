@@ -411,8 +411,6 @@ button:disabled{
  margin:0 3px;
 }
 
-/* PICKERS */
-
 .editor-picker{
  position:relative;
 }
@@ -498,8 +496,6 @@ button:disabled{
  max-height:270px;
  overflow-y:auto;
 }
-
-/* CONTENT */
 
 .editor-content{
  min-height:360px;
@@ -602,8 +598,8 @@ button:disabled{
 .news-inline-image.selected{
  border-color:#d5b42e;
  box-shadow:
-  0 0 0 1px rgba(213,180,46,.18),
-  0 0 20px rgba(213,180,46,.06);
+ 0 0 0 1px rgba(213,180,46,.18),
+ 0 0 20px rgba(213,180,46,.06);
 }
 
 .news-inline-image img{
@@ -673,10 +669,6 @@ button:disabled{
 .news-inline-image:not(.selected) .image-controls{
  display:none;
 }
-
-/* =========================
-   EDITOR HELP
-========================= */
 
 .editor-help{
  margin-top:9px;
@@ -987,10 +979,6 @@ button:disabled{
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
-
 <div id="loginScreen" class="login-screen">
 
  <div class="login-box">
@@ -1025,10 +1013,6 @@ button:disabled{
 </div>
 
 
-<!-- =========================
-     ADMIN
-========================= -->
-
 <div id="adminScreen" class="admin-screen">
 
 <header class="admin-header">
@@ -1060,17 +1044,12 @@ button:disabled{
 <main class="admin-main">
 
 
-<!-- =========================
-     CREATE NEWS
-========================= -->
-
 <section class="panel">
 
  <div class="panel-header">
   <h2 class="panel-title">Создание новости</h2>
   <div class="panel-code">NEWS / CREATE</div>
  </div>
-
 
  <div class="field">
 
@@ -1141,65 +1120,33 @@ button:disabled{
 
    <div id="editorToolbar" class="editor-toolbar">
 
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="undo"
-     title="Отменить"
-    >↶</button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="redo"
-     title="Повторить"
-    >↷</button>
+    <button class="toolbar-button" type="button" data-command="undo" title="Отменить">↶</button>
+    <button class="toolbar-button" type="button" data-command="redo" title="Повторить">↷</button>
 
     <div class="toolbar-separator"></div>
 
-
     <div id="formatPicker" class="editor-picker">
 
-     <button
-      id="formatPickerButton"
-      class="editor-picker-button"
-      type="button"
-     >
+     <button id="formatPickerButton" class="editor-picker-button" type="button">
       <span id="formatPickerText">Обычный текст</span>
       <span class="editor-picker-arrow">▼</span>
      </button>
 
      <div id="formatPickerMenu" class="editor-picker-menu">
 
-      <button
-       class="editor-picker-option active"
-       type="button"
-       data-format="p"
-      >
+      <button class="editor-picker-option active" type="button" data-format="p">
        Обычный текст
       </button>
 
-      <button
-       class="editor-picker-option"
-       type="button"
-       data-format="h2"
-      >
+      <button class="editor-picker-option" type="button" data-format="h2">
        Заголовок
       </button>
 
-      <button
-       class="editor-picker-option"
-       type="button"
-       data-format="h3"
-      >
+      <button class="editor-picker-option" type="button" data-format="h3">
        Подзаголовок
       </button>
 
-      <button
-       class="editor-picker-option"
-       type="button"
-       data-format="blockquote"
-      >
+      <button class="editor-picker-option" type="button" data-format="blockquote">
        Цитата
       </button>
 
@@ -1210,11 +1157,7 @@ button:disabled{
 
     <div id="fontSizePicker" class="editor-picker font-size-picker">
 
-     <button
-      id="fontSizeButton"
-      class="editor-picker-button"
-      type="button"
-     >
+     <button id="fontSizeButton" class="editor-picker-button" type="button">
       <span id="fontSizeText">14 px</span>
       <span class="editor-picker-arrow">▼</span>
      </button>
@@ -1223,118 +1166,32 @@ button:disabled{
 
     </div>
 
+    <div class="toolbar-separator"></div>
+
+    <button class="toolbar-button" type="button" data-command="bold" title="Жирный" data-state-command="bold"><b>B</b></button>
+    <button class="toolbar-button" type="button" data-command="italic" title="Курсив" data-state-command="italic"><i>I</i></button>
+    <button class="toolbar-button" type="button" data-command="underline" title="Подчёркивание" data-state-command="underline"><u>U</u></button>
+    <button class="toolbar-button" type="button" data-command="strikeThrough" title="Зачёркивание" data-state-command="strikeThrough"><s>S</s></button>
 
     <div class="toolbar-separator"></div>
 
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="bold"
-     title="Жирный"
-     data-state-command="bold"
-    ><b>B</b></button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="italic"
-     title="Курсив"
-     data-state-command="italic"
-    ><i>I</i></button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="underline"
-     title="Подчёркивание"
-     data-state-command="underline"
-    ><u>U</u></button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="strikeThrough"
-     title="Зачёркивание"
-     data-state-command="strikeThrough"
-    ><s>S</s></button>
-
+    <button class="toolbar-button" type="button" data-command="insertUnorderedList" title="Маркированный список" data-state-command="insertUnorderedList">☷</button>
+    <button class="toolbar-button" type="button" data-command="insertOrderedList" title="Нумерованный список" data-state-command="insertOrderedList">1.</button>
 
     <div class="toolbar-separator"></div>
 
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="insertUnorderedList"
-     title="Маркированный список"
-     data-state-command="insertUnorderedList"
-    >☷</button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="insertOrderedList"
-     title="Нумерованный список"
-     data-state-command="insertOrderedList"
-    >1.</button>
-
+    <button class="toolbar-button" type="button" data-command="justifyLeft" title="По левому краю" data-state-command="justifyLeft">≡</button>
+    <button class="toolbar-button" type="button" data-command="justifyCenter" title="По центру" data-state-command="justifyCenter">≡</button>
+    <button class="toolbar-button" type="button" data-command="justifyRight" title="По правому краю" data-state-command="justifyRight">≡</button>
 
     <div class="toolbar-separator"></div>
 
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="justifyLeft"
-     title="По левому краю"
-     data-state-command="justifyLeft"
-    >≡</button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="justifyCenter"
-     title="По центру"
-     data-state-command="justifyCenter"
-    >≡</button>
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="justifyRight"
-     title="По правому краю"
-     data-state-command="justifyRight"
-    >≡</button>
-
+    <button id="insertLinkButton" class="toolbar-button" type="button" title="Вставить ссылку">🔗</button>
+    <button id="insertImageButton" class="toolbar-button" type="button" title="Вставить изображение">▧</button>
 
     <div class="toolbar-separator"></div>
 
-
-    <button
-     id="insertLinkButton"
-     class="toolbar-button"
-     type="button"
-     title="Вставить ссылку"
-    >🔗</button>
-
-    <button
-     id="insertImageButton"
-     class="toolbar-button"
-     type="button"
-     title="Вставить изображение"
-    >▧</button>
-
-
-    <div class="toolbar-separator"></div>
-
-
-    <button
-     class="toolbar-button"
-     type="button"
-     data-command="removeFormat"
-     title="Убрать форматирование"
-    >Tx</button>
+    <button class="toolbar-button" type="button" data-command="removeFormat" title="Убрать форматирование">Tx</button>
 
    </div>
 
@@ -1365,11 +1222,7 @@ button:disabled{
  </div>
 
 
- <button
-  id="publishNewsButton"
-  class="primary-button"
-  type="button"
- >
+ <button id="publishNewsButton" class="primary-button" type="button">
   Опубликовать новость
  </button>
 
@@ -1378,24 +1231,12 @@ button:disabled{
 </section>
 
 
-<!-- =========================
-     LAST CHANGES
-========================= -->
-
 <section class="panel">
 
  <div class="panel-header">
-
-  <h2 class="panel-title">
-   Последние изменения
-  </h2>
-
-  <div class="panel-code">
-   SYSTEM / CHANGES
-  </div>
-
+  <h2 class="panel-title">Последние изменения</h2>
+  <div class="panel-code">SYSTEM / CHANGES</div>
  </div>
-
 
  <div class="grid-2">
 
@@ -1431,11 +1272,7 @@ button:disabled{
  </div>
 
 
- <button
-  id="addChangeButton"
-  class="primary-button"
-  type="button"
- >
+ <button id="addChangeButton" class="primary-button" type="button">
   Добавить изменение
  </button>
 
@@ -1445,10 +1282,6 @@ button:disabled{
 
 </section>
 
-
-<!-- =========================
-     COMMENTS
-========================= -->
 
 <section class="panel">
 
@@ -1471,10 +1304,6 @@ button:disabled{
 </section>
 
 
-<!-- =========================
-     NEWS LIST
-========================= -->
-
 <section class="panel">
 
  <div class="panel-header">
@@ -1493,10 +1322,6 @@ button:disabled{
 
 </section>
 
-
-<!-- =========================
-     SITE IMAGES
-========================= -->
 
 <section class="panel">
 
@@ -1605,10 +1430,6 @@ button:disabled{
 </div>
 
 
-<!-- =========================
-     LINK MODAL
-========================= -->
-
 <div id="linkModal" class="modal">
 
  <div class="modal-box">
@@ -1623,11 +1444,7 @@ button:disabled{
     LINK / AUTH
    </div>
 
-   <button
-    id="linkModalClose"
-    class="modal-close"
-    type="button"
-   >×</button>
+   <button id="linkModalClose" class="modal-close" type="button">×</button>
 
   </div>
 
@@ -1662,19 +1479,11 @@ button:disabled{
 
    <div class="modal-actions">
 
-    <button
-     id="linkCancel"
-     class="secondary-button"
-     type="button"
-    >
+    <button id="linkCancel" class="secondary-button" type="button">
      Отмена
     </button>
 
-    <button
-     id="linkConfirm"
-     class="primary-button"
-     type="button"
-    >
+    <button id="linkConfirm" class="primary-button" type="button">
      Вставить
     </button>
 
@@ -1686,10 +1495,6 @@ button:disabled{
 
 </div>
 
-
-<!-- =========================
-     IMAGE MODAL
-========================= -->
 
 <div id="imageModal" class="modal">
 
@@ -1705,11 +1510,7 @@ button:disabled{
     MEDIA / ARTICLE
    </div>
 
-   <button
-    id="imageModalClose"
-    class="modal-close"
-    type="button"
-   >×</button>
+   <button id="imageModalClose" class="modal-close" type="button">×</button>
 
   </div>
 
@@ -1732,19 +1533,11 @@ button:disabled{
 
    <div class="modal-actions">
 
-    <button
-     id="imageCancel"
-     class="secondary-button"
-     type="button"
-    >
+    <button id="imageCancel" class="secondary-button" type="button">
      Отмена
     </button>
 
-    <button
-     id="imageConfirm"
-     class="primary-button"
-     type="button"
-    >
+    <button id="imageConfirm" class="primary-button" type="button">
      Вставить
     </button>
 
@@ -1758,6 +1551,7 @@ button:disabled{
 
 
 <script>
+
 /* =========================================================
    SUPABASE
 ========================================================= */
@@ -1801,7 +1595,6 @@ const loginStatus =
 const logoutButton =
  document.getElementById("logoutButton");
 
-
 const newsImage =
  document.getElementById("newsImage");
 
@@ -1829,7 +1622,6 @@ const publishNewsButton =
 const newsStatus =
  document.getElementById("newsStatus");
 
-
 const formatPicker =
  document.getElementById("formatPicker");
 
@@ -1842,7 +1634,6 @@ const formatPickerText =
 const formatPickerMenu =
  document.getElementById("formatPickerMenu");
 
-
 const fontSizePicker =
  document.getElementById("fontSizePicker");
 
@@ -1854,7 +1645,6 @@ const fontSizeText =
 
 const fontSizeMenu =
  document.getElementById("fontSizeMenu");
-
 
 const insertLinkButton =
  document.getElementById("insertLinkButton");
@@ -1877,7 +1667,6 @@ const linkText =
 const linkUrl =
  document.getElementById("linkUrl");
 
-
 const insertImageButton =
  document.getElementById("insertImageButton");
 
@@ -1898,7 +1687,6 @@ const imageConfirm =
 
 const imageCaption =
  document.getElementById("imageCaption");
-
 
 const changeTitle =
  document.getElementById("changeTitle");
@@ -1937,9 +1725,7 @@ const imagesStatus =
 
 let savedEditorRange = null;
 let pendingImageUrl = null;
-
 let selectedInlineImage = null;
-
 let resizingImage = false;
 let resizeStartX = 0;
 let resizeStartWidth = 0;
@@ -1962,6 +1748,10 @@ function escapeHtml(value){
 
 
 function setStatus(element,message,error=false){
+
+ if(!element){
+  return;
+ }
 
  element.textContent =
   message || "";
@@ -2206,13 +1996,9 @@ logoutButton.addEventListener(
  async()=>{
 
   try{
-
    await db.auth.signOut();
-
   }catch(error){
-
    console.error(error);
-
   }
 
   location.reload();
@@ -2250,7 +2036,6 @@ async function loadSiteSettings(){
  (data || []).forEach(row=>{
   settings[row.key] = row.value;
  });
-
 
  renderPreview(
   "logoPreview",
@@ -2403,9 +2188,15 @@ async function uploadImage(type){
 
  }catch(error){
 
+  console.error(
+   "UPLOAD SITE IMAGE ERROR:",
+   error
+  );
+
   setStatus(
    imagesStatus,
-   error.message,
+   error.message ||
+    "Не удалось загрузить изображение.",
    true
   );
 
@@ -2476,7 +2267,7 @@ newsImage.addEventListener(
 
 
 /* =========================================================
-   EDITOR SELECTION
+   EDITOR
 ========================================================= */
 
 function saveEditorSelection(){
@@ -2544,29 +2335,18 @@ function restoreEditorSelection(){
 
 function closePickers(){
 
- formatPicker.classList.remove(
-  "open"
- );
-
- fontSizePicker.classList.remove(
-  "open"
- );
+ formatPicker.classList.remove("open");
+ fontSizePicker.classList.remove("open");
 
 }
 
-
-/* =========================================================
-   TOOLBAR SELECTION
-========================================================= */
 
 editorToolbar.addEventListener(
  "mousedown",
  event=>{
 
   const target =
-   event.target.closest(
-    "button"
-   );
+   event.target.closest("button");
 
   if(!target){
    return;
@@ -2579,10 +2359,6 @@ editorToolbar.addEventListener(
  });
 
 
-/* =========================================================
-   FORMAT PICKER
-========================================================= */
-
 const formatNames = {
  p:"Обычный текст",
  h2:"Заголовок",
@@ -2594,11 +2370,8 @@ const formatNames = {
 formatPickerButton.addEventListener(
  "mousedown",
  event=>{
-
   event.preventDefault();
-
   saveEditorSelection();
-
  });
 
 
@@ -2609,16 +2382,12 @@ formatPickerButton.addEventListener(
   event.stopPropagation();
 
   const willOpen =
-   !formatPicker.classList.contains(
-    "open"
-   );
+   !formatPicker.classList.contains("open");
 
   closePickers();
 
   if(willOpen){
-   formatPicker.classList.add(
-    "open"
-   );
+   formatPicker.classList.add("open");
   }
 
  });
@@ -2629,16 +2398,13 @@ formatPickerMenu.addEventListener(
  event=>{
 
   const option =
-   event.target.closest(
-    ".editor-picker-option"
-   );
+   event.target.closest(".editor-picker-option");
 
   if(!option){
    return;
   }
 
   event.preventDefault();
-
   saveEditorSelection();
 
  });
@@ -2649,9 +2415,7 @@ formatPickerMenu.addEventListener(
  event=>{
 
   const option =
-   event.target.closest(
-    ".editor-picker-option"
-   );
+   event.target.closest(".editor-picker-option");
 
   if(!option){
    return;
@@ -2672,28 +2436,20 @@ formatPickerMenu.addEventListener(
     "#formatPickerMenu .editor-picker-option"
    )
    .forEach(item=>{
-
     item.classList.toggle(
      "active",
      item.dataset.format === format
     );
-
    });
 
   closePickers();
 
   saveEditorSelection();
-
   updateToolbarState();
-
   scheduleEditorHistory();
 
  });
 
-
-/* =========================================================
-   SAFE BLOCK FORMATTING
-========================================================= */
 
 function getEditorBlockElement(node){
 
@@ -2701,8 +2457,7 @@ function getEditorBlockElement(node){
   node &&
   node.nodeType === Node.TEXT_NODE
  ){
-  node =
-   node.parentElement;
+  node = node.parentElement;
  }
 
  if(
@@ -2735,8 +2490,7 @@ function replaceBlockTag(block,tagName){
  }
 
  if(
-  block.tagName.toLowerCase() ===
-  tagName
+  block.tagName.toLowerCase() === tagName
  ){
   return block;
  }
@@ -2744,10 +2498,6 @@ function replaceBlockTag(block,tagName){
  const replacement =
   document.createElement(tagName);
 
- /*
-  * Переносим только необходимые
-  * атрибуты самого блока.
-  */
  Array.from(
   block.attributes
  ).forEach(attribute=>{
@@ -2768,6 +2518,7 @@ function replaceBlockTag(block,tagName){
  );
 
  return replacement;
+
 }
 
 
@@ -2792,6 +2543,7 @@ function getSelectedEditorBlocks(range){
   });
 
  return blocks;
+
 }
 
 
@@ -2842,11 +2594,6 @@ function applyBlockFormat(format){
 
  }
 
- /*
-  * Меняем каждый существующий блок отдельно.
-  * Это принципиально важно: execCommand("formatBlock")
-  * мог создавать неправильные вложенные h2/p/list.
-  */
  blocks.forEach(block=>{
   replaceBlockTag(
    block,
@@ -2854,10 +2601,6 @@ function applyBlockFormat(format){
   );
  });
 
- /*
-  * Если редактор содержит обычный текст
-  * без блочного элемента — помещаем его в p.
-  */
  if(
   !blocks.length &&
   newsEditor.textContent.trim()
@@ -2875,8 +2618,6 @@ function applyBlockFormat(format){
    paragraph
   );
 
-  blocks = [paragraph];
-
  }
 
 }
@@ -2891,21 +2632,12 @@ for(let size=8;size<=72;size++){
  const option =
   document.createElement("button");
 
- option.type =
-  "button";
+ option.type = "button";
+ option.className = "editor-picker-option";
+ option.dataset.size = size;
+ option.textContent = `${size} px`;
 
- option.className =
-  "editor-picker-option";
-
- option.dataset.size =
-  size;
-
- option.textContent =
-  `${size} px`;
-
- fontSizeMenu.appendChild(
-  option
- );
+ fontSizeMenu.appendChild(option);
 
 }
 
@@ -2926,8 +2658,7 @@ function getCurrentFontSize(){
   node &&
   node.nodeType === Node.TEXT_NODE
  ){
-  node =
-   node.parentElement;
+  node = node.parentElement;
  }
 
  if(
@@ -2982,12 +2713,10 @@ function updateFontSizeState(){
    "#fontSizeMenu .editor-picker-option"
   )
   .forEach(option=>{
-
    option.classList.toggle(
     "active",
     Number(option.dataset.size) === size
    );
-
   });
 
 }
@@ -2996,11 +2725,8 @@ function updateFontSizeState(){
 fontSizeButton.addEventListener(
  "mousedown",
  event=>{
-
   event.preventDefault();
-
   saveEditorSelection();
-
  });
 
 
@@ -3011,9 +2737,7 @@ fontSizeButton.addEventListener(
   event.stopPropagation();
 
   const willOpen =
-   !fontSizePicker.classList.contains(
-    "open"
-   );
+   !fontSizePicker.classList.contains("open");
 
   closePickers();
 
@@ -3021,9 +2745,7 @@ fontSizeButton.addEventListener(
 
    updateFontSizeState();
 
-   fontSizePicker.classList.add(
-    "open"
-   );
+   fontSizePicker.classList.add("open");
 
   }
 
@@ -3035,16 +2757,13 @@ fontSizeMenu.addEventListener(
  event=>{
 
   const option =
-   event.target.closest(
-    ".editor-picker-option"
-   );
+   event.target.closest(".editor-picker-option");
 
   if(!option){
    return;
   }
 
   event.preventDefault();
-
   saveEditorSelection();
 
  });
@@ -3055,9 +2774,7 @@ fontSizeMenu.addEventListener(
  event=>{
 
   const option =
-   event.target.closest(
-    ".editor-picker-option"
-   );
+   event.target.closest(".editor-picker-option");
 
   if(!option){
    return;
@@ -3078,20 +2795,16 @@ fontSizeMenu.addEventListener(
     "#fontSizeMenu .editor-picker-option"
    )
    .forEach(item=>{
-
     item.classList.toggle(
      "active",
      Number(item.dataset.size) === size
     );
-
    });
 
   closePickers();
 
   saveEditorSelection();
-
   updateToolbarState();
-
   scheduleEditorHistory();
 
  });
@@ -3117,21 +2830,16 @@ function applyFontSize(size){
   return;
  }
 
-
  if(range.collapsed){
 
   const span =
-   document.createElement(
-    "span"
-   );
+   document.createElement("span");
 
   span.style.fontSize =
    `${size}px`;
 
   const text =
-   document.createTextNode(
-    "\u200B"
-   );
+   document.createTextNode("\u200B");
 
   span.appendChild(text);
 
@@ -3140,18 +2848,11 @@ function applyFontSize(size){
   const newRange =
    document.createRange();
 
-  newRange.setStart(
-   text,
-   1
-  );
-
+  newRange.setStart(text,1);
   newRange.collapse(true);
 
   selection.removeAllRanges();
-
-  selection.addRange(
-   newRange
-  );
+  selection.addRange(newRange);
 
   savedEditorRange =
    newRange.cloneRange();
@@ -3160,38 +2861,26 @@ function applyFontSize(size){
 
  }
 
-
  const fragment =
   range.extractContents();
 
  const span =
-  document.createElement(
-   "span"
-  );
+  document.createElement("span");
 
  span.style.fontSize =
   `${size}px`;
 
- span.appendChild(
-  fragment
- );
+ span.appendChild(fragment);
 
- range.insertNode(
-  span
- );
+ range.insertNode(span);
 
  const newRange =
   document.createRange();
 
- newRange.selectNodeContents(
-  span
- );
+ newRange.selectNodeContents(span);
 
  selection.removeAllRanges();
-
- selection.addRange(
-  newRange
- );
+ selection.addRange(newRange);
 
  savedEditorRange =
   newRange.cloneRange();
@@ -3200,7 +2889,7 @@ function applyFontSize(size){
 
 
 /* =========================================================
-   EDITOR HISTORY
+   HISTORY
 ========================================================= */
 
 let editorHistory = [
@@ -3208,9 +2897,7 @@ let editorHistory = [
 ];
 
 let editorHistoryIndex = 0;
-
 let historyTimer = null;
-
 let restoringHistory = false;
 
 
@@ -3237,9 +2924,7 @@ function recordEditorHistory(){
    editorHistoryIndex + 1
   );
 
- editorHistory.push(
-  html
- );
+ editorHistory.push(html);
 
  if(editorHistory.length > 100){
 
@@ -3258,9 +2943,7 @@ function recordEditorHistory(){
 
 function scheduleEditorHistory(){
 
- clearTimeout(
-  historyTimer
- );
+ clearTimeout(historyTimer);
 
  historyTimer =
   setTimeout(
@@ -3273,9 +2956,7 @@ function scheduleEditorHistory(){
 
 function flushEditorHistory(){
 
- clearTimeout(
-  historyTimer
- );
+ clearTimeout(historyTimer);
 
  historyTimer = null;
 
@@ -3294,12 +2975,9 @@ function restoreEditorHistory(index){
   return;
  }
 
- clearTimeout(
-  historyTimer
- );
+ clearTimeout(historyTimer);
 
  historyTimer = null;
-
  restoringHistory = true;
 
  newsEditor.innerHTML =
@@ -3318,23 +2996,16 @@ function restoreEditorHistory(index){
  const range =
   document.createRange();
 
- range.selectNodeContents(
-  newsEditor
- );
-
+ range.selectNodeContents(newsEditor);
  range.collapse(false);
 
  selection.removeAllRanges();
-
- selection.addRange(
-  range
- );
+ selection.addRange(range);
 
  savedEditorRange =
   range.cloneRange();
 
  updateToolbarState();
-
  updateHistoryButtons();
 
 }
@@ -3353,18 +3024,14 @@ function updateHistoryButtons(){
   );
 
  if(undoButton){
-
   undoButton.disabled =
    editorHistoryIndex <= 0;
-
  }
 
  if(redoButton){
-
   redoButton.disabled =
    editorHistoryIndex >=
    editorHistory.length - 1;
-
  }
 
 }
@@ -3375,23 +3042,17 @@ function executeEditorCommand(command){
  flushEditorHistory();
 
  if(command === "undo"){
-
   restoreEditorHistory(
    editorHistoryIndex - 1
   );
-
   return;
-
  }
 
  if(command === "redo"){
-
   restoreEditorHistory(
    editorHistoryIndex + 1
   );
-
   return;
-
  }
 
  restoreEditorSelection();
@@ -3403,9 +3064,7 @@ function executeEditorCommand(command){
  );
 
  saveEditorSelection();
-
  updateToolbarState();
-
  scheduleEditorHistory();
 
 }
@@ -3425,7 +3084,6 @@ editorToolbar.addEventListener(
   }
 
   event.preventDefault();
-
   event.stopImmediatePropagation();
 
   executeEditorCommand(
@@ -3447,8 +3105,7 @@ function getEditorBlock(node){
   node &&
   node.nodeType === Node.TEXT_NODE
  ){
-  node =
-   node.parentElement;
+  node = node.parentElement;
  }
 
  if(
@@ -3479,30 +3136,12 @@ function resetBlockFormatting(block){
   return;
  }
 
- /*
-  * Новый абзац всегда начинается
-  * с базового форматирования.
-  */
- block.style.fontSize =
-  "14px";
+ block.style.fontSize = "14px";
+ block.style.fontWeight = "normal";
+ block.style.fontStyle = "normal";
+ block.style.textDecoration = "none";
+ block.style.textAlign = "left";
 
- block.style.fontWeight =
-  "normal";
-
- block.style.fontStyle =
-  "normal";
-
- block.style.textDecoration =
-  "none";
-
- block.style.textAlign =
-  "left";
-
- /*
-  * Убираем форматирование,
-  * которое браузер мог перенести
-  * в новый блок после Enter.
-  */
  block
   .querySelectorAll(
    "strong,b,em,i,u,s,strike"
@@ -3514,26 +3153,15 @@ function resetBlockFormatting(block){
   });
 
  block
-  .querySelectorAll(
-   "span"
-  )
+  .querySelectorAll("span")
   .forEach(span=>{
 
-   span.style.fontSize =
-    "14px";
+   span.style.fontSize = "14px";
+   span.style.fontWeight = "normal";
+   span.style.fontStyle = "normal";
+   span.style.textDecoration = "none";
 
-   span.style.fontWeight =
-    "normal";
-
-   span.style.fontStyle =
-    "normal";
-
-   span.style.textDecoration =
-    "none";
-
-   if(
-    !span.attributes.length
-   ){
+   if(!span.attributes.length){
     span.replaceWith(
      ...span.childNodes
     );
@@ -3558,9 +3186,7 @@ newsEditor.addEventListener(
   const selection =
    window.getSelection();
 
-  if(
-   !selection.rangeCount
-  ){
+  if(!selection.rangeCount){
    return;
   }
 
@@ -3582,17 +3208,12 @@ newsEditor.addEventListener(
    node &&
    node.nodeType === Node.TEXT_NODE
   ){
-   node =
-    node.parentElement;
+   node = node.parentElement;
   }
 
   const currentBlock =
    getEditorBlock(node);
 
-  /*
-   * В списках Enter должен работать
-   * как обычный Enter браузера.
-   */
   if(
    currentBlock &&
    currentBlock.matches("li")
@@ -3606,28 +3227,16 @@ newsEditor.addEventListener(
     null
    );
 
-   requestAnimationFrame(
-    ()=>{
-
-     saveEditorSelection();
-
-     updateToolbarState();
-
-     scheduleEditorHistory();
-
-    }
-   );
+   requestAnimationFrame(()=>{
+    saveEditorSelection();
+    updateToolbarState();
+    scheduleEditorHistory();
+   });
 
    return;
+
   }
 
-  /*
-   * Для p/h2/h3/blockquote тоже используем
-   * настоящий insertParagraph. В отличие от
-   * ручного extractContents() он корректно
-   * разделяет текущий блок и не переносит
-   * последующие p/ul/ol внутрь h2.
-   */
   event.preventDefault();
 
   document.execCommand(
@@ -3636,73 +3245,59 @@ newsEditor.addEventListener(
    null
   );
 
-  requestAnimationFrame(
-   ()=>{
+  requestAnimationFrame(()=>{
 
-    const currentSelection =
-     window.getSelection();
+   const currentSelection =
+    window.getSelection();
+
+   if(
+    currentSelection &&
+    currentSelection.rangeCount
+   ){
+
+    let newNode =
+     currentSelection.anchorNode;
 
     if(
-     currentSelection &&
-     currentSelection.rangeCount
+     newNode &&
+     newNode.nodeType === Node.TEXT_NODE
+    ){
+     newNode =
+      newNode.parentElement;
+    }
+
+    let newBlock =
+     getEditorBlock(newNode);
+
+    if(
+     newBlock &&
+     newBlock.matches(
+      "h2,h3,blockquote"
+     )
     ){
 
-     let newNode =
-      currentSelection.anchorNode;
-
-     if(
-      newNode &&
-      newNode.nodeType === Node.TEXT_NODE
-     ){
-      newNode =
-       newNode.parentElement;
-     }
-
-     let newBlock =
-      getEditorBlock(newNode);
-
-     /*
-      * После Enter в заголовке браузер
-      * иногда создаёт второй h2/h3.
-      * Превращаем именно новый блок
-      * в обычный p.
-      */
-     if(
-      newBlock &&
-      newBlock.matches(
-       "h2,h3,blockquote"
-      )
-     ){
-
-      newBlock =
-       replaceBlockTag(
-        newBlock,
-        "p"
-       );
-
-     }
-
-     resetBlockFormatting(
-      newBlock
-     );
+     newBlock =
+      replaceBlockTag(
+       newBlock,
+       "p"
+      );
 
     }
 
-    saveEditorSelection();
-
-    updateToolbarState();
-
-    scheduleEditorHistory();
+    resetBlockFormatting(
+     newBlock
+    );
 
    }
-  );
+
+   saveEditorSelection();
+   updateToolbarState();
+   scheduleEditorHistory();
+
+  });
 
  });
 
-
-/* =========================
-   INPUT / HISTORY
-========================= */
 
 newsEditor.addEventListener(
  "input",
@@ -3713,7 +3308,6 @@ newsEditor.addEventListener(
   }
 
   saveEditorSelection();
-
   updateToolbarState();
 
  });
@@ -3724,7 +3318,6 @@ newsEditor.addEventListener(
  ()=>{
 
   saveEditorSelection();
-
   updateToolbarState();
 
  });
@@ -3735,7 +3328,6 @@ newsEditor.addEventListener(
  ()=>{
 
   saveEditorSelection();
-
   updateToolbarState();
 
  });
@@ -3763,7 +3355,6 @@ document.addEventListener(
   ){
 
    saveEditorSelection();
-
    updateToolbarState();
 
   }
@@ -3804,9 +3395,7 @@ function updateToolbarState(){
 
   });
 
-
  updateFontSizeState();
-
 
  const selection =
   window.getSelection();
@@ -3822,8 +3411,7 @@ function updateToolbarState(){
   node &&
   node.nodeType === Node.TEXT_NODE
  ){
-  node =
-   node.parentElement;
+  node = node.parentElement;
  }
 
  if(
@@ -3851,12 +3439,10 @@ function updateToolbarState(){
    "#formatPickerMenu .editor-picker-option"
   )
   .forEach(option=>{
-
    option.classList.toggle(
     "active",
     option.dataset.format === tag
    );
-
   });
 
 }
@@ -3869,11 +3455,8 @@ function updateToolbarState(){
 insertLinkButton.addEventListener(
  "mousedown",
  event=>{
-
   event.preventDefault();
-
   saveEditorSelection();
-
  });
 
 
@@ -3893,14 +3476,10 @@ insertLinkButton.addEventListener(
 
   linkUrl.value = "";
 
-  linkModal.classList.add(
-   "open"
-  );
+  linkModal.classList.add("open");
 
   setTimeout(
-   ()=>{
-    linkText.focus();
-   },
+   ()=>linkText.focus(),
    20
   );
 
@@ -3909,9 +3488,7 @@ insertLinkButton.addEventListener(
 
 function closeLinkModal(){
 
- linkModal.classList.remove(
-  "open"
- );
+ linkModal.classList.remove("open");
 
 }
 
@@ -3975,40 +3552,23 @@ linkConfirm.addEventListener(
   range.deleteContents();
 
   const link =
-   document.createElement(
-    "a"
-   );
+   document.createElement("a");
 
-  link.href =
-   url;
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = text;
 
-  link.target =
-   "_blank";
-
-  link.rel =
-   "noopener noreferrer";
-
-  link.textContent =
-   text;
-
-  range.insertNode(
-   link
-  );
+  range.insertNode(link);
 
   const newRange =
    document.createRange();
 
-  newRange.setStartAfter(
-   link
-  );
-
+  newRange.setStartAfter(link);
   newRange.collapse(true);
 
   selection.removeAllRanges();
-
-  selection.addRange(
-   newRange
-  );
+  selection.addRange(newRange);
 
   savedEditorRange =
    newRange.cloneRange();
@@ -4016,7 +3576,6 @@ linkConfirm.addEventListener(
   closeLinkModal();
 
   updateToolbarState();
-
   scheduleEditorHistory();
 
  });
@@ -4029,11 +3588,8 @@ linkConfirm.addEventListener(
 insertImageButton.addEventListener(
  "mousedown",
  event=>{
-
   event.preventDefault();
-
   saveEditorSelection();
-
  });
 
 
@@ -4043,9 +3599,7 @@ insertImageButton.addEventListener(
 
   restoreEditorSelection();
 
-  inlineImageFile.value =
-   "";
-
+  inlineImageFile.value = "";
   inlineImageFile.click();
 
  });
@@ -4068,9 +3622,7 @@ inlineImageFile.addEventListener(
     "Максимальный размер изображения — 5 МБ."
    );
 
-   inlineImageFile.value =
-    "";
-
+   inlineImageFile.value = "";
    return;
 
   }
@@ -4087,9 +3639,7 @@ inlineImageFile.addEventListener(
     "Разрешены PNG, JPG и WEBP."
    );
 
-   inlineImageFile.value =
-    "";
-
+   inlineImageFile.value = "";
    return;
 
   }
@@ -4097,9 +3647,7 @@ inlineImageFile.addEventListener(
   try{
 
    const url =
-    await uploadInlineImage(
-     file
-    );
+    await uploadInlineImage(file);
 
    pendingImageUrl =
     url;
@@ -4107,14 +3655,10 @@ inlineImageFile.addEventListener(
    imageCaption.value =
     "";
 
-   imageModal.classList.add(
-    "open"
-   );
+   imageModal.classList.add("open");
 
    setTimeout(
-    ()=>{
-     imageCaption.focus();
-    },
+    ()=>imageCaption.focus(),
     20
    );
 
@@ -4170,9 +3714,7 @@ async function uploadInlineImage(file){
 
 function closeImageModal(){
 
- imageModal.classList.remove(
-  "open"
- );
+ imageModal.classList.remove("open");
 
  pendingImageUrl =
   null;
@@ -4204,28 +3746,23 @@ function selectInlineImage(figure){
   selectedInlineImage &&
   selectedInlineImage !== figure
  ){
+
   selectedInlineImage.classList.remove(
    "selected"
   );
+
  }
 
  selectedInlineImage =
   figure;
 
- figure.classList.add(
-  "selected"
- );
-
+ figure.classList.add("selected");
 
  const controls =
-  figure.querySelector(
-   ".image-controls"
-  );
+  figure.querySelector(".image-controls");
 
  if(!controls){
-  createImageControls(
-   figure
-  );
+  createImageControls(figure);
  }
 
 }
@@ -4234,17 +3771,13 @@ function selectInlineImage(figure){
 function createImageControls(figure){
 
  if(
-  figure.querySelector(
-   ".image-controls"
-  )
+  figure.querySelector(".image-controls")
  ){
   return;
  }
 
  const controls =
-  document.createElement(
-   "div"
-  );
+  document.createElement("div");
 
  controls.className =
   "image-controls";
@@ -4254,13 +3787,9 @@ function createImageControls(figure){
 
 
  const deleteButton =
-  document.createElement(
-   "button"
-  );
+  document.createElement("button");
 
- deleteButton.type =
-  "button";
-
+ deleteButton.type = "button";
  deleteButton.className =
   "image-delete-button";
 
@@ -4305,16 +3834,13 @@ function createImageControls(figure){
    }
 
    saveEditorSelection();
-
    scheduleEditorHistory();
 
   });
 
 
  const resizeHandle =
-  document.createElement(
-   "div"
-  );
+  document.createElement("div");
 
  resizeHandle.className =
   "image-resize-handle";
@@ -4328,7 +3854,6 @@ function createImageControls(figure){
   event=>{
 
    event.preventDefault();
-
    event.stopPropagation();
 
    selectInlineImage(
@@ -4348,18 +3873,10 @@ function createImageControls(figure){
   });
 
 
- controls.appendChild(
-  deleteButton
- );
+ controls.appendChild(deleteButton);
+ controls.appendChild(resizeHandle);
 
- controls.appendChild(
-  resizeHandle
- );
-
- figure.appendChild(
-  controls
- );
-
+ figure.appendChild(controls);
 
  figure.contentEditable =
   "false";
@@ -4382,7 +3899,6 @@ newsEditor.addEventListener(
   if(figure){
 
    event.preventDefault();
-
    event.stopPropagation();
 
    selectInlineImage(
@@ -4424,8 +3940,7 @@ document.addEventListener(
   }
 
   const editorWidth =
-   newsEditor.clientWidth -
-   36;
+   newsEditor.clientWidth - 36;
 
   const delta =
    event.clientX -
@@ -4465,7 +3980,6 @@ document.addEventListener(
    false;
 
   saveEditorSelection();
-
   scheduleEditorHistory();
 
  });
@@ -4500,11 +4014,8 @@ imageConfirm.addEventListener(
 
   range.deleteContents();
 
-
   const figure =
-   document.createElement(
-    "figure"
-   );
+   document.createElement("figure");
 
   figure.className =
    "news-inline-image";
@@ -4517,9 +4028,7 @@ imageConfirm.addEventListener(
 
 
   const img =
-   document.createElement(
-    "img"
-   );
+   document.createElement("img");
 
   img.src =
    pendingImageUrl;
@@ -4530,37 +4039,22 @@ imageConfirm.addEventListener(
 
 
   const figcaption =
-   document.createElement(
-    "figcaption"
-   );
+   document.createElement("figcaption");
 
   figcaption.textContent =
    caption;
 
 
-  figure.appendChild(
-   img
-  );
+  figure.appendChild(img);
+  figure.appendChild(figcaption);
 
-  figure.appendChild(
-   figcaption
-  );
+  createImageControls(figure);
 
-
-  createImageControls(
-   figure
-  );
-
-
-  range.insertNode(
-   figure
-  );
+  range.insertNode(figure);
 
 
   const paragraph =
-   document.createElement(
-    "p"
-   );
+   document.createElement("p");
 
   paragraph.style.fontSize =
    "14px";
@@ -4580,30 +4074,20 @@ imageConfirm.addEventListener(
   paragraph.innerHTML =
    "<br>";
 
-
-  figure.after(
-   paragraph
-  );
+  figure.after(paragraph);
 
 
   const newRange =
    document.createRange();
 
-  newRange.selectNodeContents(
-   paragraph
-  );
-
+  newRange.selectNodeContents(paragraph);
   newRange.collapse(true);
 
   selection.removeAllRanges();
-
-  selection.addRange(
-   newRange
-  );
+  selection.addRange(newRange);
 
   savedEditorRange =
    newRange.cloneRange();
-
 
   closeImageModal();
 
@@ -4615,22 +4099,15 @@ imageConfirm.addEventListener(
 
 
 /* =========================================================
-   PREPARE EDITOR HTML FOR DATABASE
+   PREPARE EDITOR HTML
 ========================================================= */
 
 function removeEmptyEditorParagraphs(root){
 
  root
-  .querySelectorAll(
-   "p"
-  )
+  .querySelectorAll("p")
   .forEach(paragraph=>{
 
-   /*
-    * Оставляем <p><br></p>, только если это
-    * единственный способ сохранить пустую
-    * строку между элементами.
-    */
    const text =
     paragraph.textContent
      .replace(/\u200B/g,"")
@@ -4661,30 +4138,15 @@ function removeEmptyEditorParagraphs(root){
 
 function unwrapInvalidNestedBlocks(root){
 
- const blockSelector =
-  "p,h2,h3,h4,blockquote,ul,ol,figure";
+ const selectors =
+  "p p,p h2,p h3,p h4,p blockquote,p ul,p ol,p figure," +
+  "h2 p,h2 h2,h2 h3,h2 h4,h2 blockquote,h2 ul,h2 ol,h2 figure," +
+  "h3 p,h3 h2,h3 h3,h3 h4,h3 blockquote,h3 ul,h3 ol,h3 figure," +
+  "h4 p,h4 h2,h4 h3,h4 h4,h4 blockquote,h4 ul,h4 ol,h4 figure," +
+  "blockquote p,blockquote h2,blockquote h3,blockquote h4,blockquote blockquote,blockquote ul,blockquote ol,blockquote figure";
 
- /*
-  * Старый редактор мог создать структуру
-  * вроде:
-  *
-  * <h2>
-  *   текст
-  *   <p>...</p>
-  *   <ul>...</ul>
-  * </h2>
-  *
-  * Такие блочные элементы не могут находиться
-  * внутри h2/p. Выносим их наружу.
-  */
  root
-  .querySelectorAll(
-   "p p,p h2,p h3,p h4,p blockquote,p ul,p ol,p figure," +
-   "h2 p,h2 h2,h2 h3,h2 h4,h2 blockquote,h2 ul,h2 ol,h2 figure," +
-   "h3 p,h3 h2,h3 h3,h3 h4,h3 blockquote,h3 ul,h3 ol,h3 figure," +
-   "h4 p,h4 h2,h4 h3,h4 h4,h4 blockquote,h4 ul,h4 ol,h4 figure," +
-   "blockquote p,blockquote h2,blockquote h3,blockquote h4,blockquote blockquote,blockquote ul,blockquote ol,blockquote figure"
-  )
+  .querySelectorAll(selectors)
   .forEach(nested=>{
 
    const parent =
@@ -4706,30 +4168,25 @@ function unwrapInvalidNestedBlocks(root){
     return;
    }
 
-   /*
-    * Если вложенный блок не последний,
-    * переносим последующие узлы в новый
-    * блок того же типа.
-    */
    const following = [];
 
    let sibling =
     nested.nextSibling;
 
    while(sibling){
+
     const next =
      sibling.nextSibling;
 
-    following.push(
-     sibling
-    );
+    following.push(sibling);
 
     sibling = next;
+
    }
 
-   following.forEach(node=>{
-    node.remove();
-   });
+   following.forEach(
+    node=>node.remove()
+   );
 
    const afterBlock =
     following.length
@@ -4761,18 +4218,17 @@ function unwrapInvalidNestedBlocks(root){
    );
 
    if(afterBlock){
+
     parentParent.insertBefore(
      afterBlock,
      nested.nextSibling
     );
+
    }
 
   });
 
- /*
-  * Убираем возможные пустые контейнеры,
-  * оставшиеся после исправления.
-  */
+
  root
   .querySelectorAll(
    "p,h2,h3,h4,blockquote"
@@ -4801,45 +4257,27 @@ function normalizeEditorHtml(html){
  wrapper.innerHTML =
   html;
 
- /*
-  * Сначала удаляем неправильную
-  * вложенность блоков.
-  */
  unwrapInvalidNestedBlocks(
   wrapper
  );
 
- /*
-  * Затем убираем пустые технические
-  * абзацы.
-  */
  removeEmptyEditorParagraphs(
   wrapper
  );
 
- /*
-  * Удаляем пустые span и стили,
-  * которые браузер добавляет сам.
-  */
  wrapper
-  .querySelectorAll(
-   "span"
-  )
+  .querySelectorAll("span")
   .forEach(span=>{
 
    if(
     !span.textContent &&
-    !span.querySelector(
-     "img"
-    )
+    !span.querySelector("img")
    ){
     span.remove();
     return;
    }
 
-   if(
-    !span.attributes.length
-   ){
+   if(!span.attributes.length){
     span.replaceWith(
      ...span.childNodes
     );
@@ -4857,10 +4295,6 @@ function prepareEditorHtml(){
  const clone =
   newsEditor.cloneNode(true);
 
- /*
-  * Удаляем все служебные элементы
-  * управления картинками.
-  */
  clone
   .querySelectorAll(
    ".image-controls,.image-delete-button,.image-resize-handle"
@@ -4869,9 +4303,7 @@ function prepareEditorHtml(){
    element.remove();
   });
 
- /*
-  * Убираем служебные атрибуты картинок.
-  */
+
  clone
   .querySelectorAll(
    ".news-inline-image"
@@ -4891,6 +4323,7 @@ function prepareEditorHtml(){
    );
 
   });
+
 
  const clean =
   DOMPurify.sanitize(
@@ -4953,25 +4386,21 @@ function prepareEditorHtml(){
 
 
 /* =========================================================
-   NEWS UPLOAD
+   NEWS
 ========================================================= */
 
 async function uploadNewsImage(file){
 
  if(!file){
-
   throw new Error(
    "Главное изображение не выбрано."
   );
-
  }
 
  if(file.size > 5 * 1024 * 1024){
-
   throw new Error(
    "Максимальный размер изображения — 5 МБ."
   );
-
  }
 
  if(
@@ -4981,11 +4410,9 @@ async function uploadNewsImage(file){
    "image/webp"
   ].includes(file.type)
  ){
-
   throw new Error(
    "Разрешены PNG, JPG и WEBP."
   );
-
  }
 
  const extension =
@@ -5025,10 +4452,6 @@ async function uploadNewsImage(file){
 }
 
 
-/* =========================================================
-   PUBLISH NEWS
-========================================================= */
-
 publishNewsButton.addEventListener(
  "click",
  async()=>{
@@ -5044,7 +4467,6 @@ publishNewsButton.addEventListener(
 
   const imageFile =
    newsImage.files?.[0];
-
 
   if(!title){
 
@@ -5075,7 +4497,6 @@ publishNewsButton.addEventListener(
     .replace(/\u200B/g,"")
     .trim();
 
-
   if(!plainText){
 
    setStatus(
@@ -5100,7 +4521,6 @@ publishNewsButton.addEventListener(
 
   }
 
-
   publishNewsButton.disabled =
    true;
 
@@ -5108,7 +4528,6 @@ publishNewsButton.addEventListener(
    newsStatus,
    "Загрузка изображения..."
   );
-
 
   try{
 
@@ -5120,12 +4539,10 @@ publishNewsButton.addEventListener(
    const cleanContent =
     prepareEditorHtml();
 
-
    setStatus(
     newsStatus,
     "Сохранение новости..."
    );
-
 
    const {
     error
@@ -5139,45 +4556,26 @@ publishNewsButton.addEventListener(
      image:imageUrl
     });
 
-
    if(error){
     throw error;
    }
-
 
    setStatus(
     newsStatus,
     "Новость успешно опубликована."
    );
 
+   newsTitle.value = "";
+   newsDescription.value = "";
+   newsImage.value = "";
+   newsImagePreview.innerHTML = "";
+   newsEditor.innerHTML = "";
 
-   newsTitle.value =
-    "";
+   selectedInlineImage = null;
+   savedEditorRange = null;
 
-   newsDescription.value =
-    "";
-
-   newsImage.value =
-    "";
-
-   newsImagePreview.innerHTML =
-    "";
-
-   newsEditor.innerHTML =
-    "";
-
-   selectedInlineImage =
-    null;
-
-   savedEditorRange =
-    null;
-
-   editorHistory = [
-    ""
-   ];
-
-   editorHistoryIndex =
-    0;
+   editorHistory = [""];
+   editorHistoryIndex = 0;
 
    formatPickerText.textContent =
     "Обычный текст";
@@ -5185,27 +4583,21 @@ publishNewsButton.addEventListener(
    fontSizeText.textContent =
     "14 px";
 
-
    document
     .querySelectorAll(
      "#formatPickerMenu .editor-picker-option"
     )
     .forEach(option=>{
-
      option.classList.toggle(
       "active",
       option.dataset.format === "p"
      );
-
     });
 
-
    updateToolbarState();
-
    updateHistoryButtons();
 
    await loadNews();
-
 
   }catch(error){
 
@@ -5230,10 +4622,6 @@ publishNewsButton.addEventListener(
 
  });
 
-
-/* =========================================================
-   LOAD NEWS
-========================================================= */
 
 async function loadNews(){
 
@@ -5261,9 +4649,7 @@ async function loadNews(){
 
  }
 
-
- newsList.innerHTML =
-  "";
+ newsList.innerHTML = "";
 
  if(!data?.length){
 
@@ -5274,22 +4660,16 @@ async function loadNews(){
 
  }
 
-
  data.forEach(news=>{
 
   const item =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   item.className =
    "news-item";
 
-
   const info =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   info.innerHTML = `
    <div class="item-title">
@@ -5308,11 +4688,8 @@ async function loadNews(){
    </div>
   `;
 
-
   const deleteButton =
-   document.createElement(
-    "button"
-   );
+   document.createElement("button");
 
   deleteButton.className =
    "danger-button";
@@ -5325,25 +4702,13 @@ async function loadNews(){
 
   deleteButton.addEventListener(
    "click",
-   ()=>{
-    deleteNews(
-     news.id
-    );
-   }
+   ()=>deleteNews(news.id)
   );
 
+  item.appendChild(info);
+  item.appendChild(deleteButton);
 
-  item.appendChild(
-   info
-  );
-
-  item.appendChild(
-   deleteButton
-  );
-
-  newsList.appendChild(
-   item
-  );
+  newsList.appendChild(item);
 
  });
 
@@ -5358,24 +4723,44 @@ async function deleteNews(id){
   return;
  }
 
- const {
-  error
- } = await db
-  .from("news")
-  .delete()
-  .eq("id",id);
+ try{
 
- if(error){
+  const {
+   data,
+   error
+  } = await db
+   .from("news")
+   .delete()
+   .eq("id",id)
+   .select("id");
 
-  alert(
-   error.message
+  if(error){
+   throw error;
+  }
+
+  if(!data?.length){
+
+   throw new Error(
+    "Новость не была удалена. Проверьте RLS-политику DELETE для таблицы news."
+   );
+
+  }
+
+  await loadNews();
+
+ }catch(error){
+
+  console.error(
+   "DELETE NEWS ERROR:",
+   error
   );
 
-  return;
+  alert(
+   "Не удалось удалить новость:\n\n" +
+   (error.message || error)
+  );
 
  }
-
- await loadNews();
 
 }
 
@@ -5388,8 +4773,7 @@ changeIcon.addEventListener(
  "change",
  ()=>{
 
-  changeIconPreview.innerHTML =
-   "";
+  changeIconPreview.innerHTML = "";
 
   const file =
    changeIcon.files?.[0];
@@ -5406,27 +4790,21 @@ changeIcon.addEventListener(
     true
    );
 
-   changeIcon.value =
-    "";
+   changeIcon.value = "";
 
    return;
 
   }
 
   const img =
-   document.createElement(
-    "img"
-   );
+   document.createElement("img");
 
   img.src =
    URL.createObjectURL(file);
 
-  img.alt =
-   "";
+  img.alt = "";
 
-  changeIconPreview.appendChild(
-   img
-  );
+  changeIconPreview.appendChild(img);
 
  });
 
@@ -5438,11 +4816,9 @@ async function uploadChangeIcon(file){
  }
 
  if(file.size > 5 * 1024 * 1024){
-
   throw new Error(
    "Максимальный размер иконки — 5 МБ."
   );
-
  }
 
  if(
@@ -5452,11 +4828,9 @@ async function uploadChangeIcon(file){
    "image/webp"
   ].includes(file.type)
  ){
-
   throw new Error(
    "Разрешены PNG, JPG и WEBP."
   );
-
  }
 
  const extension =
@@ -5506,7 +4880,6 @@ addChangeButton.addEventListener(
   const file =
    changeIcon.files?.[0];
 
-
   if(!title){
 
    setStatus(
@@ -5519,7 +4892,6 @@ addChangeButton.addEventListener(
 
   }
 
-
   addChangeButton.disabled =
    true;
 
@@ -5528,14 +4900,10 @@ addChangeButton.addEventListener(
    "Добавление изменения..."
   );
 
-
   try{
 
    const iconUrl =
-    await uploadChangeIcon(
-     file
-    );
-
+    await uploadChangeIcon(file);
 
    const {
     error
@@ -5546,30 +4914,20 @@ addChangeButton.addEventListener(
      icon:iconUrl
     });
 
-
    if(error){
     throw error;
    }
 
-
-   changeTitle.value =
-    "";
-
-   changeIcon.value =
-    "";
-
-   changeIconPreview.innerHTML =
-    "";
-
+   changeTitle.value = "";
+   changeIcon.value = "";
+   changeIconPreview.innerHTML = "";
 
    setStatus(
     changeStatus,
     "Изменение добавлено."
    );
 
-
    await loadChanges();
-
 
   }catch(error){
 
@@ -5606,7 +4964,6 @@ async function loadChanges(){
    }
   );
 
-
  if(error){
 
   changesList.innerHTML =
@@ -5616,10 +4973,7 @@ async function loadChanges(){
 
  }
 
-
- changesList.innerHTML =
-  "";
-
+ changesList.innerHTML = "";
 
  if(!data?.length){
 
@@ -5630,22 +4984,16 @@ async function loadChanges(){
 
  }
 
-
  data.forEach(change=>{
 
   const item =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   item.className =
    "change-item";
 
-
   const img =
-   document.createElement(
-    "img"
-   );
+   document.createElement("img");
 
   img.className =
    "change-icon";
@@ -5654,14 +5002,10 @@ async function loadChanges(){
    change.icon ||
    "";
 
-  img.alt =
-   "";
-
+  img.alt = "";
 
   const info =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   info.innerHTML = `
    <div class="item-title">
@@ -5675,11 +5019,8 @@ async function loadChanges(){
    </div>
   `;
 
-
   const button =
-   document.createElement(
-    "button"
-   );
+   document.createElement("button");
 
   button.className =
    "danger-button";
@@ -5690,16 +5031,10 @@ async function loadChanges(){
   button.textContent =
    "Удалить";
 
-
   button.addEventListener(
    "click",
-   ()=>{
-    deleteChange(
-     change.id
-    );
-   }
+   ()=>deleteChange(change.id)
   );
-
 
   item.appendChild(img);
   item.appendChild(info);
@@ -5720,30 +5055,50 @@ async function deleteChange(id){
   return;
  }
 
- const {
-  error
- } = await db
-  .from("changes")
-  .delete()
-  .eq("id",id);
+ try{
 
- if(error){
+  const {
+   data,
+   error
+  } = await db
+   .from("changes")
+   .delete()
+   .eq("id",id)
+   .select("id");
 
-  alert(
-   error.message
+  if(error){
+   throw error;
+  }
+
+  if(!data?.length){
+
+   throw new Error(
+    "Изменение не было удалено. Проверьте RLS-политику DELETE для таблицы changes."
+   );
+
+  }
+
+  await loadChanges();
+
+ }catch(error){
+
+  console.error(
+   "DELETE CHANGE ERROR:",
+   error
   );
 
-  return;
+  alert(
+   "Не удалось удалить изменение:\n\n" +
+   (error.message || error)
+  );
 
  }
-
- await loadChanges();
 
 }
 
 
 /* =========================================================
-   COMMENTS MODERATION
+   COMMENTS MODERATION — FIXED
 ========================================================= */
 
 async function loadComments(){
@@ -5752,7 +5107,6 @@ async function loadComments(){
   commentsStatus,
   "Загрузка комментариев..."
  );
-
 
  const {
   data,
@@ -5770,12 +5124,17 @@ async function loadComments(){
   )
   .limit(50);
 
-
  if(error){
+
+  console.error(
+   "LOAD COMMENTS ERROR:",
+   error
+  );
 
   setStatus(
    commentsStatus,
-   error.message,
+   error.message ||
+    "Не удалось загрузить комментарии.",
    true
   );
 
@@ -5786,10 +5145,8 @@ async function loadComments(){
 
  }
 
-
  commentsList.innerHTML =
   "";
-
 
  if(!data?.length){
 
@@ -5814,7 +5171,6 @@ async function loadComments(){
    )
   ];
 
-
  let newsMap = {};
 
 
@@ -5832,7 +5188,6 @@ async function loadComments(){
     "id",
     newsIds
    );
-
 
   if(!newsError){
 
@@ -5864,9 +5219,7 @@ async function loadComments(){
  if(pending.length){
 
   const title =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   title.className =
    "comments-section-title";
@@ -5874,10 +5227,7 @@ async function loadComments(){
   title.textContent =
    `На проверке — ${pending.length}`;
 
-  commentsList.appendChild(
-   title
-  );
-
+  commentsList.appendChild(title);
 
   pending.forEach(
    comment=>{
@@ -5898,16 +5248,12 @@ async function loadComments(){
  ){
 
   const divider =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   divider.className =
    "comments-divider";
 
-  commentsList.appendChild(
-   divider
-  );
+  commentsList.appendChild(divider);
 
  }
 
@@ -5915,9 +5261,7 @@ async function loadComments(){
  if(approved.length){
 
   const title =
-   document.createElement(
-    "div"
-   );
+   document.createElement("div");
 
   title.className =
    "comments-section-title";
@@ -5925,10 +5269,7 @@ async function loadComments(){
   title.textContent =
    `Одобрены — ${approved.length}`;
 
-  commentsList.appendChild(
-   title
-  );
-
+  commentsList.appendChild(title);
 
   approved.forEach(
    comment=>{
@@ -5958,24 +5299,17 @@ function renderComment(
 ){
 
  const item =
-  document.createElement(
-   "div"
-  );
+  document.createElement("div");
 
  item.className =
   "comment-item";
 
-
  const info =
-  document.createElement(
-   "div"
-  );
-
+  document.createElement("div");
 
  const newsTitleText =
   newsMap[comment.news_id] ||
   "Удалённая новость";
-
 
  info.innerHTML = `
 
@@ -6013,9 +5347,7 @@ function renderComment(
 
 
  const actions =
-  document.createElement(
-   "div"
-  );
+  document.createElement("div");
 
  actions.className =
   "comment-actions";
@@ -6024,9 +5356,7 @@ function renderComment(
  if(isPending){
 
   const approveButton =
-   document.createElement(
-    "button"
-   );
+   document.createElement("button");
 
   approveButton.type =
    "button";
@@ -6039,13 +5369,11 @@ function renderComment(
 
   approveButton.addEventListener(
    "click",
-   ()=>{
-    approveComment(
-     comment.id
-    );
-   }
+   ()=>approveComment(
+    comment.id,
+    approveButton
+   )
   );
-
 
   actions.appendChild(
    approveButton
@@ -6055,9 +5383,7 @@ function renderComment(
 
 
  const deleteButton =
-  document.createElement(
-   "button"
-  );
+  document.createElement("button");
 
  deleteButton.type =
   "button";
@@ -6070,67 +5396,156 @@ function renderComment(
 
  deleteButton.addEventListener(
   "click",
-  ()=>{
-   deleteComment(
-    comment.id
-   );
-  }
+  ()=>deleteComment(
+   comment.id,
+   deleteButton
+  )
  );
-
 
  actions.appendChild(
   deleteButton
  );
 
+ item.appendChild(info);
+ item.appendChild(actions);
 
- item.appendChild(
-  info
- );
-
- item.appendChild(
-  actions
- );
-
- commentsList.appendChild(
-  item
- );
+ commentsList.appendChild(item);
 
 }
 
 
-async function approveComment(id){
+/*
+ * ИСПРАВЛЕНО:
+ *
+ * .select("id,status") после UPDATE позволяет проверить,
+ * действительно ли Supabase изменил строку.
+ *
+ * Если RLS запрещает UPDATE, Supabase вернёт ошибку.
+ *
+ * Если UPDATE разрешён, но строка не видна текущему пользователю,
+ * .single() / отсутствие data также покажет проблему.
+ */
 
- const {
-  error
- } = await db
-  .from("comments")
-  .update({
-   status:"approved"
-  })
-  .eq(
-   "id",
-   id
+async function approveComment(
+ id,
+ button
+){
+
+ if(!id){
+  return;
+ }
+
+ if(button){
+  button.disabled = true;
+ }
+
+ setStatus(
+  commentsStatus,
+  "Одобрение комментария..."
+ );
+
+ try{
+
+  const {
+   data,
+   error
+  } = await db
+   .from("comments")
+   .update({
+    status:"approved"
+   })
+   .eq(
+    "id",
+    id
+   )
+   .select(
+    "id,status"
+   );
+
+  if(error){
+   throw error;
+  }
+
+
+  if(!data || data.length === 0){
+
+   throw new Error(
+    "Комментарий не был одобрен. Supabase не изменил строку. Проверьте RLS-политику UPDATE для таблицы comments."
+   );
+
+  }
+
+
+  const updatedComment =
+   data[0];
+
+
+  if(
+   updatedComment.status !==
+   "approved"
+  ){
+
+   throw new Error(
+    `Supabase вернул неожиданный статус: ${updatedComment.status}`
+   );
+
+  }
+
+
+  setStatus(
+   commentsStatus,
+   "Комментарий успешно одобрен."
   );
 
 
- if(error){
+  await loadComments();
+
+
+ }catch(error){
+
+  console.error(
+   "APPROVE COMMENT ERROR:",
+   error
+  );
+
+  setStatus(
+   commentsStatus,
+   "Не удалось одобрить комментарий.",
+   true
+  );
 
   alert(
-   "Не удалось одобрить комментарий:\n" +
-   error.message
+   "Не удалось одобрить комментарий:\n\n" +
+   (error.message || error)
   );
 
-  return;
+
+ }finally{
+
+  if(button){
+   button.disabled = false;
+  }
 
  }
 
-
- await loadComments();
-
 }
 
 
-async function deleteComment(id){
+/*
+ * ИСПРАВЛЕНО:
+ *
+ * После DELETE запрашиваем удалённый id через .select().
+ * Если массив пустой — Supabase не удалил строку.
+ */
+
+async function deleteComment(
+ id,
+ button
+){
+
+ if(!id){
+  return;
+ }
 
  if(!confirm(
   "Удалить комментарий?"
@@ -6138,30 +5553,84 @@ async function deleteComment(id){
   return;
  }
 
-
- const {
-  error
- } = await db
-  .from("comments")
-  .delete()
-  .eq(
-   "id",
-   id
-  );
-
-
- if(error){
-
-  alert(
-   error.message
-  );
-
-  return;
-
+ if(button){
+  button.disabled = true;
  }
 
+ setStatus(
+  commentsStatus,
+  "Удаление комментария..."
+ );
 
- await loadComments();
+ try{
+
+  const {
+   data,
+   error
+  } = await db
+   .from("comments")
+   .delete()
+   .eq(
+    "id",
+    id
+   )
+   .select(
+    "id"
+   );
+
+
+  if(error){
+   throw error;
+  }
+
+
+  if(
+   !data ||
+   data.length === 0
+  ){
+
+   throw new Error(
+    "Комментарий не был удалён. Supabase не изменил строку. Проверьте RLS-политику DELETE для таблицы comments."
+   );
+
+  }
+
+
+  setStatus(
+   commentsStatus,
+   "Комментарий успешно удалён."
+  );
+
+
+  await loadComments();
+
+
+ }catch(error){
+
+  console.error(
+   "DELETE COMMENT ERROR:",
+   error
+  );
+
+  setStatus(
+   commentsStatus,
+   "Не удалось удалить комментарий.",
+   true
+  );
+
+  alert(
+   "Не удалось удалить комментарий:\n\n" +
+   (error.message || error)
+  );
+
+
+ }finally{
+
+  if(button){
+   button.disabled = false;
+  }
+
+ }
 
 }
 
@@ -6244,7 +5713,7 @@ let authCheckRunning = false;
 
 db.auth.onAuthStateChange(
  async()=>{
-  
+
   if(authCheckRunning){
    return;
   }
