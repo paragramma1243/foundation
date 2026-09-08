@@ -3192,7 +3192,8 @@ const supabaseClient =
         persistSession:true,
         autoRefreshToken:true,
         detectSessionInUrl:true,
-        flowType:"implicit"
+        flowType:"pkce",
+        storageKey:"scp_cb2_discord_auth"
       }
     }
   );
