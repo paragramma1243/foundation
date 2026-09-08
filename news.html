@@ -449,6 +449,13 @@ nav a.active:after{
  box-shadow:0 5px 18px rgba(88,101,242,.18);
 }
 
+.discord-login-button:disabled{
+ opacity:.65;
+ cursor:wait;
+ transform:none;
+ box-shadow:none;
+}
+
 .auth-modal-footer{
  margin-top:18px;
  text-align:center;
@@ -620,11 +627,6 @@ main{
  overflow-wrap:anywhere;
 }
 
-
-/* ==========================================
-   NEWS PARAGRAPHS
-========================================== */
-
 .article-text p{
  margin:0 0 18px;
 }
@@ -632,11 +634,6 @@ main{
 .article-text p:last-child{
  margin-bottom:0;
 }
-
-
-/* ==========================================
-   NEWS HEADINGS
-========================================== */
 
 .article-text h2{
  color:#fff;
@@ -659,11 +656,6 @@ main{
  margin:20px 0 10px;
 }
 
-
-/* ==========================================
-   TEXT FORMATTING
-========================================== */
-
 .article-text strong,
 .article-text b{
  color:#fff;
@@ -684,11 +676,6 @@ main{
  text-decoration:line-through;
 }
 
-
-/* ==========================================
-   LINKS
-========================================== */
-
 .article-text a{
  color:#f4ca28;
  text-decoration:underline;
@@ -698,11 +685,6 @@ main{
 .article-text a:hover{
  color:#ffd83d;
 }
-
-
-/* ==========================================
-   LISTS
-========================================== */
 
 .article-text ul,
 .article-text ol{
@@ -722,19 +704,9 @@ main{
  margin-bottom:5px;
 }
 
-
-/* ==========================================
-   LINE BREAKS
-========================================== */
-
 .article-text br{
  line-height:1.85;
 }
-
-
-/* ==========================================
-   INLINE IMAGES
-========================================== */
 
 .article-text img{
  max-width:100%;
@@ -742,11 +714,6 @@ main{
  display:block;
  border-radius:6px;
 }
-
-
-/* ==========================================
-   NEWS FIGURES
-========================================== */
 
 .article-text figure.news-inline-image{
  display:block;
@@ -768,11 +735,6 @@ main{
  line-height:1.5;
 }
 
-
-/* ==========================================
-   BLOCKQUOTE
-========================================== */
-
 .article-text blockquote{
  margin:20px 0;
  padding:12px 18px;
@@ -781,21 +743,11 @@ main{
  color:#aaa;
 }
 
-
-/* ==========================================
-   HORIZONTAL LINE
-========================================== */
-
 .article-text hr{
  border:0;
  border-top:1px solid #292b2c;
  margin:25px 0;
 }
-
-
-/* ==========================================
-   EMPTY CONTENT
-========================================== */
 
 .article-text:empty{
  display:none;
@@ -1695,7 +1647,6 @@ FOUNDATION ACCESS
  id="commentForm"
  autocomplete="off">
 
-
 <textarea
  class="comment-textarea"
  id="commentContent"
@@ -1886,6 +1837,22 @@ const SUPABASE_KEY =
 "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
 
+/*
+ * ВАЖНО:
+ *
+ * Используем PKCE вместо принудительного
+ * implicit flow.
+ *
+ * persistSession:
+ * сохраняет Discord-сессию.
+ *
+ * autoRefreshToken:
+ * автоматически обновляет сессию.
+ *
+ * detectSessionInUrl:
+ * обрабатывает возврат после Discord.
+ */
+
 const db =
 window.supabase.createClient(
  SUPABASE_URL,
@@ -1895,7 +1862,7 @@ window.supabase.createClient(
    persistSession:true,
    autoRefreshToken:true,
    detectSessionInUrl:true,
-   flowType:"implicit"
+   flowType:"pkce"
   }
  }
 );
@@ -2138,6 +2105,18 @@ async function loginWithDiscord(){
 
  try{
 
+  /*
+   * Сохраняем текущую страницу,
+   * включая ?id=новости.
+   *
+   * Например:
+   *
+   * https://site.com/news.html?id=15
+   *
+   * После авторизации Discord
+   * пользователь вернётся сюда же.
+   */
+
   const redirectUrl =
    getCurrentPageUrl();
 
@@ -2178,10 +2157,12 @@ async function loginWithDiscord(){
 
   }
 
+
   console.log(
-   "OAuth запущен:",
+   "Discord OAuth запущен:",
    data
   );
+
 
  }
  catch(error){
@@ -2377,38 +2358,6 @@ async function checkAuth(){
   );
 
 
-  /*
-   * После обработки OAuth Supabase
-   * оставляет access_token в URL hash.
-   * Удаляем его из адресной строки,
-   * но сессию при этом сохраняем.
-   */
-
-  if(
-   window.location.hash &&
-   (
-    window.location.hash.includes(
-     "access_token"
-    ) ||
-    window.location.hash.includes(
-     "refresh_token"
-    ) ||
-    window.location.hash.includes(
-     "provider_token"
-    )
-   )
-  ){
-
-   window.history.replaceState(
-    {},
-    document.title,
-    window.location.pathname +
-    window.location.search
-   );
-
-  }
-
-
   return user;
 
  }
@@ -2431,6 +2380,175 @@ async function checkAuth(){
 
 
 /* ==========================================
+   OAUTH CALLBACK
+========================================== */
+
+async function handleOAuthCallback(){
+
+ /*
+  * Сначала даём Supabase завершить
+  * внутреннюю инициализацию.
+  *
+  * Это особенно важно после возврата
+  * из Discord.
+  */
+
+ await new Promise(
+  resolve =>
+   setTimeout(
+    resolve,
+    150
+   )
+ );
+
+
+ /*
+  * Получаем уже восстановленную
+  * сессию.
+  */
+
+ const {
+  data,
+  error
+ } =
+  await db.auth.getSession();
+
+
+ if(error){
+
+  console.error(
+   "Ошибка восстановления OAuth-сессии:",
+   error
+  );
+
+  renderAuthUser(
+   null
+  );
+
+  return null;
+
+ }
+
+
+ const session =
+  data?.session || null;
+
+
+ const user =
+  session?.user || null;
+
+
+ /*
+  * Показываем пользователя только
+  * после успешного восстановления
+  * сессии.
+  */
+
+ renderAuthUser(
+  user
+ );
+
+
+ if(user){
+
+  closeAuthModal();
+
+  discordLoginButton.disabled =
+   false;
+
+  discordLoginButton.textContent =
+   "Войти через Discord";
+
+
+  /*
+   * После успешной авторизации
+   * можно очистить OAuth-параметры
+   * из адресной строки.
+   *
+   * Важно:
+   * делаем это ТОЛЬКО после того,
+   * как сессия уже получена.
+   */
+
+  const url =
+   new URL(
+    window.location.href
+   );
+
+
+  let changed =
+   false;
+
+
+  if(
+   url.searchParams.has(
+    "code"
+   )
+  ){
+
+   url.searchParams.delete(
+    "code"
+   );
+
+   changed =
+    true;
+
+  }
+
+
+  if(
+   url.hash &&
+   (
+    url.hash.includes(
+     "access_token"
+    ) ||
+    url.hash.includes(
+     "refresh_token"
+    ) ||
+    url.hash.includes(
+     "provider_token"
+    ) ||
+    url.hash.includes(
+     "expires_at"
+    ) ||
+    url.hash.includes(
+     "expires_in"
+    ) ||
+    url.hash.includes(
+     "token_type"
+    )
+   )
+  ){
+
+   url.hash =
+    "";
+
+   changed =
+    true;
+
+  }
+
+
+  if(changed){
+
+   window.history.replaceState(
+    {},
+    document.title,
+    url.pathname +
+    url.search
+   );
+
+  }
+
+ }
+
+
+ return user;
+
+}
+
+
+/* ==========================================
    AUTH STATE
 ========================================== */
 
@@ -2439,9 +2557,21 @@ db.auth.onAuthStateChange(
 
   console.log(
    "Auth state:",
-   event
+   event,
+   session?.user?.id || null
   );
 
+
+  /*
+   * ВАЖНО:
+   *
+   * Никогда не вызываем signOut
+   * здесь автоматически.
+   *
+   * Если Supabase сообщает,
+   * что сессия существует —
+   * показываем пользователя.
+   */
 
   renderAuthUser(
    session?.user || null
@@ -2510,6 +2640,10 @@ logoutButton.addEventListener(
  "click",
  async function(){
 
+  logoutButton.disabled =
+   true;
+
+
   const {
    error
   } =
@@ -2523,6 +2657,9 @@ logoutButton.addEventListener(
     error
    );
 
+   logoutButton.disabled =
+    false;
+
    return;
 
   }
@@ -2531,6 +2668,10 @@ logoutButton.addEventListener(
   authMenu.classList.remove(
    "open"
   );
+
+
+  logoutButton.disabled =
+   false;
 
  }
 );
@@ -2842,8 +2983,8 @@ async function loadNews(){
 
 
  /*
-  * admin.html сохраняет главную
-  * фотографию новости в поле "image".
+  * Главная фотография новости
+  * хранится в поле image.
   */
 
  const newsImage =
@@ -2939,11 +3080,6 @@ async function loadNews(){
   data.description ||
   "";
 
-
- /*
-  * Основной текст новости.
-  * Контент из редактора содержит HTML-разметку.
-  */
 
  const text =
   document.createElement(
@@ -3248,22 +3384,6 @@ async function loadComments(newsId){
  `;
 
 
- /*
-  * ВАЖНО:
-  *
-  * Показываем ТОЛЬКО комментарии,
-  * которые администратор одобрил
-  * в admin.html.
-  *
-  * admin.html использует:
-  *
-  * comments.status
-  *
-  * Одобренный комментарий:
-  *
-  * status = "approved"
-  */
-
  const {
   data,
   error
@@ -3317,10 +3437,6 @@ async function loadComments(newsId){
  }
 
 
- /*
-  * Здесь находятся только approved.
-  */
-
  const comments =
   (data || []).slice(
    0,
@@ -3332,11 +3448,6 @@ async function loadComments(newsId){
   comments.length
  );
 
-
- /*
-  * Лимит считается только
-  * среди опубликованных комментариев.
-  */
 
  if(comments.length >= MAX_COMMENTS){
 
@@ -3399,10 +3510,6 @@ commentForm.addEventListener(
   event.preventDefault();
 
 
-  /*
-   * СНАЧАЛА ПРОВЕРЯЕМ СЕССИЮ
-   */
-
   const {
    data:sessionData,
    error:sessionError
@@ -3412,7 +3519,7 @@ commentForm.addEventListener(
 
   if(
    sessionError ||
-   !sessionData.session ||
+   !sessionData?.session ||
    !sessionData.session.user
   ){
 
@@ -3477,21 +3584,11 @@ commentForm.addEventListener(
   }
 
 
-  /*
-   * ПОЛУЧАЕМ DISCORD ДАННЫЕ
-   */
-
   const discordData =
    getDiscordUserData(
     user
    );
 
-
-  /*
-   * ПРОВЕРЯЕМ ЛИМИТ
-   *
-   * Считаем ТОЛЬКО approved.
-   */
 
   const {
    count,
@@ -3551,10 +3648,6 @@ commentForm.addEventListener(
   }
 
 
-  /*
-   * БЛОКИРУЕМ КНОПКУ
-   */
-
   commentSubmit.disabled =
    true;
 
@@ -3568,21 +3661,7 @@ commentForm.addEventListener(
   );
 
 
-  /*
-   * ОТПРАВЛЯЕМ КОММЕНТАРИЙ
-   *
-   * ВАЖНО:
-   *
-   * Новый комментарий получает
-   * status = "pending".
-   *
-   * Поэтому news.html НЕ покажет его,
-   * пока администратор не нажмёт
-   * "Одобрить" в admin.html.
-   */
-
   const {
-   data,
    error
   } =
    await db
@@ -3607,14 +3686,8 @@ commentForm.addEventListener(
      status:
       "pending"
 
-    })
-    .select()
-    .single();
+    });
 
-
-  /*
-   * ОШИБКА
-   */
 
   if(error){
 
@@ -3641,15 +3714,6 @@ commentForm.addEventListener(
   }
 
 
-  /*
-   * УСПЕШНО
-   *
-   * data специально НЕ добавляем
-   * в commentList.
-   *
-   * Он пока pending.
-   */
-
   commentContent.value =
    "";
 
@@ -3664,22 +3728,10 @@ commentForm.addEventListener(
   );
 
 
-  /*
-   * Счётчик НЕ увеличиваем.
-   *
-   * Новый комментарий пока не approved,
-   * поэтому опубликованных комментариев
-   * стало столько же.
-   */
-
   updateCommentsCount(
    count || 0
   );
 
-
-  /*
-   * РАЗБЛОКИРОВКА
-   */
 
   commentSubmit.disabled =
    false;
@@ -3732,24 +3784,23 @@ function showCommentStatus(
 
 
 /* ==========================================
-   ОБРАБОТКА OAUTH CALLBACK
+   INITIALIZE AUTH
 ========================================== */
 
 async function initializeAuth(){
 
  /*
-  * Supabase автоматически обработает
-  * access_token / refresh_token из hash,
-  * потому что detectSessionInUrl включён.
+  * Сначала ждём, пока Supabase
+  * закончит восстановление OAuth-сессии.
   */
 
  const user =
-  await checkAuth();
+  await handleOAuthCallback();
 
 
  /*
-  * Если OAuth уже завершён,
-  * закрываем модальное окно.
+  * Если пользователь уже вошёл,
+  * модальное окно не показываем.
   */
 
  if(user){
