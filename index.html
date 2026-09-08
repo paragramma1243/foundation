@@ -4337,9 +4337,20 @@ function createNewsCard(
         : ""
     );
 
+
+  /*
+    Картинка новости берётся из image_url.
+    Дополнительные варианты оставлены как
+    запасной вариант, если в старых записях
+    использовалось другое имя поля.
+  */
+
   const image =
     news.image_url ||
+    news.image ||
+    news.imageUrl ||
     "";
+
 
   const tagClass =
     categoryClass(
@@ -4369,10 +4380,8 @@ function createNewsCard(
         `
         <img
           class="news-image"
-          src="${escapeHtml(image)}"
           alt=""
           loading="lazy"
-          onerror="this.style.display='none'"
         >
         `
         :
@@ -4431,11 +4440,13 @@ function createNewsCard(
 
       </div>
 
+
       <h3>
         ${escapeHtml(
           news.title
         )}
       </h3>
+
 
       <p>
         ${escapeHtml(
@@ -4467,11 +4478,48 @@ function createNewsCard(
   `;
 
 
+  /*
+    Устанавливаем URL картинки через свойство src,
+    а не через innerHTML.
+  */
+
+  if(image){
+
+    const imageElement =
+      card.querySelector(
+        ".news-image"
+      );
+
+
+    if(imageElement){
+
+      imageElement.src =
+        String(image);
+
+
+      imageElement.addEventListener(
+        "error",
+        function(){
+
+          console.error(
+            "Не удалось загрузить изображение новости:",
+            image
+          );
+
+          imageElement.style.display =
+            "none";
+
+        }
+      );
+
+    }
+
+  }
+
+
   return card;
 
 }
-
-
 /* ================= SEARCH ================= */
 
 function normalizeSearchText(value){
