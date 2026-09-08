@@ -418,6 +418,28 @@ main{
 }
 
 
+/* ================= IMAGE FALLBACK ================= */
+
+.news-image-placeholder{
+  width:100%;
+  height:100%;
+  min-height:200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    linear-gradient(
+      135deg,
+      #202223,
+      #101111
+    );
+  color:#3d3f40;
+  font-size:35px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+
 /* ================= TAG COLORS ================= */
 
 .news-card-tag{
@@ -451,6 +473,10 @@ main{
 
 .news-card-tag.tag-events{
   background:#bc7722;
+}
+
+.news-card-tag.tag-community{
+  background:#318c9c;
 }
 
 .news-card-tag.tag-default{
@@ -749,6 +775,11 @@ footer{
     min-height:0;
   }
 
+  .news-image-placeholder{
+    height:190px;
+    min-height:0;
+  }
+
   .footer-grid{
     grid-template-columns:1fr;
     gap:30px;
@@ -769,6 +800,10 @@ footer{
   }
 
   .news-image{
+    height:180px;
+  }
+
+  .news-image-placeholder{
     height:180px;
   }
 
@@ -1239,6 +1274,10 @@ function categoryClass(category){
     return "tag-events";
   }
 
+  if(category === "Сообщество"){
+    return "tag-community";
+  }
+
   return "tag-default";
 
 }
@@ -1277,7 +1316,17 @@ function createNewsCard(news){
     "news-card";
 
 
+  /*
+   * ГЛАВНАЯ ФОТОГРАФИЯ
+   *
+   * Новая система использует поле "image".
+   *
+   * image_url оставлен как резервный
+   * вариант для старых новостей.
+   */
+
   const image =
+    news.image ||
     news.image_url ||
     "";
 
@@ -1288,87 +1337,252 @@ function createNewsCard(news){
     );
 
 
-  card.innerHTML = `
+  /*
+   * ЭЛЕМЕНТ ФОТОГРАФИИ
+   */
 
-    <div class="news-image-area">
+  const imageArea =
+    document.createElement(
+      "div"
+    );
 
-      <div
-        class="news-card-tag ${tagClass}"
-      >
-        ${escapeHtml(
-          news.category ||
-          "Новости"
-        )}
-      </div>
+  imageArea.className =
+    "news-image-area";
 
 
-      ${
-        image
-        ?
-        `
-        <img
-          class="news-image"
-          src="${escapeHtml(image)}"
-          alt=""
-          loading="lazy"
-          onerror="this.style.display='none'"
-        >
-        `
-        :
-        ""
+  /*
+   * ТЕГ
+   */
+
+  const tag =
+    document.createElement(
+      "div"
+    );
+
+  tag.className =
+    `news-card-tag ${tagClass}`;
+
+  tag.textContent =
+    news.category ||
+    "Новости";
+
+
+  imageArea.appendChild(
+    tag
+  );
+
+
+  /*
+   * ФОТО
+   */
+
+  if(image){
+
+    const imageElement =
+      document.createElement(
+        "img"
+      );
+
+    imageElement.className =
+      "news-image";
+
+    imageElement.src =
+      image;
+
+    imageElement.alt =
+      news.title ||
+      "Изображение новости";
+
+    imageElement.loading =
+      "lazy";
+
+    /*
+     * Если изображение не загрузилось,
+     * показываем резервный блок.
+     */
+
+    imageElement.addEventListener(
+      "error",
+      function(){
+
+        imageElement.remove();
+
+        const placeholder =
+          document.createElement(
+            "div"
+          );
+
+        placeholder.className =
+          "news-image-placeholder";
+
+        placeholder.textContent =
+          "SCP";
+
+        imageArea.appendChild(
+          placeholder
+        );
+
+      },
+      {
+        once:true
       }
-
-    </div>
-
-
-    <div class="news-content">
-
-      <div class="news-meta">
-
-        <span class="news-date">
-
-          ${formatDate(
-            news.created_at
-          )}
-
-        </span>
-
-      </div>
+    );
 
 
-      <h3>
+    imageArea.appendChild(
+      imageElement
+    );
 
-        ${escapeHtml(
-          news.title
-        )}
+  }
 
-      </h3>
+  else{
+
+    /*
+     * Если у новости вообще нет
+     * фотографии.
+     */
+
+    const placeholder =
+      document.createElement(
+        "div"
+      );
+
+    placeholder.className =
+      "news-image-placeholder";
+
+    placeholder.textContent =
+      "SCP";
+
+    imageArea.appendChild(
+      placeholder
+    );
+
+  }
 
 
-      <p>
+  /*
+   * КОНТЕНТ
+   */
 
-        ${escapeHtml(
-          news.description ||
-          ""
-        )}
+  const content =
+    document.createElement(
+      "div"
+    );
 
-      </p>
+  content.className =
+    "news-content";
 
 
-      <a
-        class="news-more"
-        href="./news.html?id=${encodeURIComponent(
-          news.id
-        )}"
-      >
+  /*
+   * META
+   */
 
-        Читать далее →
+  const meta =
+    document.createElement(
+      "div"
+    );
 
-      </a>
+  meta.className =
+    "news-meta";
 
-    </div>
 
-  `;
+  const date =
+    document.createElement(
+      "span"
+    );
+
+  date.className =
+    "news-date";
+
+  date.textContent =
+    formatDate(
+      news.created_at
+    );
+
+
+  meta.appendChild(
+    date
+  );
+
+
+  /*
+   * ЗАГОЛОВОК
+   */
+
+  const title =
+    document.createElement(
+      "h3"
+    );
+
+  title.textContent =
+    news.title ||
+    "Без названия";
+
+
+  /*
+   * ОПИСАНИЕ
+   */
+
+  const description =
+    document.createElement(
+      "p"
+    );
+
+  description.textContent =
+    news.description ||
+    "";
+
+
+  /*
+   * ССЫЛКА
+   */
+
+  const more =
+    document.createElement(
+      "a"
+    );
+
+  more.className =
+    "news-more";
+
+  more.href =
+    "./news.html?id=" +
+    encodeURIComponent(
+      news.id
+    );
+
+  more.textContent =
+    "Читать далее →";
+
+
+  /*
+   * СОБИРАЕМ КАРТОЧКУ
+   */
+
+  content.appendChild(
+    meta
+  );
+
+  content.appendChild(
+    title
+  );
+
+  content.appendChild(
+    description
+  );
+
+  content.appendChild(
+    more
+  );
+
+
+  card.appendChild(
+    imageArea
+  );
+
+  card.appendChild(
+    content
+  );
 
 
   return card;
@@ -1532,7 +1746,8 @@ function buildYearFilters(){
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   const allButton =
@@ -1635,7 +1850,8 @@ function buildMonthFilters(){
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   if(currentYear === "all"){
