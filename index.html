@@ -4965,7 +4965,7 @@ if(ideaSubmitButton){
 
   ideaSubmitButton.addEventListener(
     "click",
-    function(){
+    async function(){
 
       if(!currentAuthUser){
 
@@ -4991,19 +4991,156 @@ if(ideaSubmitButton){
       }
 
 
-      /*
-        Backend для предложений пока не подключён.
-        Поэтому здесь ничего не отправляем в базу.
-      */
+      if(text.length > 2000){
 
-      if(ideaResult){
+        if(ideaResult){
 
-        ideaResult.textContent =
-          "Интерфейс предложения готов. Сохранение в базу будет подключено позже.";
+          ideaResult.textContent =
+            "Предложение не может быть длиннее 2000 символов.";
 
-        ideaResult.classList.add(
-          "visible"
+          ideaResult.classList.add(
+            "visible"
+          );
+
+        }
+
+        return;
+
+      }
+
+
+      ideaSubmitButton.disabled =
+        true;
+
+      ideaSubmitButton.textContent =
+        "ОТПРАВКА...";
+
+
+      try{
+
+        const discordUser =
+          getDiscordUserData(
+            currentAuthUser
+          );
+
+
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("suggestions")
+            .insert({
+
+              user_id:
+                currentAuthUser.id,
+
+              discord_name:
+                discordUser.name,
+
+              discord_avatar:
+                discordUser.avatar,
+
+              content:
+                text,
+
+              status:
+                "pending"
+
+            });
+
+
+        if(error){
+
+          console.error(
+            "Ошибка отправки предложения:",
+            error
+          );
+
+          if(ideaResult){
+
+            ideaResult.textContent =
+              "Не удалось отправить предложение. Попробуйте ещё раз.";
+
+            ideaResult.classList.add(
+              "visible"
+            );
+
+          }
+
+          ideaSubmitButton.disabled =
+            false;
+
+          ideaSubmitButton.textContent =
+            "ОТПРАВИТЬ";
+
+          return;
+
+        }
+
+
+        if(ideaResult){
+
+          ideaResult.textContent =
+            "Предложение отправлено на модерацию.";
+
+          ideaResult.classList.add(
+            "visible"
+          );
+
+        }
+
+
+        ideaInput.value =
+          "";
+
+        updateIdeaCounter();
+
+
+        setTimeout(
+          function(){
+
+            closeIdeaModal();
+
+          },
+          1800
         );
+
+
+      }catch(error){
+
+        console.error(
+          "Ошибка отправки предложения:",
+          error
+        );
+
+
+        if(ideaResult){
+
+          ideaResult.textContent =
+            "Произошла ошибка. Попробуйте ещё раз.";
+
+          ideaResult.classList.add(
+            "visible"
+          );
+
+        }
+
+      }finally{
+
+        ideaSubmitButton.textContent =
+          "ОТПРАВИТЬ";
+
+
+        if(
+          currentAuthUser &&
+          ideaInput &&
+          ideaInput.value.trim().length > 0
+        ){
+
+          ideaSubmitButton.disabled =
+            false;
+
+        }
 
       }
 
@@ -5011,7 +5148,6 @@ if(ideaSubmitButton){
   );
 
 }
-
 
 /* ================= SITE SETTINGS ================= */
 
