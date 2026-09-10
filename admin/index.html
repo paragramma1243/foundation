@@ -5509,7 +5509,7 @@ addChangeButton.addEventListener(
     .from("changes")
     .insert({
      title,
-     icon:iconUrl
+     icon_url:iconUrl
     });
 
    if(error){
@@ -5553,7 +5553,7 @@ async function loadChanges(){
  } = await db
   .from("changes")
   .select(
-   "id,title,icon,created_at"
+   "id,title,icon_url,created_at"
   )
   .order(
    "created_at",
