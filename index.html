@@ -57,7 +57,8 @@ a{
 }
 
 button,
-input{
+input,
+textarea{
   font:inherit;
 }
 
@@ -1248,7 +1249,7 @@ main:after{
 }
 
 .section-kicker:before{
-  content:"// ";
+  content:"/// ";
   color:#9e2929;
 }
 
@@ -1415,11 +1416,6 @@ main:after{
     0 0 30px rgba(227,189,50,.05);
 }
 
-.news-card.featured .news-image-area,
-.news-card.featured .news-image{
-  min-height:255px;
-}
-
 .news-card.featured .news-content{
   padding:27px 29px;
 }
@@ -1461,8 +1457,10 @@ main:after{
 
 .news-image-area{
   width:100%;
-  height:100%;
-  min-height:200px;
+  height:auto;
+  min-height:0;
+  aspect-ratio:4 / 3;
+  align-self:start;
   position:relative;
   overflow:hidden;
   background:#151616;
@@ -1488,7 +1486,8 @@ main:after{
 .news-image{
   width:100%;
   height:100%;
-  min-height:200px;
+  min-height:0;
+  aspect-ratio:4 / 3;
   object-fit:cover;
   background:#151616;
   display:block;
@@ -1879,24 +1878,46 @@ main:after{
   line-height:1.65;
 }
 
+
+/* ================= NEWS MORE BUTTON ================= */
+
 .news-more{
-  margin-top:auto;
-  padding-top:15px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:36px;
+  padding:0 14px;
+  margin-left:auto;
+  border:1px solid #3b3c3d;
+  border-radius:6px;
+  background:#151616;
   color:#c5a82c;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:1.7px;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1.2px;
   text-transform:uppercase;
+  white-space:nowrap;
   transition:
     color .2s ease,
+    background .2s ease,
+    border-color .2s ease,
     transform .2s ease,
-    text-shadow .2s ease;
+    box-shadow .2s ease;
 }
 
 .news-more:hover{
-  color:#f0ce43;
-  transform:translateX(3px);
-  text-shadow:0 0 10px rgba(213,180,46,.18);
+  color:#111;
+  background:#d5b42e;
+  border-color:#d5b42e;
+  transform:translateY(-2px);
+  box-shadow:
+    0 6px 16px rgba(213,180,46,.12),
+    0 0 15px rgba(213,180,46,.04);
+}
+
+.news-more:active{
+  transform:translateY(0) scale(.98);
 }
 
 
@@ -2029,21 +2050,18 @@ main:after{
 
 /* ================= YELLOW PANEL HEADERS ================= */
 
-.panel#changes,
-.panel#about{
+.panel#changes{
   background:#0d0e0e;
   border-color:#292a2b;
   color:#ddd;
 }
 
-.panel#changes .panel-head,
-.panel#about .panel-head{
+.panel#changes .panel-head{
   background:#d5b42e;
   border-bottom-color:#d5b42e;
 }
 
-.panel#changes .panel-head h3,
-.panel#about .panel-head h3{
+.panel#changes .panel-head h3{
   color:#111;
 }
 
@@ -2051,8 +2069,7 @@ main:after{
   color:rgba(17,17,17,.55);
 }
 
-.panel#changes .panel-body,
-.panel#about .panel-body{
+.panel#changes .panel-body{
   background:#0d0e0e;
 }
 
@@ -2283,35 +2300,404 @@ main:after{
 }
 
 
-/* ================= ABOUT ================= */
+/* ================= ABOUT WIDE ================= */
 
-.about-text{
-  color:#b5b5b5;
-  font-size:12px;
-  font-weight:500;
-  line-height:1.7;
+.about-wide{
+  margin-top:32px;
+  background:#0d0e0e;
+  border:1px solid #292a2b;
+  border-radius:7px;
+  overflow:hidden;
+  position:relative;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
 }
 
-.about-line{
-  height:1px;
-  background:#222;
-  margin:15px 0;
+.about-wide:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#d5b42e;
+  box-shadow:0 0 12px rgba(213,180,46,.18);
 }
 
-.about-stat{
+.about-wide:hover{
+  border-color:#414243;
+  box-shadow:0 8px 25px rgba(0,0,0,.18);
+}
+
+.about-wide-head{
   display:flex;
+  align-items:center;
   justify-content:space-between;
+  gap:25px;
+  padding:22px 27px;
+  background:#111212;
+  border-bottom:1px solid #292a2b;
+}
+
+.about-wide-head .section-kicker{
+  margin-bottom:6px;
+}
+
+.about-wide-head h2{
+  color:#eee;
+  font-size:25px;
+  line-height:1.1;
+}
+
+.about-wide-code{
+  color:#505253;
+  font-family:monospace;
+  font-size:8px;
+  letter-spacing:1.5px;
+  white-space:nowrap;
+}
+
+.about-wide-content{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:45px;
+  padding:28px 30px 31px;
+}
+
+.about-wide-content p{
+  color:#777;
+  font-size:13px;
+  line-height:1.8;
+  max-width:none;
+}
+
+.about-wide-content p:first-child{
+  color:#aaa;
+}
+
+
+/* ================= DEVELOPMENT IDEAS ================= */
+
+.ideas-section{
+  margin-top:20px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(213,180,46,.045),
+      transparent 35%
+    ),
+    #0b0c0c;
+  border:1px solid #292a2b;
+  border-radius:7px;
+  position:relative;
+  overflow:hidden;
+}
+
+.ideas-section:after{
+  content:"IDEA CHANNEL // PUBLIC";
+  position:absolute;
+  top:13px;
+  right:17px;
+  color:#4d4e4f;
+  font-family:monospace;
+  font-size:7px;
+  letter-spacing:1.5px;
+}
+
+.ideas-inner{
+  min-height:145px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:35px;
+  padding:30px;
+}
+
+.ideas-kicker{
+  color:#9e2929;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.ideas-text h2{
+  color:#eee;
+  font-size:21px;
+  margin-bottom:7px;
+}
+
+.ideas-text p{
+  color:#666;
+  font-size:11px;
+  line-height:1.6;
+  max-width:650px;
+}
+
+.idea-button{
+  flex-shrink:0;
+  min-width:190px;
+  min-height:43px;
+  padding:0 18px;
+  border:1px solid #4b4b4b;
+  border-radius:6px;
+  background:#151616;
+  color:#d5b42e;
   font-size:10px;
+  font-weight:800;
+  letter-spacing:1.3px;
   text-transform:uppercase;
+  cursor:pointer;
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.idea-button span{
+  margin-left:8px;
+  transition:transform .2s ease;
+}
+
+.idea-button:hover{
+  background:#d5b42e;
+  color:#111;
+  border-color:#d5b42e;
+  transform:translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(213,180,46,.12),
+    0 0 20px rgba(213,180,46,.05);
+}
+
+.idea-button:hover span{
+  transform:translateX(3px);
+}
+
+.idea-button:active{
+  transform:translateY(0) scale(.98);
+}
+
+
+/* ================= IDEA MODAL ================= */
+
+.idea-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(5px);
+  z-index:1200;
+}
+
+.idea-modal.open{
+  display:flex;
+}
+
+.idea-modal-box{
+  width:min(560px,100%);
+  background:#101111;
+  border:1px solid #363839;
+  border-radius:7px;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.6),
+    0 0 30px rgba(213,180,46,.025);
+  overflow:hidden;
+  animation:ideaModalIn .2s ease-out;
+}
+
+@keyframes ideaModalIn{
+
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+}
+
+.idea-modal-header{
+  min-height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:16px 20px;
+  background:#0b0c0c;
+  border-bottom:1px solid #292a2b;
+}
+
+.idea-modal-kicker{
+  color:#d5b42e;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:5px;
+}
+
+.idea-modal-header h3{
+  color:#eee;
+  font-size:17px;
+}
+
+.idea-modal-close{
+  width:30px;
+  height:30px;
+  border:0;
+  background:none;
+  color:#666;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.idea-modal-close:hover{
+  color:#eee;
+  transform:rotate(90deg);
+}
+
+.idea-modal-body{
+  padding:20px;
+}
+
+.idea-auth-notice{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px;
+  margin-bottom:15px;
+  border:1px solid #292a2b;
+  border-radius:5px;
+  background:#0c0d0d;
+}
+
+.idea-auth-dot{
+  width:7px;
+  height:7px;
+  margin-top:5px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:#e3bd32;
+  box-shadow:0 0 8px rgba(227,189,50,.25);
+}
+
+.idea-auth-notice strong{
+  display:block;
+  color:#bbb;
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.idea-auth-notice p{
+  margin-top:4px;
+  color:#666;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.idea-input{
+  width:100%;
+  min-height:150px;
+  resize:vertical;
+  padding:14px;
+  border:1px solid #303233;
+  border-radius:5px;
+  background:#090a0a;
+  color:#ddd;
+  outline:none;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  line-height:1.6;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.idea-input:focus{
+  border-color:#d5b42e;
+  box-shadow:0 0 12px rgba(213,180,46,.06);
+}
+
+.idea-input::placeholder{
+  color:#505253;
+}
+
+.idea-input:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.idea-modal-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:12px;
+}
+
+#ideaCounter{
+  color:#4e5051;
+  font-family:monospace;
+  font-size:8px;
   letter-spacing:1px;
 }
 
-.about-stat span:first-child{
-  color:#555;
+.idea-submit{
+  min-height:38px;
+  padding:0 16px;
+  border:1px solid #d5b42e;
+  border-radius:5px;
+  background:#d5b42e;
+  color:#111;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
 }
 
-.about-stat span:last-child{
-  color:#aaa;
+.idea-submit:hover:not(:disabled){
+  background:#f0ce43;
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(213,180,46,.12);
+}
+
+.idea-submit:disabled{
+  opacity:.3;
+  cursor:not-allowed;
+}
+
+.idea-result{
+  display:none;
+  margin-top:12px;
+  padding:11px;
+  border:1px solid #29302b;
+  border-radius:5px;
+  background:#0b100c;
+  color:#78947d;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.idea-result.visible{
+  display:block;
 }
 
 
@@ -2376,6 +2762,10 @@ footer{
   font-size:9px;
   letter-spacing:1px;
   text-transform:uppercase;
+}
+
+.footer-copyright{
+  color:#555;
 }
 
 
@@ -2581,14 +2971,11 @@ footer{
     grid-template-columns:1fr;
   }
 
-  .news-card.featured .news-image-area{
-    height:220px;
-    min-height:0;
-  }
-
+  .news-card.featured .news-image-area,
   .news-card.featured .news-image{
-    height:220px;
     min-height:0;
+    height:auto;
+    aspect-ratio:4 / 3;
   }
 
   .news-card.featured .news-content{
@@ -2599,18 +2986,41 @@ footer{
     font-size:25px;
   }
 
-  .news-image-area{
-    height:190px;
-    min-height:0;
-  }
-
+  .news-image-area,
   .news-image{
-    height:190px;
+    height:auto;
     min-height:0;
+    aspect-ratio:4 / 3;
   }
 
   .sidebar{
     display:flex;
+  }
+
+  .about-wide-content{
+    grid-template-columns:1fr;
+    gap:20px;
+    padding:24px 23px 26px;
+  }
+
+  .about-wide-head{
+    padding:19px 22px;
+  }
+
+  .about-wide-code{
+    display:none;
+  }
+
+  .ideas-inner{
+    min-height:0;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:22px;
+    padding:25px 22px;
+  }
+
+  .idea-button{
+    width:100%;
   }
 
   .footer-grid{
@@ -2631,20 +3041,12 @@ footer{
     font-size:36px;
   }
 
-  .news-image-area{
-    height:180px;
-  }
-
-  .news-image{
-    height:180px;
-  }
-
-  .news-card.featured .news-image-area{
-    height:180px;
-  }
-
+  .news-image-area,
+  .news-image,
+  .news-card.featured .news-image-area,
   .news-card.featured .news-image{
-    height:180px;
+    height:auto;
+    aspect-ratio:4 / 3;
   }
 
   .auth-modal-body{
@@ -2653,6 +3055,15 @@ footer{
 
   .auth-modal-body h3{
     font-size:23px;
+  }
+
+  .idea-modal-bottom{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .idea-submit{
+    width:100%;
   }
 
 }
@@ -2885,7 +3296,8 @@ footer{
 
       <p>
         Авторизуйтесь через Discord, чтобы получить
-        возможность оставлять комментарии под новостями.
+        возможность оставлять комментарии под новостями
+        и предложения по развитию проекта.
       </p>
 
 
@@ -3246,70 +3658,203 @@ footer{
         </div>
 
 
-        <div
-          class="panel"
-          id="about"
-        >
+      </aside>
 
-          <div class="panel-head">
+    </div>
 
-            <h3>
-              О проекте
-            </h3>
 
+    <!-- ================= ABOUT ================= -->
+
+    <section
+      class="about-wide"
+      id="about"
+    >
+
+      <div class="about-wide-head">
+
+        <div>
+
+          <div class="section-kicker">
+            О проекте
           </div>
 
-          <div class="panel-body">
-
-            <div class="about-text">
-
-              Голос Фонда - Новостной канал событий в сообществе игры SCP: CB2
-
-              <div class="about-line"></div>
-
-              Здесь публикуются последние изменения и события в сообществе проекта
-
-            </div>
-
-            <div class="about-line"></div>
-
-            <div class="about-stat">
-
-              <span>
-                Проект
-              </span>
-
-              <span>
-                SCP: CB2
-              </span>
-
-            </div>
-
-            <div style="height:10px"></div>
-
-            <div class="about-stat">
-
-              <span>
-                Статус
-              </span>
-
-              <span>
-                Development
-              </span>
-
-            </div>
-
-          </div>
+          <h2>
+            Голос Фонда
+          </h2>
 
         </div>
 
-      </aside>
+        <span class="about-wide-code">
+          FOUNDATION / CB2 MULTIPLAYER
+        </span>
+
+      </div>
+
+      <div class="about-wide-content">
+
+        <p>
+          Голос Фонда — новостной канал событий в сообществе
+          SCP: CB2 Multiplayer. Здесь публикуются последние
+          изменения, обновления и важные события проекта.
+        </p>
+
+        <p>
+          Это место для будущего большого описания проекта.
+          В дальнейшем здесь можно подробно рассказать
+          о его истории, направлении развития и сообществе.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DEVELOPMENT IDEAS ================= -->
+
+    <section
+      class="ideas-section"
+      id="ideas"
+    >
+
+      <div class="ideas-inner">
+
+        <div class="ideas-text">
+
+          <div class="ideas-kicker">
+            FOUNDATION FEEDBACK
+          </div>
+
+          <h2>
+            Предложения о развитии
+          </h2>
+
+          <p>
+            Есть идея по развитию сайта или сообщества?
+            Оставьте предложение для команды «Голоса Фонда».
+          </p>
+
+        </div>
+
+        <button
+          id="openIdeaButton"
+          class="idea-button"
+          type="button"
+        >
+          Предложить идею
+          <span>→</span>
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<!-- ================= IDEA MODAL ================= -->
+
+<div
+  id="ideaModal"
+  class="idea-modal"
+  aria-hidden="true"
+>
+
+  <div
+    class="idea-modal-box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ideaModalTitle"
+  >
+
+    <div class="idea-modal-header">
+
+      <div>
+
+        <div class="idea-modal-kicker">
+          FOUNDATION FEEDBACK
+        </div>
+
+        <h3 id="ideaModalTitle">
+          Предложение о развитии
+        </h3>
+
+      </div>
+
+      <button
+        id="ideaModalClose"
+        class="idea-modal-close"
+        type="button"
+        aria-label="Закрыть"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="idea-modal-body">
+
+      <div
+        id="ideaAuthNotice"
+        class="idea-auth-notice"
+      >
+
+        <span class="idea-auth-dot"></span>
+
+        <div>
+
+          <strong>
+            DISCORD AUTHORIZATION REQUIRED
+          </strong>
+
+          <p id="ideaAuthText">
+            Войдите через Discord, чтобы оставить предложение.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <textarea
+        id="ideaInput"
+        class="idea-input"
+        maxlength="2000"
+        placeholder="Напишите ваше предложение..."
+        disabled
+      ></textarea>
+
+
+      <div class="idea-modal-bottom">
+
+        <span id="ideaCounter">
+          0 / 2000
+        </span>
+
+        <button
+          id="ideaSubmitButton"
+          class="idea-submit"
+          type="button"
+          disabled
+        >
+          Отправить предложение
+        </button>
+
+      </div>
+
+
+      <div
+        id="ideaResult"
+        class="idea-result"
+      ></div>
 
     </div>
 
   </div>
 
-</main>
+</div>
 
 
 <footer>
@@ -3392,8 +3937,8 @@ footer{
 
     <div class="footer-bottom">
 
-      <span>
-        SCP: CB2 MULTIPLAYER
+      <span class="footer-copyright">
+        2026 Golos Fonda. All rights reserved.
       </span>
 
       <span>
@@ -3492,6 +4037,52 @@ const discordLoginButton =
   );
 
 
+/* ================= IDEA ELEMENTS ================= */
+
+const openIdeaButton =
+  document.getElementById(
+    "openIdeaButton"
+  );
+
+const ideaModal =
+  document.getElementById(
+    "ideaModal"
+  );
+
+const ideaModalClose =
+  document.getElementById(
+    "ideaModalClose"
+  );
+
+const ideaInput =
+  document.getElementById(
+    "ideaInput"
+  );
+
+const ideaSubmitButton =
+  document.getElementById(
+    "ideaSubmitButton"
+  );
+
+const ideaCounter =
+  document.getElementById(
+    "ideaCounter"
+  );
+
+const ideaResult =
+  document.getElementById(
+    "ideaResult"
+  );
+
+const ideaAuthText =
+  document.getElementById(
+    "ideaAuthText"
+  );
+
+let currentAuthUser =
+  null;
+
+
 /* ================= CURRENT PAGE URL ================= */
 
 function getCurrentPageUrl(){
@@ -3535,8 +4126,15 @@ function closeAuthModal(){
     "open"
   );
 
-  document.body.style.overflow =
-    "";
+  if(
+    !ideaModal ||
+    !ideaModal.classList.contains("open")
+  ){
+
+    document.body.style.overflow =
+      "";
+
+  }
 
 }
 
@@ -3557,7 +4155,7 @@ if(loginButton){
 }
 
 
-/* ================= CLOSE MODAL ================= */
+/* ================= CLOSE AUTH MODAL ================= */
 
 if(authModalClose){
 
@@ -3573,7 +4171,7 @@ if(authModalClose){
 }
 
 
-/* ================= CLOSE MODAL BY BACKDROP ================= */
+/* ================= CLOSE AUTH MODAL BY BACKDROP ================= */
 
 if(authModal){
 
@@ -3608,6 +4206,8 @@ document.addEventListener(
     ){
 
       closeAuthModal();
+
+      closeIdeaModal();
 
       if(authMenu){
 
@@ -3767,11 +4367,68 @@ function getDiscordUserData(
 }
 
 
+/* ================= IDEA ACCESS ================= */
+
+function updateIdeaAccess(
+  user
+){
+
+  currentAuthUser =
+    user || null;
+
+
+  if(
+    ideaInput &&
+    ideaSubmitButton
+  ){
+
+    if(user){
+
+      ideaInput.disabled =
+        false;
+
+      ideaSubmitButton.disabled =
+        ideaInput.value.trim().length === 0;
+
+      if(ideaAuthText){
+
+        ideaAuthText.textContent =
+          "Вы вошли через Discord. Теперь можно написать предложение.";
+
+      }
+
+    }else{
+
+      ideaInput.disabled =
+        true;
+
+      ideaSubmitButton.disabled =
+        true;
+
+      if(ideaAuthText){
+
+        ideaAuthText.textContent =
+          "Войдите через Discord, чтобы оставить предложение.";
+
+      }
+
+    }
+
+  }
+
+}
+
+
 /* ================= RENDER USER ================= */
 
 function renderAuthUser(
   user
 ){
+
+  updateIdeaAccess(
+    user
+  );
+
 
   if(!user){
 
@@ -4097,6 +4754,246 @@ supabaseClient.auth.onAuthStateChange(
 /* ================= INITIAL AUTH CHECK ================= */
 
 checkAuth();
+
+
+/* ================= IDEA MODAL ================= */
+
+function openIdeaModal(){
+
+  if(!ideaModal){
+    return;
+  }
+
+
+  if(!currentAuthUser){
+
+    closeIdeaModal();
+
+    openAuthModal();
+
+    return;
+
+  }
+
+
+  ideaModal.classList.add(
+    "open"
+  );
+
+  ideaModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+
+  if(ideaResult){
+
+    ideaResult.classList.remove(
+      "visible"
+    );
+
+    ideaResult.textContent =
+      "";
+
+  }
+
+
+  updateIdeaCounter();
+
+}
+
+
+function closeIdeaModal(){
+
+  if(!ideaModal){
+    return;
+  }
+
+
+  ideaModal.classList.remove(
+    "open"
+  );
+
+  ideaModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  if(
+    !authModal ||
+    !authModal.classList.contains("open")
+  ){
+
+    document.body.style.overflow =
+      "";
+
+  }
+
+}
+
+
+if(openIdeaButton){
+
+  openIdeaButton.addEventListener(
+    "click",
+    function(){
+
+      openIdeaModal();
+
+    }
+  );
+
+}
+
+
+if(ideaModalClose){
+
+  ideaModalClose.addEventListener(
+    "click",
+    function(){
+
+      closeIdeaModal();
+
+    }
+  );
+
+}
+
+
+if(ideaModal){
+
+  ideaModal.addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target ===
+        ideaModal
+      ){
+
+        closeIdeaModal();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= IDEA COUNTER ================= */
+
+function updateIdeaCounter(){
+
+  if(!ideaCounter){
+    return;
+  }
+
+
+  const length =
+    ideaInput
+      ? ideaInput.value.length
+      : 0;
+
+
+  ideaCounter.textContent =
+    `${length} / 2000`;
+
+
+  if(
+    ideaSubmitButton
+  ){
+
+    ideaSubmitButton.disabled =
+      !currentAuthUser ||
+      length === 0;
+
+  }
+
+}
+
+
+if(ideaInput){
+
+  ideaInput.addEventListener(
+    "input",
+    function(){
+
+      updateIdeaCounter();
+
+      if(ideaResult){
+
+        ideaResult.classList.remove(
+          "visible"
+        );
+
+        ideaResult.textContent =
+          "";
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= IDEA SUBMIT ================= */
+
+if(ideaSubmitButton){
+
+  ideaSubmitButton.addEventListener(
+    "click",
+    function(){
+
+      if(!currentAuthUser){
+
+        closeIdeaModal();
+
+        openAuthModal();
+
+        return;
+
+      }
+
+
+      const text =
+        ideaInput
+          ? ideaInput.value.trim()
+          : "";
+
+
+      if(!text){
+
+        return;
+
+      }
+
+
+      /*
+        Backend для предложений пока не подключён.
+        Поэтому здесь ничего не отправляем в базу.
+      */
+
+      if(ideaResult){
+
+        ideaResult.textContent =
+          "Интерфейс предложения готов. Сохранение в базу будет подключено позже.";
+
+        ideaResult.classList.add(
+          "visible"
+        );
+
+      }
+
+    }
+  );
+
+}
 
 
 /* ================= SITE SETTINGS ================= */
@@ -4574,15 +5471,6 @@ function createNewsCard(
     );
 
 
-  /*
-    В admin.html изображение новости
-    сохраняется в поле "image".
-
-    Поэтому "image" ставим первым.
-    Остальные поля оставляем как fallback
-    для старых новостей.
-  */
-
   const image =
     news.image ||
     news.image_url ||
@@ -4706,7 +5594,8 @@ function createNewsCard(
             news.id
           )}"
         >
-          Читать далее →
+          Читать далее
+          <span>→</span>
         </a>
 
       </div>
@@ -4715,11 +5604,6 @@ function createNewsCard(
 
   `;
 
-
-  /*
-    Устанавливаем URL картинки
-    напрямую через src.
-  */
 
   if(image){
 
