@@ -1046,6 +1046,93 @@ button:disabled{
 }
 
 
+
+/* =========================
+   SUGGESTIONS
+========================= */
+
+.suggestions-list{
+ display:flex;
+ flex-direction:column;
+ gap:8px;
+}
+
+.suggestion-item{
+ border:1px solid #252b32;
+ background:#0d1013;
+ border-radius:7px;
+ padding:13px;
+}
+
+.suggestion-top{
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:12px;
+}
+
+.suggestion-author{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+
+.suggestion-avatar{
+ width:34px;
+ height:34px;
+ border:1px solid #30363d;
+ border-radius:50%;
+ object-fit:cover;
+ background:#080a0c;
+ flex-shrink:0;
+}
+
+.suggestion-name{
+ color:#d5b42e;
+ font-size:10px;
+ font-weight:bold;
+ word-break:break-word;
+}
+
+.suggestion-date{
+ margin-top:4px;
+ color:#4e555a;
+ font-size:8px;
+}
+
+.suggestion-content{
+ margin-top:11px;
+ color:#c2c7cb;
+ font-size:11px;
+ line-height:1.7;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+
+.suggestion-status{
+ display:inline-block;
+ padding:4px 7px;
+ border:1px solid #594c25;
+ border-radius:4px;
+ background:#282215;
+ color:#d5b42e;
+ font-size:7px;
+ font-weight:bold;
+ letter-spacing:.5px;
+ text-transform:uppercase;
+ white-space:nowrap;
+}
+
+.suggestions-empty{
+ padding:16px;
+ border:1px dashed #30363d;
+ border-radius:7px;
+ color:#5f666c;
+ font-size:10px;
+ text-align:center;
+}
+
 /* =========================
    MOBILE
 ========================= */
@@ -1507,6 +1594,27 @@ button:disabled{
  <div class="panel-header">
 
   <h2 class="panel-title">
+   Предложения о развитии
+  </h2>
+
+  <div class="panel-code">
+   COMMUNITY / SUGGESTIONS
+  </div>
+
+ </div>
+
+ <div id="suggestionsStatus" class="status"></div>
+
+ <div id="suggestionsList" class="suggestions-list"></div>
+
+</section>
+
+
+<section class="panel">
+
+ <div class="panel-header">
+
+  <h2 class="panel-title">
    Новости
   </h2>
 
@@ -1941,6 +2049,12 @@ const commentsStatus =
 const commentsList =
  document.getElementById("commentsList");
 
+const suggestionsStatus =
+ document.getElementById("suggestionsStatus");
+
+const suggestionsList =
+ document.getElementById("suggestionsList");
+
 const newsList =
  document.getElementById("newsList");
 
@@ -2240,7 +2354,8 @@ async function checkUser(){
    loadSiteSettings(),
    loadNews(),
    loadChanges(),
-   loadComments()
+   loadComments(),
+   loadSuggestions()
   ]);
 
 
@@ -5697,6 +5812,96 @@ async function deleteChange(id){
 
  }
 
+}
+
+
+/* =========================================================
+   SUGGESTIONS
+========================================================= */
+
+async function loadSuggestions(){
+
+ setStatus(
+  suggestionsStatus,
+  "Загрузка предложений..."
+ );
+
+ const {
+  data,
+  error
+ } = await db
+  .from("suggestions")
+  .select("id,user_id,discord_name,discord_avatar,content,status,created_at")
+  .order("created_at",{ascending:false})
+  .limit(100);
+
+ if(error){
+  console.error("LOAD SUGGESTIONS ERROR:",error);
+  setStatus(
+   suggestionsStatus,
+   error.message || "Не удалось загрузить предложения.",
+   true
+  );
+  suggestionsList.innerHTML="";
+  return;
+ }
+
+ suggestionsList.innerHTML="";
+
+ if(!data?.length){
+  suggestionsList.innerHTML='<div class="suggestions-empty">Предложений пока нет.</div>';
+  setStatus(suggestionsStatus,"");
+  return;
+ }
+
+ data.forEach(suggestion=>{
+  const item=document.createElement("article");
+  item.className="suggestion-item";
+
+  const top=document.createElement("div");
+  top.className="suggestion-top";
+
+  const author=document.createElement("div");
+  author.className="suggestion-author";
+
+  if(suggestion.discord_avatar){
+   const avatar=document.createElement("img");
+   avatar.className="suggestion-avatar";
+   avatar.src=suggestion.discord_avatar;
+   avatar.alt="";
+   avatar.onerror=()=>avatar.remove();
+   author.appendChild(avatar);
+  }
+
+  const authorInfo=document.createElement("div");
+  const name=document.createElement("div");
+  name.className="suggestion-name";
+  name.textContent=suggestion.discord_name || "Неизвестный пользователь";
+
+  const date=document.createElement("div");
+  date.className="suggestion-date";
+  date.textContent=suggestion.created_at
+   ? new Date(suggestion.created_at).toLocaleString("ru-RU")
+   : "Дата неизвестна";
+
+  authorInfo.append(name,date);
+  author.appendChild(authorInfo);
+
+  const status=document.createElement("span");
+  status.className="suggestion-status";
+  status.textContent=suggestion.status || "pending";
+
+  top.append(author,status);
+
+  const content=document.createElement("div");
+  content.className="suggestion-content";
+  content.textContent=suggestion.content || "";
+
+  item.append(top,content);
+  suggestionsList.appendChild(item);
+ });
+
+ setStatus(suggestionsStatus,"");
 }
 
 
