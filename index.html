@@ -63,7 +63,7 @@ textarea{
 }
 
 .wrap{
-  width:min(1220px,calc(100% - 40px));
+  width:min(1342px,calc(100% - 40px));
   margin:auto;
   position:relative;
   z-index:1;
@@ -83,7 +83,7 @@ header{
 }
 
 .header-inner{
-  width:min(1220px,calc(100% - 40px));
+  width:min(1342px,calc(100% - 40px));
   margin:auto;
   display:flex;
   align-items:center;
@@ -212,9 +212,10 @@ nav a.active:before{
 .search{
   width:34px;
   height:34px;
-  border:1px solid #303233;
-  display:grid;
-  place-items:center;
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:#aaa;
   cursor:pointer;
   transition:
@@ -223,7 +224,9 @@ nav a.active:before{
     border-color .2s ease,
     background .2s ease,
     box-shadow .2s ease;
-  font-size:20px;
+  font-size:18px;
+  line-height:1;
+  transform:translateY(-3px);
   background:#050606;
   padding:0;
   list-style:none;
@@ -238,7 +241,7 @@ nav a.active:before{
 .search:hover{
   border-color:#777;
   color:#fff;
-  transform:translateY(-1px);
+  transform:translateY(-3px);
   box-shadow:0 0 12px rgba(227,189,50,.06);
 }
 
@@ -2728,7 +2731,7 @@ footer{
 
 .footer-grid{
   display:grid;
-  grid-template-columns:2fr 1fr 1fr;
+  grid-template-columns:2fr 1fr;
   gap:50px;
 }
 
@@ -2749,9 +2752,10 @@ footer{
 }
 
 .footer-links{
-  display:flex;
-  flex-direction:column;
-  gap:9px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:38px;
+  row-gap:9px;
 }
 
 .footer-links a{
@@ -3498,7 +3502,7 @@ footer{
           <div class="panel-head">
 
             <h3>
-              Последние изменения
+              Последние события
             </h3>
 
             <span>
@@ -3888,13 +3892,9 @@ footer{
 
         <div class="footer-brand">
 
-          Фанатский многопользовательский проект,
-          вдохновлённый SCP: Containment Breach.
+          Фанатский новостной портал, посвященный событиям и жизни SCP: Containment Breach 2.
 
-          <br><br>
-
-          Все новости и обновления проекта
-          публикуются на данном сайте.
+          Все новости и обновления проекта публикуются на данном сайте.
 
         </div>
 
@@ -3904,46 +3904,19 @@ footer{
       <div>
 
         <div class="footer-title">
-          Навигация
+          НАВИГАЦИЯ ПРОЕКТА
         </div>
 
         <div class="footer-links">
 
-          <a
-            href="#news"
-            data-nav-category="all"
-          >
-            Новости
-          </a>
-
-          <a href="./archive.html">
-            Архив
-          </a>
-
-          <a href="#about">
-            О проекте
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <div>
-
-        <div class="footer-title">
-          Проект
-        </div>
-
-        <div class="footer-links">
-
-          <a href="#">
-            Discord
-          </a>
-
-          <a href="#">
-            GitHub
-          </a>
+          <a href="#news" data-nav-category="all">Новости</a>
+          <a href="#">Discord</a>
+          <a href="./archive.html">Архив</a>
+          <a href="#">GitHub</a>
+          <a href="#">Онлайн</a>
+          <a href="#ideas">Предложить новость</a>
+          <a href="#about">О проекте</a>
+          <a href="#">Поддержать проект</a>
 
         </div>
 
@@ -3959,7 +3932,7 @@ footer{
       </span>
 
       <span>
-        NOT AFFILIATED WITH SCP FOUNDATION
+        Не является официальным ресурсом проекта.
       </span>
 
     </div>
