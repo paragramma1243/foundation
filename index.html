@@ -29,6 +29,7 @@ body{
   background-size:cover;
   background-position:center top;
   background-attachment:fixed;
+  zoom:90%;
 }
 
 body:before{
@@ -210,8 +211,8 @@ nav a.active:before{
 }
 
 .search{
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
   border:none;
   display:flex;
   align-items:center;
@@ -224,9 +225,9 @@ nav a.active:before{
     border-color .2s ease,
     background .2s ease,
     box-shadow .2s ease;
-  font-size:18px;
+  font-size:19px;
   line-height:1;
-  transform:translateY(-3px);
+  transform:translateY(-2px);
   background:#050606;
   padding:0;
   list-style:none;
@@ -2751,6 +2752,10 @@ footer{
   text-transform:uppercase;
 }
 
+.footer-nav-block .footer-title{
+  text-align:center;
+}
+
 .footer-links{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -3901,7 +3906,7 @@ footer{
       </div>
 
 
-      <div>
+      <div class="footer-nav-block">
 
         <div class="footer-title">
           НАВИГАЦИЯ ПРОЕКТА
@@ -3910,10 +3915,8 @@ footer{
         <div class="footer-links">
 
           <a href="#news" data-nav-category="all">Новости</a>
-          <a href="#">Discord</a>
           <a href="./archive.html">Архив</a>
-          <a href="#">GitHub</a>
-          <a href="#">Онлайн</a>
+          <a href="https://store.steampowered.com/app/3257000/SCP_Containment_Breach_2/?l=russian" target="_blank" rel="noopener noreferrer">Steam</a>
           <a href="#ideas">Предложить новость</a>
           <a href="#about">О проекте</a>
           <a href="#">Поддержать проект</a>
