@@ -89,6 +89,19 @@ header{
  letter-spacing:-1px;
 }
 
+.logo-number{
+ display:inline-block;
+ margin-left:14px;
+}
+
+.fan-portal-description{
+ margin-top:14px;
+ font-weight:700;
+ letter-spacing:.7px;
+ line-height:1.6;
+ text-transform:uppercase;
+}
+
 .logo-text small{
  display:block;
  color:#e52b2b;
@@ -377,11 +390,11 @@ nav a.active:after{
 }
 
 .auth-modal-code{
- color:#f4ca28;
- font-size:8px;
- font-weight:bold;
- letter-spacing:1px;
- margin-right:30px;
+  color:#f4ca28;
+  font-size:8px;
+  font-weight:bold;
+  letter-spacing:1px;
+  margin-right:30px;
 }
 
 .auth-modal-close{
@@ -447,13 +460,6 @@ nav a.active:after{
  background:#6875ff;
  transform:translateY(-1px);
  box-shadow:0 5px 18px rgba(88,101,242,.18);
-}
-
-.discord-login-button:disabled{
- opacity:.6;
- cursor:not-allowed;
- transform:none;
- box-shadow:none;
 }
 
 .auth-modal-footer{
@@ -524,7 +530,6 @@ main{
  linear-gradient(135deg,#25292a,#090a0b);
  background-size:cover;
  background-position:center;
- background-repeat:no-repeat;
  position:relative;
  overflow:hidden;
 }
@@ -623,12 +628,29 @@ main{
  color:#c2c4c5;
  font-size:16px;
  line-height:1.85;
+ white-space:pre-wrap;
+ word-wrap:break-word;
+}
+
+.article-text:empty{
+ display:none;
+}
+
+/* ==========================================
+   CONTENT FROM RICH EDITOR
+========================================== */
+
+.article-text{
+ color:#c2c4c5;
+ font-size:16px;
+ line-height:1.85;
  word-wrap:break-word;
  overflow-wrap:anywhere;
+ white-space:normal;
 }
 
 .article-text p{
- margin:0 0 18px;
+ margin:0 0 15px;
 }
 
 .article-text p:last-child{
@@ -636,127 +658,119 @@ main{
 }
 
 .article-text h2{
- color:#fff;
+ margin:28px 0 14px;
+ color:#f0f0f0;
  font-size:25px;
  line-height:1.25;
- margin:28px 0 15px;
 }
 
 .article-text h3{
- color:#fff;
- font-size:21px;
+ margin:23px 0 12px;
+ color:#f0f0f0;
+ font-size:19px;
  line-height:1.3;
- margin:24px 0 12px;
 }
 
 .article-text h4{
- color:#fff;
- font-size:18px;
- line-height:1.35;
  margin:20px 0 10px;
-}
-
-.article-text strong,
-.article-text b{
- color:#fff;
- font-weight:700;
-}
-
-.article-text i,
-.article-text em{
- font-style:italic;
-}
-
-.article-text u{
- text-decoration:underline;
-}
-
-.article-text s,
-.article-text strike{
- text-decoration:line-through;
-}
-
-.article-text a{
- color:#f4ca28;
- text-decoration:underline;
- transition:color .2s ease;
-}
-
-.article-text a:hover{
- color:#ffd83d;
+ color:#f0f0f0;
+ font-size:17px;
+ line-height:1.35;
 }
 
 .article-text ul,
 .article-text ol{
- margin:12px 0 20px;
+ margin:8px 0 17px;
  padding-left:28px;
 }
 
 .article-text li{
  margin:5px 0;
+ padding-left:3px;
 }
 
-.article-text ul ul,
-.article-text ul ol,
-.article-text ol ul,
-.article-text ol ol{
- margin-top:5px;
- margin-bottom:5px;
+.article-text blockquote{
+ margin:20px 0;
+ padding:13px 17px;
+ border-left:3px solid #d5b42e;
+ background:#15191e;
+ color:#aeb3b7;
+ border-radius:0 5px 5px 0;
+}
+
+.article-text a{
+ color:#f4ca28;
+ text-decoration:underline;
+ text-underline-offset:2px;
+}
+
+.article-text a:hover{
+ color:#ffe16a;
+}
+
+.article-text strong,
+.article-text b{
+ color:#eee;
+ font-weight:700;
+}
+
+.article-text img{
+ max-width:100%;
+ height:auto;
+}
+
+.article-text figure.news-inline-image{
+ margin:22px 0;
+ padding:7px;
+ width:auto;
+ max-width:100%;
+ background:#11151a;
+ border:1px solid #3a4148;
+ border-radius:7px;
+ position:relative;
+ box-sizing:border-box;
+}
+
+.article-text figure.news-inline-image:before{
+ content:"";
+ position:absolute;
+ top:-1px;
+ left:-1px;
+ width:28px;
+ height:28px;
+ border-top:2px solid #d5b42e;
+ border-left:2px solid #d5b42e;
+ border-radius:7px 0 0 0;
+ pointer-events:none;
+}
+
+.article-text figure.news-inline-image img{
+ display:block;
+ width:100%;
+ max-width:100%;
+ max-height:700px;
+ height:auto;
+ object-fit:contain;
+ border-radius:4px;
+ background:#080a0c;
+}
+
+.article-text figure.news-inline-image figcaption{
+ padding:9px 7px 4px;
+ color:#737a80;
+ text-align:center;
+ font-size:9px;
+ line-height:1.5;
+}
+
+.article-text span{
+ max-width:100%;
 }
 
 .article-text br{
  line-height:1.85;
 }
 
-.article-text img{
- max-width:100%;
- height:auto;
- display:block;
- border-radius:6px;
-}
-
-.article-text figure.news-inline-image{
- display:block;
- margin:25px auto;
- max-width:100%;
- text-align:center;
-}
-
-.article-text figure.news-inline-image img{
- width:100%;
- height:auto;
- margin:0 auto;
-}
-
-.article-text figure.news-inline-image figcaption{
- margin-top:8px;
- color:#747779;
- font-size:11px;
- line-height:1.5;
-}
-
-.article-text blockquote{
- margin:20px 0;
- padding:12px 18px;
- border-left:3px solid #f4ca28;
- background:#090a0b;
- color:#aaa;
-}
-
-.article-text hr{
- border:0;
- border-top:1px solid #292b2c;
- margin:25px 0;
-}
-
-.article-text:empty{
- display:none;
-}
-
-
-/* ==========================================
-   ERROR / LOADING
-========================================== */
 
 .article-error{
  background:#111213;
@@ -871,10 +885,43 @@ main{
  transform:translateY(-1px);
 }
 
+.blocked-user-panel{
+ display:none;
+ margin-bottom:30px;
+ padding:20px;
+ background:#140b0b;
+ border:1px solid #542626;
+ border-radius:5px;
+ text-align:center;
+}
 
-/* ==========================================
-   COMMENT USER
-========================================== */
+.blocked-user-panel.visible{
+ display:block;
+}
+
+.blocked-user-label{
+ color:#e52b2b;
+ font-size:8px;
+ font-weight:bold;
+ letter-spacing:1px;
+ margin-bottom:8px;
+}
+
+.blocked-user-title{
+ color:#eee;
+ font-size:13px;
+ font-weight:bold;
+ margin-bottom:7px;
+}
+
+.blocked-user-text{
+ color:#8b6b6b;
+ font-size:10px;
+ line-height:1.6;
+}
+
+
+/* COMMENT USER */
 
 .comment-user{
  display:none;
@@ -913,9 +960,7 @@ main{
 }
 
 
-/* ==========================================
-   COMMENT FORM
-========================================== */
+/* COMMENT FORM */
 
 .comment-form{
  display:none;
@@ -1041,9 +1086,7 @@ main{
 }
 
 
-/* ==========================================
-   COMMENT LIST
-========================================== */
+/* COMMENT LIST */
 
 .comment-list{
  display:flex;
@@ -1283,27 +1326,6 @@ footer{
   line-height:1.8;
  }
 
- .article-text h2{
-  font-size:22px;
- }
-
- .article-text h3{
-  font-size:19px;
- }
-
- .article-text h4{
-  font-size:17px;
- }
-
- .article-text ul,
- .article-text ol{
-  padding-left:24px;
- }
-
- .article-text figure.news-inline-image{
-  margin:20px auto;
- }
-
  .comments{
   padding:24px 20px;
   margin-top:20px;
@@ -1347,6 +1369,11 @@ footer{
 
 <body>
 
+
+<!-- ==========================================
+     HEADER
+========================================== -->
+
 <header>
 
 <div class="wrap head">
@@ -1359,11 +1386,12 @@ footer{
 
 <div class="logo-text">
 SCP<br>
-CB2
+CB<span class="logo-number">2</span>
 <small>MULTIPLAYER</small>
 </div>
 
 </a>
+
 
 <nav>
 
@@ -1381,11 +1409,8 @@ CB2
 
 </nav>
 
-<button
- class="search"
- aria-label="Поиск"
- type="button">
-</button>
+
+<!-- AUTH -->
 
 <div class="auth-area">
 
@@ -1395,6 +1420,7 @@ CB2
  type="button">
 Войти
 </button>
+
 
 <div
  id="authUser"
@@ -1418,6 +1444,7 @@ CB2
 </span>
 
 </button>
+
 
 <div
  id="authMenu"
@@ -1455,6 +1482,10 @@ DISCORD ACCOUNT
 </header>
 
 
+<!-- ==========================================
+     AUTH MODAL
+========================================== -->
+
 <div
  id="authModal"
  class="auth-modal">
@@ -1473,6 +1504,7 @@ CB2 / AUTH
 
 </div>
 
+
 <button
  id="authModalClose"
  class="auth-modal-close"
@@ -1480,6 +1512,7 @@ CB2 / AUTH
  aria-label="Закрыть">
 ×
 </button>
+
 
 <div class="auth-modal-body">
 
@@ -1495,12 +1528,14 @@ FOUNDATION ACCESS SYSTEM
 Авторизуйтесь через Discord, чтобы получить возможность оставлять комментарии под новостями.
 </p>
 
+
 <button
  id="discordLoginButton"
  class="discord-login-button"
  type="button">
 Войти через Discord
 </button>
+
 
 <div class="auth-modal-footer">
 AUTHENTICATION PROVIDED BY DISCORD
@@ -1512,6 +1547,11 @@ AUTHENTICATION PROVIDED BY DISCORD
 
 </div>
 
+
+
+<!-- ==========================================
+     ARTICLE
+========================================== -->
 
 <main>
 
@@ -1525,6 +1565,7 @@ AUTHENTICATION PROVIDED BY DISCORD
 ← Все новости
 </a>
 
+
 <div id="article">
 
 <div class="article-loading">
@@ -1533,6 +1574,10 @@ AUTHENTICATION PROVIDED BY DISCORD
 
 </div>
 
+
+<!-- ==========================================
+     COMMENTS
+========================================== -->
 
 <section
  class="comments"
@@ -1552,6 +1597,8 @@ AUTHENTICATION PROVIDED BY DISCORD
 
 </div>
 
+
+<!-- LOGIN MESSAGE -->
 
 <div
  id="commentLogin"
@@ -1580,6 +1627,27 @@ FOUNDATION ACCESS
 
 
 <div
+ id="blockedUserPanel"
+ class="blocked-user-panel">
+
+<div class="blocked-user-label">
+FOUNDATION ACCESS DENIED
+</div>
+
+<div class="blocked-user-title">
+Доступ к комментариям заблокирован
+</div>
+
+<div class="blocked-user-text">
+Ваш Discord-аккаунт заблокирован администрацией сайта. Авторизация и отправка комментариев недоступны.
+</div>
+
+</div>
+
+
+<!-- CURRENT USER -->
+
+<div
  id="commentUser"
  class="comment-user">
 
@@ -1606,10 +1674,13 @@ FOUNDATION ACCESS
 </div>
 
 
+<!-- COMMENT FORM -->
+
 <form
  class="comment-form"
  id="commentForm"
  autocomplete="off">
+
 
 <textarea
  class="comment-textarea"
@@ -1619,6 +1690,7 @@ FOUNDATION ACCESS
  required
 ></textarea>
 
+
 <div class="comment-bottom">
 
 <span
@@ -1626,6 +1698,7 @@ FOUNDATION ACCESS
  id="commentChars">
 0 / 1000
 </span>
+
 
 <button
  class="comment-submit"
@@ -1636,6 +1709,7 @@ FOUNDATION ACCESS
 
 </div>
 
+
 <div
  class="comment-status"
  id="commentStatus">
@@ -1643,6 +1717,8 @@ FOUNDATION ACCESS
 
 </form>
 
+
+<!-- LIMIT -->
 
 <div
  class="comment-limit"
@@ -1657,6 +1733,8 @@ FOUNDATION ACCESS
 </div>
 
 
+<!-- COMMENT LIST -->
+
 <div
  class="comment-list"
  id="commentList">
@@ -1669,6 +1747,7 @@ FOUNDATION ACCESS
 
 </section>
 
+
 </div>
 
 </div>
@@ -1676,9 +1755,15 @@ FOUNDATION ACCESS
 </main>
 
 
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
 <footer>
 
 <div class="wrap foot">
+
 
 <div>
 
@@ -1688,26 +1773,17 @@ FOUNDATION ACCESS
 ☣
 </div>
 
-
 <div class="logo-text">
 SCP<br>
 CB<span class="logo-number">2</span>
 <small>MULTIPLAYER</small>
 </div>
 
-<style>
-.logo-number {
-    display: inline-block;
-    transform: translateX(3px);
-}
-</style>
-
 </div>
 
-<p>
- <span style="position: relative; top: 7px;">
-Фанатский новостной портал <br>
-SCP: CB 2 Multiplayer.
+<p class="fan-portal-description">
+ФАНАТСКИЙ НОВОСТНОЙ ПОРТАЛ<br>
+SCP: CB2 MULTIPLAYER.
 </p>
 
 </div>
@@ -1762,6 +1838,7 @@ Steam
 
 </div>
 
+
 </div>
 
 
@@ -1775,6 +1852,12 @@ Steam
 </footer>
 
 
+
+<!-- ==========================================
+     SUPABASE
+========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -1790,29 +1873,6 @@ const SUPABASE_KEY =
 "sb_publishable_jUamyU0_NP-oyYyUSayJKQ_IqDpn7EP";
 
 
-/*
- * Публичная страница использует
- * отдельное хранилище Supabase Auth.
- *
- * Это ВАЖНО:
- *
- * admin.html использует:
- * scp_cb2_admin_auth
- *
- * публичные страницы используют:
- * scp_cb2_discord_auth
- *
- * Поэтому email/password-сессия
- * администратора больше не конфликтует
- * с Discord-сессией пользователя.
- *
- * Supabase автоматически обрабатывает
- * OAuth callback с ?code=...
- *
- * exchangeCodeForSession()
- * вручную НЕ вызывается.
- */
-
 const db =
 window.supabase.createClient(
  SUPABASE_URL,
@@ -1822,8 +1882,7 @@ window.supabase.createClient(
    persistSession:true,
    autoRefreshToken:true,
    detectSessionInUrl:true,
-   flowType:"pkce",
-   storageKey:"scp_cb2_discord_auth"
+   flowType:"implicit"
   }
  }
 );
@@ -1901,6 +1960,11 @@ const commentLogin =
 const commentLoginButton =
  document.getElementById(
   "commentLoginButton"
+ );
+
+const blockedUserPanel =
+ document.getElementById(
+  "blockedUserPanel"
  );
 
 const commentUser =
@@ -2066,15 +2130,6 @@ async function loginWithDiscord(){
 
  try{
 
-  /*
-   * Никакой проверки общей Supabase-сессии
-   * здесь больше нет.
-   *
-   * Админская сессия хранится отдельно
-   * под другим storageKey и поэтому
-   * вообще не видна этой странице.
-   */
-
   const redirectUrl =
    getCurrentPageUrl();
 
@@ -2101,23 +2156,19 @@ async function loginWithDiscord(){
     error
    );
 
-
    discordLoginButton.disabled =
     false;
 
    discordLoginButton.textContent =
     "Войти через Discord";
 
-
    alert(
     "Не удалось выполнить вход через Discord."
    );
 
-
    return;
 
   }
-
 
   console.log(
    "OAuth запущен:",
@@ -2132,13 +2183,11 @@ async function loginWithDiscord(){
    error
   );
 
-
   discordLoginButton.disabled =
    false;
 
   discordLoginButton.textContent =
    "Войти через Discord";
-
 
   alert(
    "Произошла ошибка при подключении Discord."
@@ -2153,49 +2202,6 @@ discordLoginButton.addEventListener(
  "click",
  loginWithDiscord
 );
-
-
-/* ==========================================
-   ПРОВЕРКА DISCORD
-========================================== */
-
-function isDiscordUser(user){
-
- if(!user){
-  return false;
- }
-
-
- const provider =
-  user?.app_metadata?.provider ||
-  "";
-
-
- if(
-  provider.toLowerCase() ===
-  "discord"
- ){
-
-  return true;
-
- }
-
-
- const identities =
-  user?.identities || [];
-
-
- return identities.some(
-  function(identity){
-
-   return (
-    identity?.provider || ""
-   ).toLowerCase() === "discord";
-
-  }
- );
-
-}
 
 
 /* ==========================================
@@ -2232,66 +2238,90 @@ function getDiscordUserData(user){
 
 
 /* ==========================================
-   LOGGED OUT UI
+   BLOCKED DISCORD
 ========================================== */
 
-function renderLoggedOut(){
+async function ensureUserIsNotBlocked(user){
 
- loginButton.style.display =
-  "block";
+ if(!user){
+  return null;
+ }
 
+ try{
 
- authUser.classList.remove(
-  "visible"
- );
+  const {data,error}=await db
+   .from("blocked_users")
+   .select("user_id,reason")
+   .eq("user_id",user.id)
+   .maybeSingle();
 
+  if(error){
+   console.error("Ошибка проверки блокировки Discord:",error);
+   return user;
+  }
 
- authMenu.classList.remove(
-  "open"
- );
+  if(data){
 
+   if(blockedUserPanel){
+    blockedUserPanel.classList.add("visible");
+   }
 
- commentLogin.classList.add(
-  "visible"
- );
+   commentLogin.classList.remove("visible");
+   commentUser.classList.remove("visible");
+   commentForm.classList.remove("visible");
 
+   if(commentStatus){
+    commentStatus.textContent = "Доступ заблокирован.";
+    commentStatus.classList.remove("success");
+    commentStatus.classList.add("error");
+   }
 
- commentUser.classList.remove(
-  "visible"
- );
+   await db.auth.signOut({scope:"local"});
+   alert("Ваш Discord-аккаунт заблокирован администрацией сайта.");
+   return null;
+  }
 
+  return user;
 
- commentForm.classList.remove(
-  "visible"
- );
+ }catch(error){
+  console.error("Ошибка проверки блокировки:",error);
+  return user;
+ }
 
 }
 
 
+
 /* ==========================================
-   LOGGED IN UI
+   RENDER AUTH USER
 ========================================== */
 
 function renderAuthUser(user){
 
- /*
-  * Публичная страница принимает
-  * только Discord пользователя.
-  *
-  * При этом НЕ вызывается signOut(),
-  * если вдруг попадётся другая сессия.
-  *
-  * Благодаря отдельному storageKey
-  * админская сессия сюда вообще
-  * не попадает.
-  */
+ if(!user){
 
- if(
-  !user ||
-  !isDiscordUser(user)
- ){
+  loginButton.style.display =
+   "block";
 
-  renderLoggedOut();
+  authUser.classList.remove(
+   "visible"
+  );
+
+  if(blockedUserPanel){
+   blockedUserPanel.classList.remove("visible");
+  }
+
+  commentLogin.classList.add(
+   "visible"
+  );
+
+  commentUser.classList.remove(
+   "visible"
+  );
+
+  commentForm.classList.remove(
+   "visible"
+  );
 
   return;
 
@@ -2303,10 +2333,12 @@ function renderAuthUser(user){
    user
   );
 
+ if(blockedUserPanel){
+  blockedUserPanel.classList.remove("visible");
+ }
 
  loginButton.style.display =
   "none";
-
 
  authUser.classList.add(
   "visible"
@@ -2328,15 +2360,15 @@ function renderAuthUser(user){
   userData.name;
 
 
+ /* COMMENTS */
+
  commentLogin.classList.remove(
   "visible"
  );
 
-
  commentUser.classList.add(
   "visible"
  );
-
 
  commentForm.classList.add(
   "visible"
@@ -2363,16 +2395,6 @@ async function checkAuth(){
 
  try{
 
-  /*
-   * Supabase автоматически обрабатывает
-   * OAuth callback благодаря
-   * detectSessionInUrl:true.
-   *
-   * Никакого ручного
-   * exchangeCodeForSession()
-   * здесь нет.
-   */
-
   const {
    data,
    error
@@ -2387,8 +2409,9 @@ async function checkAuth(){
     error
    );
 
-
-   renderLoggedOut();
+   renderAuthUser(
+    null
+   );
 
    return null;
 
@@ -2403,38 +2426,45 @@ async function checkAuth(){
    session?.user || null;
 
 
-  /*
-   * Если в публичном storage каким-либо
-   * образом оказался не-Discord пользователь,
-   * просто не показываем его.
-   *
-   * ВАЖНО:
-   * здесь больше НЕ вызывается signOut().
-   *
-   * Поэтому эта страница физически не может
-   * выйти из админской сессии.
-   */
-
-  if(
-   user &&
-   !isDiscordUser(user)
-  ){
-
-   console.warn(
-    "Обнаружена не-Discord сессия в публичном auth storage."
-   );
-
-
-   renderLoggedOut();
-
-   return null;
-
-  }
+  const allowedUser =
+   await ensureUserIsNotBlocked(user);
 
 
   renderAuthUser(
-   user
+   allowedUser
   );
+
+
+  /*
+   * После обработки OAuth Supabase
+   * оставляет access_token в URL hash.
+   * Удаляем его из адресной строки,
+   * но сессию при этом сохраняем.
+   */
+
+  if(
+   window.location.hash &&
+   (
+    window.location.hash.includes(
+     "access_token"
+    ) ||
+    window.location.hash.includes(
+     "refresh_token"
+    ) ||
+    window.location.hash.includes(
+     "provider_token"
+    )
+   )
+  ){
+
+   window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname +
+    window.location.search
+   );
+
+  }
 
 
   return user;
@@ -2447,8 +2477,9 @@ async function checkAuth(){
    error
   );
 
-
-  renderLoggedOut();
+  renderAuthUser(
+   null
+  );
 
   return null;
 
@@ -2461,6 +2492,24 @@ async function checkAuth(){
    AUTH STATE
 ========================================== */
 
+document.addEventListener("visibilitychange",async()=>{
+ if(document.visibilityState !== "visible") return;
+ const {data}=await db.auth.getSession();
+ if(data?.session?.user){
+  const allowed=await ensureUserIsNotBlocked(data.session.user);
+  if(!allowed) renderAuthUser(null);
+ }
+});
+
+window.addEventListener("focus",async()=>{
+ const {data}=await db.auth.getSession();
+ if(data?.session?.user){
+  const allowed=await ensureUserIsNotBlocked(data.session.user);
+  if(!allowed) renderAuthUser(null);
+ }
+});
+
+
 db.auth.onAuthStateChange(
  function(event, session){
 
@@ -2470,59 +2519,32 @@ db.auth.onAuthStateChange(
   );
 
 
-  const user =
-   session?.user || null;
+  setTimeout(
+   async function(){
+    const allowedUser =
+     await ensureUserIsNotBlocked(
+      session?.user || null
+     );
+
+    renderAuthUser(
+     allowedUser
+    );
+   },
+   0
+  );
 
 
-  /*
-   * Discord session
-   */
-
-  if(
-   user &&
-   isDiscordUser(user)
-  ){
-
-   renderAuthUser(
-    user
-   );
-
+  if(session?.user){
 
    closeAuthModal();
-
 
    discordLoginButton.disabled =
     false;
 
-
    discordLoginButton.textContent =
     "Войти через Discord";
 
-
-   return;
-
   }
-
-
-  /*
-   * Если пользователь отсутствует,
-   * просто показываем состояние выхода.
-   *
-   * НЕ вызываем signOut().
-   *
-   * Это особенно важно для того,
-   * чтобы auth state admin.html
-   * не был затронут.
-   */
-
-  renderLoggedOut();
-
-
-  discordLoginButton.disabled =
-   false;
-
-  discordLoginButton.textContent =
-   "Войти через Discord";
 
  }
 );
@@ -2537,7 +2559,6 @@ authUserButton.addEventListener(
  function(event){
 
   event.stopPropagation();
-
 
   authMenu.classList.toggle(
    "open"
@@ -2575,52 +2596,27 @@ logoutButton.addEventListener(
  "click",
  async function(){
 
-  try{
-
-   /*
-    * scope:"local" + отдельный
-    * storageKey означает, что выход
-    * относится к Discord-сессии
-    * этой публичной страницы.
-    */
-
-   const {
-    error
-   } =
-    await db.auth.signOut({
-     scope:"local"
-    });
+  const {
+   error
+  } =
+   await db.auth.signOut();
 
 
-   if(error){
-
-    console.error(
-     "Ошибка выхода:",
-     error
-    );
-
-
-    return;
-
-   }
-
-
-   authMenu.classList.remove(
-    "open"
-   );
-
-
-   renderLoggedOut();
-
-  }
-  catch(error){
+  if(error){
 
    console.error(
     "Ошибка выхода:",
     error
    );
 
+   return;
+
   }
+
+
+  authMenu.classList.remove(
+   "open"
+  );
 
  }
 );
@@ -2655,7 +2651,6 @@ async function loadSiteSettings(){
    "Ошибка загрузки настроек:",
    error
   );
-
 
   return;
 
@@ -2700,18 +2695,14 @@ async function loadSiteSettings(){
   document.body.style.backgroundImage =
    `url("${settings.background}?v=${Date.now()}")`;
 
-
   document.body.style.backgroundSize =
    "cover";
-
 
   document.body.style.backgroundAttachment =
    "fixed";
 
-
   document.body.style.backgroundPosition =
    "center";
-
 
   document.body.style.backgroundRepeat =
    "no-repeat";
@@ -2730,22 +2721,17 @@ function categoryClass(category){
  if(category === "Обновления")
   return "purple";
 
-
  if(category === "Сообщество")
   return "community";
-
 
  if(category === "Сервера")
   return "blue";
 
-
  if(category === "Разработка")
   return "green";
 
-
  if(category === "События")
   return "orange";
-
 
  return "blue";
 
@@ -2761,10 +2747,8 @@ function formatTime(dateString){
  const date =
   new Date(dateString);
 
-
  const now =
   new Date();
-
 
  const seconds =
   Math.floor(
@@ -2777,43 +2761,33 @@ function formatTime(dateString){
 
 
  const minutes =
-  Math.floor(
-   seconds / 60
-  );
+  Math.floor(seconds / 60);
 
 
  if(minutes < 60)
   return minutes +
    " " +
-   (
-    minutes === 1
-     ? "минуту"
-     : "минут"
-   ) +
+   (minutes === 1
+    ? "минуту"
+    : "минут") +
    " назад";
 
 
  const hours =
-  Math.floor(
-   minutes / 60
-  );
+  Math.floor(minutes / 60);
 
 
  if(hours < 24)
   return hours +
    " " +
-   (
-    hours === 1
-     ? "час"
-     : "часов"
-   ) +
+   (hours === 1
+    ? "час"
+    : "часов") +
    " назад";
 
 
  const days =
-  Math.floor(
-   hours / 24
-  );
+  Math.floor(hours / 24);
 
 
  if(days === 1)
@@ -2823,11 +2797,9 @@ function formatTime(dateString){
  if(days < 7)
   return days +
    " " +
-   (
-    days < 5
-     ? "дня"
-     : "дней"
-   ) +
+   (days < 5
+    ? "дня"
+    : "дней") +
    " назад";
 
 
@@ -2854,11 +2826,80 @@ function getNewsId(){
    window.location.search
   );
 
+ return params.get("id");
 
- return params.get(
-  "id"
+}
+
+
+/* ==========================================
+   БЕЗОПАСНОЕ ОТОБРАЖЕНИЕ HTML НОВОСТИ
+========================================== */
+
+function sanitizeNewsContent(html){
+
+ if(!html) return "";
+
+ const clean = DOMPurify.sanitize(
+  html,
+  {
+   ALLOWED_TAGS:[
+    "p","br","strong","b","em","i","u","s","strike",
+    "span","h2","h3","h4","ul","ol","li","blockquote",
+    "a","figure","figcaption","img"
+   ],
+   ALLOWED_ATTR:[
+    "href","target","rel","src","alt","title","class","style","width"
+   ],
+   FORBID_TAGS:[
+    "script","iframe","object","embed","form","input","button"
+   ],
+   ALLOW_DATA_ATTR:false
+  }
  );
 
+ const wrapper=document.createElement("div");
+ wrapper.innerHTML=clean;
+
+ /* Удаляем редакторские служебные элементы */
+ wrapper.querySelectorAll(".inline-image-editor-ui,.inline-image-delete,.inline-image-resize-handle").forEach(el=>el.remove());
+
+ /* Нельзя позволять HTML редактора ломать структуру страницы */
+ wrapper.querySelectorAll(`h2 h2,h2 h3,h2 h4,h2 p,h2 ul,h2 ol,h2 blockquote,h2 figure,
+   h3 h2,h3 h3,h3 h4,h3 p,h3 ul,h3 ol,h3 blockquote,h3 figure,
+   p p,p h2,p h3,p h4,p ul,p ol,p blockquote,p figure,
+   blockquote p ul,blockquote p ol`).forEach(child=>{
+  const parent=child.parentElement;
+  if(!parent) return;
+  while(child.firstChild) parent.parentElement.insertBefore(child.firstChild,parent);
+  child.remove();
+ });
+
+ /* Inline images: ширина из админки сохраняется, но не выходит за экран */
+ wrapper.querySelectorAll("figure.news-inline-image").forEach(figure=>{
+  const img=figure.querySelector("img");
+  if(!img) return;
+
+  figure.style.maxWidth="100%";
+  figure.style.boxSizing="border-box";
+  img.removeAttribute("width");
+  img.style.maxWidth="100%";
+  img.style.height="auto";
+  img.style.display="block";
+  img.style.objectFit="contain";
+ });
+
+ /* Ссылки открываются безопасно */
+ wrapper.querySelectorAll("a").forEach(a=>{
+  const href=a.getAttribute("href") || "";
+  if(!/^(https?:|mailto:|#|\/)/i.test(href)){
+   a.removeAttribute("href");
+  }
+  if(a.getAttribute("target")==="_blank"){
+   a.setAttribute("rel","noopener noreferrer");
+  }
+ });
+
+ return wrapper.innerHTML;
 }
 
 
@@ -2886,9 +2927,7 @@ async function loadNews(){
    </div>
   `;
 
-
   hideComments();
-
 
   return;
 
@@ -2931,9 +2970,7 @@ async function loadNews(){
    </div>
   `;
 
-
   hideComments();
-
 
   return;
 
@@ -2949,7 +2986,6 @@ async function loadNews(){
    "article"
   );
 
-
  articleElement.className =
   "article";
 
@@ -2959,18 +2995,11 @@ async function loadNews(){
    "div"
   );
 
-
  image.className =
   "article-image";
 
 
- const newsImage =
-  data.image ||
-  data.image_url ||
-  "";
-
-
- if(newsImage){
+ if(data.image){
 
   image.style.backgroundImage =
    `linear-gradient(
@@ -2978,7 +3007,7 @@ async function loadNews(){
      rgba(0,0,0,.05),
      rgba(0,0,0,.3)
     ),
-    url("${newsImage}")`;
+    url("${data.image}")`;
 
  }
 
@@ -2987,7 +3016,6 @@ async function loadNews(){
   document.createElement(
    "div"
   );
-
 
  content.className =
   "article-content";
@@ -2998,7 +3026,6 @@ async function loadNews(){
    "div"
   );
 
-
  top.className =
   "article-top";
 
@@ -3008,13 +3035,11 @@ async function loadNews(){
    "span"
   );
 
-
  tag.className =
   "tag " +
   categoryClass(
    data.category
   );
-
 
  tag.textContent =
   data.category ||
@@ -3026,10 +3051,8 @@ async function loadNews(){
    "span"
   );
 
-
  time.className =
   "time";
-
 
  time.textContent =
   formatTime(
@@ -3037,21 +3060,14 @@ async function loadNews(){
   );
 
 
- top.appendChild(
-  tag
- );
-
-
- top.appendChild(
-  time
- );
+ top.appendChild(tag);
+ top.appendChild(time);
 
 
  const title =
   document.createElement(
    "h1"
   );
-
 
  title.textContent =
   data.title ||
@@ -3063,10 +3079,8 @@ async function loadNews(){
    "p"
   );
 
-
  description.className =
   "article-description";
-
 
  description.textContent =
   data.description ||
@@ -3078,24 +3092,20 @@ async function loadNews(){
    "div"
   );
 
-
  text.className =
   "article-text";
 
-
+ /* Контент из нового rich-text редактора — это HTML.
+    Используем innerHTML только после DOMPurify. */
  text.innerHTML =
-  data.content ||
-  "";
+  sanitizeNewsContent(
+   data.content ||
+   ""
+  );
 
 
- content.appendChild(
-  top
- );
-
-
- content.appendChild(
-  title
- );
+ content.appendChild(top);
+ content.appendChild(title);
 
 
  if(data.description){
@@ -3116,7 +3126,6 @@ async function loadNews(){
   image
  );
 
-
  articleElement.appendChild(
   content
  );
@@ -3128,10 +3137,7 @@ async function loadNews(){
 
 
  document.title =
-  (
-   data.title ||
-   "Новость"
-  ) +
+  (data.title || "Новость") +
   " — SCP: CB2 Multiplayer";
 
 
@@ -3198,9 +3204,7 @@ function updateCommentsCount(number){
  commentsCount.textContent =
   number +
   " " +
-  commentsWord(
-   number
-  );
+  commentsWord(number);
 
 }
 
@@ -3217,10 +3221,8 @@ function updateCommentLimit(number){
    "visible"
   );
 
-
   commentLimit.style.display =
    "block";
-
 
   return;
 
@@ -3269,7 +3271,6 @@ function createCommentElement(comment){
    "div"
   );
 
-
  element.className =
   "comment";
 
@@ -3278,7 +3279,6 @@ function createCommentElement(comment){
   document.createElement(
    "div"
   );
-
 
  head.className =
   "comment-head";
@@ -3289,7 +3289,6 @@ function createCommentElement(comment){
    "div"
   );
 
-
  authorBox.className =
   "comment-author-box";
 
@@ -3299,15 +3298,12 @@ function createCommentElement(comment){
    "img"
   );
 
-
  avatar.className =
   "comment-avatar";
-
 
  avatar.src =
   comment.avatar_url ||
   "https://cdn.discordapp.com/embed/avatars/0.png";
-
 
  avatar.alt =
   comment.author ||
@@ -3319,10 +3315,8 @@ function createCommentElement(comment){
    "span"
   );
 
-
  author.className =
   "comment-author";
-
 
  author.textContent =
   comment.author ||
@@ -3332,7 +3326,6 @@ function createCommentElement(comment){
  authorBox.appendChild(
   avatar
  );
-
 
  authorBox.appendChild(
   author
@@ -3344,10 +3337,8 @@ function createCommentElement(comment){
    "span"
   );
 
-
  date.className =
   "comment-date";
-
 
  date.textContent =
   formatTime(
@@ -3359,7 +3350,6 @@ function createCommentElement(comment){
   authorBox
  );
 
-
  head.appendChild(
   date
  );
@@ -3370,10 +3360,8 @@ function createCommentElement(comment){
    "div"
   );
 
-
  content.className =
   "comment-content";
-
 
  content.textContent =
   comment.content;
@@ -3382,7 +3370,6 @@ function createCommentElement(comment){
  element.appendChild(
   head
  );
-
 
  element.appendChild(
   content
@@ -3453,11 +3440,7 @@ async function loadComments(newsId){
    </div>
   `;
 
-
-  updateCommentsCount(
-   0
-  );
-
+  updateCommentsCount(0);
 
   return;
 
@@ -3465,7 +3448,7 @@ async function loadComments(newsId){
 
 
  const comments =
-  (data || []).slice(
+  data.slice(
    0,
    MAX_COMMENTS
   );
@@ -3482,15 +3465,8 @@ async function loadComments(newsId){
    "visible"
   );
 
-
   commentLimit.style.display =
    "block";
-
- }
- else{
-
-  commentLimit.style.display =
-   "none";
 
  }
 
@@ -3502,7 +3478,6 @@ async function loadComments(newsId){
     Пока нет комментариев. Будьте первым!
    </div>
   `;
-
 
   return;
 
@@ -3539,6 +3514,10 @@ commentForm.addEventListener(
   event.preventDefault();
 
 
+  /*
+   * СНАЧАЛА ПРОВЕРЯЕМ СЕССИЮ
+   */
+
   const {
    data:sessionData,
    error:sessionError
@@ -3552,10 +3531,11 @@ commentForm.addEventListener(
    !sessionData.session.user
   ){
 
-   renderLoggedOut();
+   renderAuthUser(
+    null
+   );
 
    openAuthModal();
-
 
    return;
 
@@ -3566,24 +3546,11 @@ commentForm.addEventListener(
    sessionData.session.user;
 
 
-  /*
-   * Комментарии разрешены
-   * только Discord-пользователям.
-   *
-   * Не-Discord сессия не вызывает
-   * signOut(), чтобы auth storage
-   * оставался изолированным.
-   */
+  const allowedUser =
+   await ensureUserIsNotBlocked(user);
 
-  if(!isDiscordUser(user)){
-
-   renderLoggedOut();
-
-   openAuthModal();
-
-
+  if(!allowedUser){
    return;
-
   }
 
 
@@ -3602,7 +3569,6 @@ commentForm.addEventListener(
     true
    );
 
-
    return;
 
   }
@@ -3615,9 +3581,7 @@ commentForm.addEventListener(
     true
    );
 
-
    commentContent.focus();
-
 
    return;
 
@@ -3631,17 +3595,24 @@ commentForm.addEventListener(
     true
    );
 
-
    return;
 
   }
 
+
+  /*
+   * ПОЛУЧАЕМ DISCORD ДАННЫЕ
+   */
 
   const discordData =
    getDiscordUserData(
     user
    );
 
+
+  /*
+   * ПРОВЕРЯЕМ ЛИМИТ
+   */
 
   const {
    count,
@@ -3659,10 +3630,6 @@ commentForm.addEventListener(
     .eq(
      "news_id",
      Number(newsId)
-    )
-    .eq(
-     "status",
-     "approved"
     );
 
 
@@ -3673,12 +3640,10 @@ commentForm.addEventListener(
     countError
    );
 
-
    showCommentStatus(
     "Не удалось проверить лимит комментариев.",
     true
    );
-
 
    return;
 
@@ -3691,24 +3656,24 @@ commentForm.addEventListener(
     count
    );
 
-
    commentForm.classList.remove(
     "visible"
    );
 
-
    commentLimit.style.display =
     "block";
-
 
    return;
 
   }
 
 
+  /*
+   * БЛОКИРУЕМ КНОПКУ
+   */
+
   commentSubmit.disabled =
    true;
-
 
   commentSubmit.textContent =
    "Отправка...";
@@ -3719,6 +3684,10 @@ commentForm.addEventListener(
    false
   );
 
+
+  /*
+   * ОТПРАВЛЯЕМ
+   */
 
   const {
    data,
@@ -3751,6 +3720,10 @@ commentForm.addEventListener(
     .single();
 
 
+  /*
+   * ОШИБКА
+   */
+
   if(error){
 
    console.error(
@@ -3768,19 +3741,20 @@ commentForm.addEventListener(
    commentSubmit.disabled =
     false;
 
-
    commentSubmit.textContent =
     "Отправить";
-
 
    return;
 
   }
 
 
+  /*
+   * УСПЕШНО
+   */
+
   commentContent.value =
    "";
-
 
   commentChars.textContent =
    "0 / 1000";
@@ -3793,17 +3767,59 @@ commentForm.addEventListener(
   );
 
 
+  /*
+   * Новый комментарий имеет статус pending, поэтому
+   * публично он появится только после одобрения администрацией.
+   */
+
+  const currentCount =
+   commentList.querySelectorAll(
+    ".comment"
+   ).length;
+
   updateCommentsCount(
-   count || 0
+   currentCount
   );
 
 
-  commentSubmit.disabled =
-   false;
+  /*
+   * ДОСТИГНУТ ЛИМИТ
+   */
+
+  if(
+   currentCount >= MAX_COMMENTS
+  ){
+
+   commentForm.classList.remove(
+    "visible"
+   );
+
+   commentLimit.style.display =
+    "block";
+
+   showCommentStatus(
+    "",
+    false
+   );
+
+  }
 
 
-  commentSubmit.textContent =
-   "Отправить";
+  /*
+   * РАЗБЛОКИРОВКА
+   */
+
+  if(
+   currentCount < MAX_COMMENTS
+  ){
+
+   commentSubmit.disabled =
+    false;
+
+   commentSubmit.textContent =
+    "Отправить";
+
+  }
 
  }
 );
@@ -3850,22 +3866,25 @@ function showCommentStatus(
 
 
 /* ==========================================
-   ОБРАБОТКА AUTH
+   ОБРАБОТКА OAUTH CALLBACK
 ========================================== */
 
 async function initializeAuth(){
 
  /*
-  * Ждём автоматическую обработку
-  * OAuth callback от Supabase.
-  *
-  * Ручной exchangeCodeForSession()
-  * отсутствует.
+  * Supabase автоматически обработает
+  * access_token / refresh_token из hash,
+  * потому что detectSessionInUrl включён.
   */
 
  const user =
   await checkAuth();
 
+
+ /*
+  * Если OAuth уже завершён,
+  * закрываем модальное окно.
+  */
 
  if(user){
 
