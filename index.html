@@ -29,7 +29,6 @@ body{
   background-size:cover;
   background-position:center top;
   background-attachment:fixed;
-  zoom:90%;
 }
 
 body:before{
@@ -211,8 +210,8 @@ nav a.active:before{
 }
 
 .search{
-  width:36px;
-  height:36px;
+  width:34px;
+  height:34px;
   border:none;
   display:flex;
   align-items:center;
@@ -225,9 +224,9 @@ nav a.active:before{
     border-color .2s ease,
     background .2s ease,
     box-shadow .2s ease;
-  font-size:19px;
+  font-size:18px;
   line-height:1;
-  transform:translateY(-2px);
+  transform:translateY(-3px);
   background:#050606;
   padding:0;
   list-style:none;
@@ -2502,6 +2501,341 @@ main:after{
 }
 
 
+/* ================= FEEDBACK GRID ================= */
+
+.feedback-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
+
+.feedback-grid .ideas-section,
+.feedback-grid .news-suggest-section{
+  margin-top:0;
+  min-width:0;
+}
+
+/* ================= NEWS SUGGESTION ================= */
+
+.news-suggest-section{
+  background:
+    linear-gradient(
+      90deg,
+      rgba(173,48,48,.065),
+      transparent 35%
+    ),
+    #0b0c0c;
+  border:1px solid #292a2b;
+  border-radius:7px;
+  position:relative;
+  overflow:hidden;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.news-suggest-section:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#a93636;
+  box-shadow:0 0 12px rgba(169,54,54,.20);
+}
+
+.news-suggest-section:after{
+  content:"NEWS CHANNEL // PUBLIC";
+  position:absolute;
+  top:13px;
+  right:17px;
+  color:#4d4e4f;
+  font-family:monospace;
+  font-size:7px;
+  letter-spacing:1.5px;
+}
+
+.news-suggest-section:hover{
+  border-color:#414243;
+  box-shadow:0 8px 25px rgba(0,0,0,.18);
+}
+
+.news-suggest-inner{
+  min-height:145px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:35px;
+  padding:30px;
+}
+
+.news-suggest-kicker{
+  color:#a93636;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.news-suggest-text h2{
+  color:#eee;
+  font-size:21px;
+  margin-bottom:7px;
+}
+
+.news-suggest-text p{
+  color:#666;
+  font-size:11px;
+  line-height:1.6;
+  max-width:650px;
+}
+
+.news-suggest-button{
+  flex-shrink:0;
+  min-width:190px;
+  min-height:43px;
+  padding:0 18px;
+  border:1px solid #4b3a3a;
+  border-radius:6px;
+  background:#151616;
+  color:#c45a5a;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.3px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.news-suggest-button span{
+  margin-left:8px;
+  transition:transform .2s ease;
+}
+
+.news-suggest-button:hover{
+  background:#a93636;
+  color:#fff;
+  border-color:#a93636;
+  transform:translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(169,54,54,.14),
+    0 0 20px rgba(169,54,54,.05);
+}
+
+.news-suggest-button:hover span{
+  transform:translateX(3px);
+}
+
+.news-suggest-button:active{
+  transform:translateY(0) scale(.98);
+}
+
+/* ================= NEWS SUGGESTION MODAL ================= */
+
+.news-suggest-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(5px);
+  z-index:1200;
+}
+
+.news-suggest-modal.open{
+  display:flex;
+}
+
+.news-suggest-modal-box{
+  width:min(560px,100%);
+  background:#101111;
+  border:1px solid #363839;
+  border-radius:7px;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.6),
+    0 0 30px rgba(169,54,54,.04);
+  overflow:hidden;
+  animation:ideaModalIn .2s ease-out;
+}
+
+.news-suggest-modal-header{
+  min-height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:16px 20px;
+  background:#0b0c0c;
+  border-bottom:1px solid #292a2b;
+}
+
+.news-suggest-modal-kicker{
+  color:#a93636;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:5px;
+}
+
+.news-suggest-modal-header h3{
+  color:#eee;
+  font-size:17px;
+}
+
+.news-suggest-modal-close{
+  width:30px;
+  height:30px;
+  border:0;
+  background:none;
+  color:#666;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.news-suggest-modal-close:hover{
+  color:#eee;
+  transform:rotate(90deg);
+}
+
+.news-suggest-modal-body{
+  padding:20px;
+}
+
+.news-suggest-field{
+  margin-bottom:13px;
+}
+
+.news-suggest-label{
+  display:block;
+  margin-bottom:6px;
+  color:#777;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.news-suggest-input,
+.news-suggest-textarea{
+  width:100%;
+  border:1px solid #303233;
+  border-radius:5px;
+  background:#090a0a;
+  color:#ddd;
+  outline:none;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  line-height:1.6;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.news-suggest-input{
+  min-height:42px;
+  padding:10px 12px;
+}
+
+.news-suggest-textarea{
+  min-height:135px;
+  resize:vertical;
+  padding:12px;
+}
+
+.news-suggest-input:focus,
+.news-suggest-textarea:focus{
+  border-color:#a93636;
+  box-shadow:0 0 12px rgba(169,54,54,.08);
+}
+
+.news-suggest-input::placeholder,
+.news-suggest-textarea::placeholder{
+  color:#505253;
+}
+
+.news-suggest-input:disabled,
+.news-suggest-textarea:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.news-suggest-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:12px;
+}
+
+#newsSuggestCounter{
+  color:#4e5051;
+  font-family:monospace;
+  font-size:8px;
+  letter-spacing:1px;
+}
+
+.news-suggest-submit{
+  min-height:38px;
+  padding:0 16px;
+  border:1px solid #a93636;
+  border-radius:5px;
+  background:#a93636;
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.news-suggest-submit:hover:not(:disabled){
+  background:#c34848;
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(169,54,54,.14);
+}
+
+.news-suggest-submit:disabled{
+  opacity:.3;
+  cursor:not-allowed;
+}
+
+.news-suggest-result{
+  display:none;
+  margin-top:12px;
+  padding:11px;
+  border:1px solid #29302b;
+  border-radius:5px;
+  background:#0b100c;
+  color:#78947d;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.news-suggest-result.visible{
+  display:block;
+}
+
+.news-suggest-auth{
+  margin-bottom:15px;
+}
+
 /* ================= IDEA MODAL ================= */
 
 .idea-modal{
@@ -2732,8 +3066,24 @@ footer{
 
 .footer-grid{
   display:grid;
-  grid-template-columns:2fr 1fr;
+  grid-template-columns:2fr 1fr 1fr;
   gap:50px;
+}
+
+.footer-nav-block{
+  grid-column:2 / 4;
+}
+
+.footer-nav-block .footer-title{
+  text-align:center;
+  transform:none;
+}
+
+.footer-nav-block .footer-links{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:42px;
+  row-gap:9px;
 }
 
 .footer-brand{
@@ -2752,20 +3102,10 @@ footer{
   text-transform:uppercase;
 }
 
-.footer-nav-block{
-  position:relative;
-  left:-30px;
-}
-
-.footer-nav-block .footer-title{
-  text-align:center;
-}
-
 .footer-links{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  column-gap:38px;
-  row-gap:9px;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
 }
 
 .footer-links a{
@@ -2845,10 +3185,6 @@ footer{
 }
 
 @media(max-width:700px){
-
-  .footer-nav-block{
-    left:0;
-  }
 
   .wrap,
   .header-inner{
@@ -3046,7 +3382,12 @@ footer{
     display:none;
   }
 
-  .ideas-inner{
+  .feedback-grid{
+    grid-template-columns:1fr;
+  }
+
+  .ideas-inner,
+  .news-suggest-inner{
     min-height:0;
     flex-direction:column;
     align-items:flex-start;
@@ -3054,13 +3395,23 @@ footer{
     padding:25px 22px;
   }
 
-  .idea-button{
+  .idea-button,
+  .news-suggest-button{
     width:100%;
   }
 
   .footer-grid{
     grid-template-columns:1fr;
     gap:30px;
+  }
+
+  .footer-nav-block{
+    grid-column:auto;
+    left:0;
+  }
+
+  .footer-nav-block .footer-title{
+    transform:none;
   }
 
   .footer-bottom{
@@ -3092,12 +3443,14 @@ footer{
     font-size:23px;
   }
 
-  .idea-modal-bottom{
+  .idea-modal-bottom,
+  .news-suggest-bottom{
     align-items:stretch;
     flex-direction:column;
   }
 
-  .idea-submit{
+  .idea-submit,
+  .news-suggest-submit{
     width:100%;
   }
 
@@ -3744,44 +4097,90 @@ footer{
     </section>
 
 
-    <!-- ================= DEVELOPMENT IDEAS ================= -->
+    <!-- ================= FEEDBACK SECTIONS ================= -->
 
-    <section
-      class="ideas-section"
-      id="ideas"
-    >
+    <div class="feedback-grid">
 
-      <div class="ideas-inner">
+      <!-- DEVELOPMENT IDEAS -->
 
-        <div class="ideas-text">
+      <section
+        class="ideas-section"
+        id="ideas"
+      >
 
-          <div class="ideas-kicker">
-            FOUNDATION FEEDBACK
+        <div class="ideas-inner">
+
+          <div class="ideas-text">
+
+            <div class="ideas-kicker">
+              FOUNDATION FEEDBACK
+            </div>
+
+            <h2>
+              Предложения о развитии
+            </h2>
+
+            <p>
+              Есть идея по развитию сайта или сообщества?
+              Оставьте предложение для команды «Голоса Фонда».
+            </p>
+
           </div>
 
-          <h2>
-            Предложения о развитии
-          </h2>
-
-          <p>
-            Есть идея по развитию сайта или сообщества?
-            Оставьте предложение для команды «Голоса Фонда».
-          </p>
+          <button
+            id="openIdeaButton"
+            class="idea-button"
+            type="button"
+          >
+            Предложить идею
+            <span>→</span>
+          </button>
 
         </div>
 
-        <button
-          id="openIdeaButton"
-          class="idea-button"
-          type="button"
-        >
-          Предложить идею
-          <span>→</span>
-        </button>
+      </section>
 
-      </div>
 
-    </section>
+      <!-- NEWS SUGGESTION -->
+
+      <section
+        class="news-suggest-section"
+        id="news-suggest"
+      >
+
+        <div class="news-suggest-inner">
+
+          <div class="news-suggest-text">
+
+            <div class="news-suggest-kicker">
+              NEWS TRANSMISSION
+            </div>
+
+            <h2>
+              Предложить новость
+            </h2>
+
+            <p>
+              Знаете о важном событии или обновлении?
+              Передайте информацию команде «Голоса Фонда».
+            </p>
+
+          </div>
+
+          <button
+            id="openNewsSuggestButton"
+            class="news-suggest-button"
+            type="button"
+          >
+            Предложить новость
+            <span>→</span>
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
 
   </div>
 
@@ -3892,6 +4291,136 @@ footer{
 </div>
 
 
+<!-- ================= NEWS SUGGESTION MODAL ================= -->
+
+<div
+  id="newsSuggestModal"
+  class="news-suggest-modal"
+  aria-hidden="true"
+>
+
+  <div
+    class="news-suggest-modal-box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="newsSuggestModalTitle"
+  >
+
+    <div class="news-suggest-modal-header">
+
+      <div>
+
+        <div class="news-suggest-modal-kicker">
+          NEWS TRANSMISSION
+        </div>
+
+        <h3 id="newsSuggestModalTitle">
+          Предложить новость
+        </h3>
+
+      </div>
+
+      <button
+        id="newsSuggestModalClose"
+        class="news-suggest-modal-close"
+        type="button"
+        aria-label="Закрыть"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="news-suggest-modal-body">
+
+      <div
+        id="newsSuggestAuthNotice"
+        class="idea-auth-notice news-suggest-auth"
+      >
+
+        <span class="idea-auth-dot" style="background:#a93636;box-shadow:0 0 8px rgba(169,54,54,.25);"></span>
+
+        <div>
+
+          <strong>
+            DISCORD AUTHORIZATION REQUIRED
+          </strong>
+
+          <p id="newsSuggestAuthText">
+            Войдите через Discord, чтобы предложить новость.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="news-suggest-field">
+
+        <label class="news-suggest-label" for="newsSuggestTitle">
+          Заголовок новости
+        </label>
+
+        <input
+          id="newsSuggestTitle"
+          class="news-suggest-input"
+          type="text"
+          maxlength="180"
+          placeholder="Например: Вышло новое обновление сервера"
+          disabled
+        >
+
+      </div>
+
+
+      <div class="news-suggest-field">
+
+        <label class="news-suggest-label" for="newsSuggestContent">
+          Информация
+        </label>
+
+        <textarea
+          id="newsSuggestContent"
+          class="news-suggest-textarea"
+          maxlength="2000"
+          placeholder="Расскажите, что произошло, или укажите источник информации..."
+          disabled
+        ></textarea>
+
+      </div>
+
+
+      <div class="news-suggest-bottom">
+
+        <span id="newsSuggestCounter">
+          0 / 2000
+        </span>
+
+        <button
+          id="newsSuggestSubmitButton"
+          class="news-suggest-submit"
+          type="button"
+          disabled
+        >
+          Отправить новость
+        </button>
+
+      </div>
+
+
+      <div
+        id="newsSuggestResult"
+        class="news-suggest-result"
+      ></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
 <footer>
 
   <div class="wrap">
@@ -3924,9 +4453,11 @@ footer{
         <div class="footer-links">
 
           <a href="#news" data-nav-category="all">Новости</a>
+          <a href="#">Discord</a>
           <a href="./archive.html">Архив</a>
-          <a href="https://store.steampowered.com/app/3257000/SCP_Containment_Breach_2/?l=russian" target="_blank" rel="noopener noreferrer">Steam</a>
-          <a href="#ideas">Предложить новость</a>
+          <a href="#">GitHub</a>
+          <a href="#">Онлайн</a>
+          <a href="#news-suggest">Предложить новость</a>
           <a href="#about">О проекте</a>
           <a href="#">Поддержать проект</a>
 
@@ -4081,6 +4612,53 @@ const ideaAuthText =
     "ideaAuthText"
   );
 
+/* ================= NEWS SUGGESTION ELEMENTS ================= */
+
+const openNewsSuggestButton =
+  document.getElementById(
+    "openNewsSuggestButton"
+  );
+
+const newsSuggestModal =
+  document.getElementById(
+    "newsSuggestModal"
+  );
+
+const newsSuggestModalClose =
+  document.getElementById(
+    "newsSuggestModalClose"
+  );
+
+const newsSuggestTitle =
+  document.getElementById(
+    "newsSuggestTitle"
+  );
+
+const newsSuggestContent =
+  document.getElementById(
+    "newsSuggestContent"
+  );
+
+const newsSuggestSubmitButton =
+  document.getElementById(
+    "newsSuggestSubmitButton"
+  );
+
+const newsSuggestCounter =
+  document.getElementById(
+    "newsSuggestCounter"
+  );
+
+const newsSuggestResult =
+  document.getElementById(
+    "newsSuggestResult"
+  );
+
+const newsSuggestAuthText =
+  document.getElementById(
+    "newsSuggestAuthText"
+  );
+
 let currentAuthUser =
   null;
 
@@ -4129,8 +4707,8 @@ function closeAuthModal(){
   );
 
   if(
-    !ideaModal ||
-    !ideaModal.classList.contains("open")
+    (!ideaModal || !ideaModal.classList.contains("open")) &&
+    (!newsSuggestModal || !newsSuggestModal.classList.contains("open"))
   ){
 
     document.body.style.overflow =
@@ -4210,6 +4788,8 @@ document.addEventListener(
       closeAuthModal();
 
       closeIdeaModal();
+
+      closeNewsSuggestModal();
 
       if(authMenu){
 
@@ -4369,6 +4949,63 @@ function getDiscordUserData(
 }
 
 
+/* ================= BLOCKED DISCORD ================= */
+
+async function ensureUserIsNotBlocked(
+  user
+){
+
+  if(!user){
+    return null;
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("blocked_users")
+      .select("user_id")
+      .eq("user_id",user.id)
+      .maybeSingle();
+
+    if(error){
+      console.error(
+        "Ошибка проверки блокировки Discord:",
+        error
+      );
+      return user;
+    }
+
+    if(data){
+
+      await supabaseClient.auth.signOut({
+        scope:"local"
+      });
+
+      alert(
+        "Ваш Discord-аккаунт заблокирован администрацией сайта."
+      );
+
+      return null;
+    }
+
+    return user;
+
+  }catch(error){
+
+    console.error(
+      "Ошибка проверки блокировки:",
+      error
+    );
+
+    return user;
+  }
+
+}
+
+
 /* ================= IDEA ACCESS ================= */
 
 function updateIdeaAccess(
@@ -4418,69 +5055,51 @@ function updateIdeaAccess(
 
   }
 
-}
 
+  if(
+    newsSuggestTitle &&
+    newsSuggestContent &&
+    newsSuggestSubmitButton
+  ){
 
-/* ================= BLOCKED DISCORD CHECK ================= */
+    if(user){
 
-async function ensureUserIsNotBlocked(
-  user
-){
+      newsSuggestTitle.disabled =
+        false;
 
-  if(!user){
-    return null;
-  }
+      newsSuggestContent.disabled =
+        false;
 
-  try{
+      newsSuggestSubmitButton.disabled =
+        newsSuggestTitle.value.trim().length === 0 ||
+        newsSuggestContent.value.trim().length === 0;
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("blocked_users")
-        .select("user_id")
-        .eq(
-          "user_id",
-          user.id
-        )
-        .maybeSingle();
+      if(newsSuggestAuthText){
 
-    if(error){
+        newsSuggestAuthText.textContent =
+          "Вы вошли через Discord. Теперь можно предложить новость.";
 
-      console.error(
-        "Ошибка проверки блокировки Discord:",
-        error
-      );
+      }
 
-      return user;
+    }else{
 
-    }
+      newsSuggestTitle.disabled =
+        true;
 
-    if(data){
+      newsSuggestContent.disabled =
+        true;
 
-      await supabaseClient.auth.signOut({
-        scope:"local"
-      });
+      newsSuggestSubmitButton.disabled =
+        true;
 
-      alert(
-        "Ваш Discord-аккаунт заблокирован администрацией сайта."
-      );
+      if(newsSuggestAuthText){
 
-      return null;
+        newsSuggestAuthText.textContent =
+          "Войдите через Discord, чтобы предложить новость.";
+
+      }
 
     }
-
-    return user;
-
-  }catch(error){
-
-    console.error(
-      "Ошибка проверки блокировки:",
-      error
-    );
-
-    return user;
 
   }
 
@@ -4810,7 +5429,6 @@ supabaseClient.auth.onAuthStateChange(
 
       setTimeout(
         async function(){
-
           const allowedUser =
             await ensureUserIsNotBlocked(
               session.user
@@ -4819,7 +5437,6 @@ supabaseClient.auth.onAuthStateChange(
           renderAuthUser(
             allowedUser
           );
-
         },
         0
       );
@@ -4839,6 +5456,110 @@ supabaseClient.auth.onAuthStateChange(
 /* ================= INITIAL AUTH CHECK ================= */
 
 checkAuth();
+
+
+/* ================= NEWS SUGGESTION MODAL ================= */
+
+function openNewsSuggestModal(){
+
+  if(!newsSuggestModal){
+    return;
+  }
+
+  if(!currentAuthUser){
+
+    closeNewsSuggestModal();
+    openAuthModal();
+    return;
+
+  }
+
+  newsSuggestModal.classList.add(
+    "open"
+  );
+
+  newsSuggestModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+  if(newsSuggestResult){
+    newsSuggestResult.classList.remove(
+      "visible"
+    );
+    newsSuggestResult.textContent =
+      "";
+  }
+
+  updateNewsSuggestCounter();
+
+}
+
+
+function closeNewsSuggestModal(){
+
+  if(!newsSuggestModal){
+    return;
+  }
+
+  newsSuggestModal.classList.remove(
+    "open"
+  );
+
+  newsSuggestModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  if(
+    !authModal ||
+    !authModal.classList.contains("open") &&
+    !ideaModal?.classList.contains("open")
+  ){
+    document.body.style.overflow =
+      "";
+  }
+
+}
+
+
+if(openNewsSuggestButton){
+
+  openNewsSuggestButton.addEventListener(
+    "click",
+    openNewsSuggestModal
+  );
+
+}
+
+
+if(newsSuggestModalClose){
+
+  newsSuggestModalClose.addEventListener(
+    "click",
+    closeNewsSuggestModal
+  );
+
+}
+
+
+if(newsSuggestModal){
+
+  newsSuggestModal.addEventListener(
+    "click",
+    function(event){
+
+      if(event.target === newsSuggestModal){
+        closeNewsSuggestModal();
+      }
+
+    }
+  );
+
+}
 
 
 /* ================= IDEA MODAL ================= */
@@ -4909,8 +5630,8 @@ function closeIdeaModal(){
 
 
   if(
-    !authModal ||
-    !authModal.classList.contains("open")
+    (!authModal || !authModal.classList.contains("open")) &&
+    (!newsSuggestModal || !newsSuggestModal.classList.contains("open"))
   ){
 
     document.body.style.overflow =
@@ -5027,6 +5748,196 @@ if(ideaInput){
 }
 
 
+/* ================= NEWS SUGGESTION COUNTER ================= */
+
+function updateNewsSuggestCounter(){
+
+  if(!newsSuggestCounter){
+    return;
+  }
+
+  const titleLength =
+    newsSuggestTitle
+      ? newsSuggestTitle.value.length
+      : 0;
+
+  const contentLength =
+    newsSuggestContent
+      ? newsSuggestContent.value.length
+      : 0;
+
+  newsSuggestCounter.textContent =
+    `${contentLength} / 2000`;
+
+  if(newsSuggestSubmitButton){
+
+    newsSuggestSubmitButton.disabled =
+      !currentAuthUser ||
+      titleLength === 0 ||
+      contentLength === 0;
+
+  }
+
+}
+
+
+if(newsSuggestTitle){
+
+  newsSuggestTitle.addEventListener(
+    "input",
+    function(){
+      updateNewsSuggestCounter();
+      if(newsSuggestResult){
+        newsSuggestResult.classList.remove("visible");
+        newsSuggestResult.textContent = "";
+      }
+    }
+  );
+
+}
+
+
+if(newsSuggestContent){
+
+  newsSuggestContent.addEventListener(
+    "input",
+    function(){
+      updateNewsSuggestCounter();
+      if(newsSuggestResult){
+        newsSuggestResult.classList.remove("visible");
+        newsSuggestResult.textContent = "";
+      }
+    }
+  );
+
+}
+
+
+/* ================= NEWS SUGGESTION SUBMIT ================= */
+
+if(newsSuggestSubmitButton){
+
+  newsSuggestSubmitButton.addEventListener(
+    "click",
+    async function(){
+
+      if(!currentAuthUser){
+        closeNewsSuggestModal();
+        openAuthModal();
+        return;
+      }
+
+      const title =
+        newsSuggestTitle
+          ? newsSuggestTitle.value.trim()
+          : "";
+
+      const content =
+        newsSuggestContent
+          ? newsSuggestContent.value.trim()
+          : "";
+
+      if(!title || !content){
+        return;
+      }
+
+      if(title.length > 180 || content.length > 2000){
+
+        if(newsSuggestResult){
+          newsSuggestResult.textContent =
+            "Проверьте длину заголовка и текста новости.";
+          newsSuggestResult.classList.add("visible");
+        }
+
+        return;
+      }
+
+      newsSuggestSubmitButton.disabled = true;
+      newsSuggestSubmitButton.textContent = "ОТПРАВКА...";
+
+      try{
+
+        const discordUser =
+          getDiscordUserData(
+            currentAuthUser
+          );
+
+        /*
+          Используем существующую таблицу suggestions,
+          чтобы предложение сразу попадало в уже
+          существующую очередь модерации админ-панели.
+        */
+        const suggestionContent =
+          `Предложение новости: ${title}\n\n${content}`;
+
+        const {error} =
+          await supabaseClient
+            .from("suggestions")
+            .insert({
+              user_id: currentAuthUser.id,
+              discord_name: discordUser.name,
+              discord_avatar: discordUser.avatar,
+              content: suggestionContent,
+              status: "pending"
+            });
+
+        if(error){
+
+          console.error(
+            "Ошибка отправки предложения новости:",
+            error
+          );
+
+          if(newsSuggestResult){
+            newsSuggestResult.textContent =
+              "Не удалось отправить предложение. Попробуйте ещё раз.";
+            newsSuggestResult.classList.add("visible");
+          }
+
+          newsSuggestSubmitButton.disabled = false;
+          newsSuggestSubmitButton.textContent =
+            "ОТПРАВИТЬ НОВОСТЬ";
+          return;
+        }
+
+        if(newsSuggestResult){
+          newsSuggestResult.textContent =
+            "Предложение новости отправлено на модерацию.";
+          newsSuggestResult.classList.add("visible");
+        }
+
+        newsSuggestTitle.value = "";
+        newsSuggestContent.value = "";
+        updateNewsSuggestCounter();
+
+      }catch(error){
+
+        console.error(
+          "Ошибка отправки предложения новости:",
+          error
+        );
+
+        if(newsSuggestResult){
+          newsSuggestResult.textContent =
+            "Произошла ошибка при отправке. Попробуйте ещё раз.";
+          newsSuggestResult.classList.add("visible");
+        }
+
+      }finally{
+
+        newsSuggestSubmitButton.textContent =
+          "ОТПРАВИТЬ НОВОСТЬ";
+
+        updateNewsSuggestCounter();
+
+      }
+
+    }
+  );
+
+}
+
+
 /* ================= IDEA SUBMIT ================= */
 
 if(ideaSubmitButton){
@@ -5085,29 +5996,6 @@ if(ideaSubmitButton){
 
 
       try{
-
-        const allowedUser =
-          await ensureUserIsNotBlocked(
-            currentAuthUser
-          );
-
-        if(!allowedUser){
-
-          currentAuthUser =
-            null;
-
-          updateIdeaAccess(
-            null
-          );
-
-          closeIdeaModal();
-
-          return;
-
-        }
-
-        currentAuthUser =
-          allowedUser;
 
         const discordUser =
           getDiscordUserData(
