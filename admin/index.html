@@ -1142,6 +1142,19 @@ button:disabled{
 }
 
 /* =========================
+   SITE MEDIA LIBRARY
+========================= */
+
+.media-library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px;}
+.media-card{border:1px solid #252b32;background:#0d1014;border-radius:6px;padding:10px;}
+.media-card.active{border-color:#d5b42e;box-shadow:0 0 0 1px rgba(213,180,46,.12);}
+.media-card-preview{height:130px;border:1px solid #20262c;border-radius:4px;background:#080a0c;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.media-card-preview img{width:100%;height:100%;object-fit:contain;display:block;}
+.media-card-name{margin-top:8px;color:#d7dadd;font-size:9px;font-weight:bold;word-break:break-word;}
+.media-card-meta{margin-top:4px;color:#5f666c;font-size:8px;}
+.media-card-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+
+/* =========================
    MOBILE
 ========================= */
 
@@ -1661,101 +1674,36 @@ button:disabled{
 <section class="panel">
 
  <div class="panel-header">
-
-  <h2 class="panel-title">
-   Изображения сайта
-  </h2>
-
-  <div class="panel-code">
-   SYSTEM / MEDIA
-  </div>
-
+  <h2 class="panel-title">Изображения сайта</h2>
+  <div class="panel-code">SYSTEM / MEDIA</div>
  </div>
-
 
  <div class="field">
-
-  <label>Логотип</label>
-
+  <label>Логотип — до 5 файлов</label>
   <div class="upload-row">
-
-   <input
-    id="logoFile"
-    class="file-input"
-    type="file"
-    accept="image/png,image/jpeg,image/webp"
-   >
-
-   <button
-    class="secondary-button"
-    type="button"
-    data-image-type="logo"
-   >
-    Загрузить
-   </button>
-
+   <input id="logoFile" class="file-input" type="file" accept="image/png,image/jpeg,image/webp">
+   <button class="secondary-button" type="button" data-image-type="logo">Загрузить</button>
   </div>
-
-  <div id="logoPreview" class="preview-box"></div>
-
+  <div id="logoLibrary" class="media-library"></div>
  </div>
-
 
  <div class="field">
-
-  <label>Фоновое изображение</label>
-
+  <label>Фоны — до 5 файлов</label>
   <div class="upload-row">
-
-   <input
-    id="backgroundFile"
-    class="file-input"
-    type="file"
-    accept="image/png,image/jpeg,image/webp"
-   >
-
-   <button
-    class="secondary-button"
-    type="button"
-    data-image-type="background"
-   >
-    Загрузить
-   </button>
-
+   <input id="backgroundFile" class="file-input" type="file" accept="image/png,image/jpeg,image/webp">
+   <button class="secondary-button" type="button" data-image-type="background">Загрузить</button>
   </div>
-
-  <div id="backgroundPreview" class="preview-box"></div>
-
+  <div id="backgroundLibrary" class="media-library"></div>
  </div>
-
 
  <div class="field">
-
-  <label>Баннер</label>
-
+  <label>Баннеры — до 5 файлов</label>
   <div class="upload-row">
-
-   <input
-    id="bannerFile"
-    class="file-input"
-    type="file"
-    accept="image/png,image/jpeg,image/webp"
-   >
-
-   <button
-    class="secondary-button"
-    type="button"
-    data-image-type="banner"
-   >
-    Загрузить
-   </button>
-
+   <input id="bannerFile" class="file-input" type="file" accept="image/png,image/jpeg,image/webp">
+   <button class="secondary-button" type="button" data-image-type="banner">Загрузить</button>
   </div>
-
-  <div id="bannerPreview" class="preview-box"></div>
-
+  <div id="bannerLibrary" class="media-library"></div>
  </div>
-
 
  <div id="imagesStatus" class="status"></div>
 
@@ -2616,216 +2564,94 @@ logoutButton.addEventListener(
 
 async function loadSiteSettings(){
 
- const {
-  data,
-  error
- } = await db
-  .from("site_settings")
-  .select("key,value");
+ const {data,error}=await db.from("site_settings").select("key,value");
+ if(error){setStatus(imagesStatus,error.message,true);return;}
+ const settings={};
+ (data||[]).forEach(row=>{settings[row.key]=row.value;});
+ await loadMediaLibrary(settings);
+}
 
- if(error){
-
-  setStatus(
-   imagesStatus,
-   error.message,
-   true
-  );
-
-  return;
-
- }
-
- const settings = {};
-
- (data || []).forEach(row=>{
-  settings[row.key] = row.value;
+async function loadMediaLibrary(settings={}){
+ const {data,error}=await db.from("site_media").select("id,type,name,path,url,created_at").order("created_at",{ascending:false});
+ if(error){setStatus(imagesStatus,"Библиотека изображений: "+error.message,true);return;}
+ const active={logo:settings.logo||"",background:settings.background||"",banner:settings.banner||""};
+ ["logo","background","banner"].forEach(type=>{
+  const container=document.getElementById(type+"Library");
+  container.innerHTML="";
+  const items=(data||[]).filter(item=>item.type===type);
+  if(!items.length){container.innerHTML='<div class="status">Файлов пока нет.</div>';return;}
+  items.forEach(item=>{
+   const card=document.createElement("div");
+   const isActive=active[type]===item.url;
+   card.className="media-card"+(isActive?" active":"");
+   const preview=document.createElement("div");preview.className="media-card-preview";
+   const img=document.createElement("img");img.src=item.url+"?v="+encodeURIComponent(item.id);img.alt="";preview.appendChild(img);
+   const name=document.createElement("div");name.className="media-card-name";name.textContent=item.name||"Изображение";
+   const meta=document.createElement("div");meta.className="media-card-meta";meta.textContent=isActive?"АКТИВНО":"Сохранено";
+   const actions=document.createElement("div");actions.className="media-card-actions";
+   const use=document.createElement("button");use.type="button";use.className="secondary-button";use.textContent=isActive?"Используется":"Использовать";use.disabled=isActive;use.addEventListener("click",()=>activateMedia(item));
+   const del=document.createElement("button");del.type="button";del.className="danger-button";del.textContent="Удалить";del.addEventListener("click",()=>deleteMedia(item));
+   actions.append(use,del);card.append(preview,name,meta,actions);container.appendChild(card);
+  });
  });
-
- renderPreview(
-  "logoPreview",
-  settings.logo
- );
-
- renderPreview(
-  "backgroundPreview",
-  settings.background
- );
-
- renderPreview(
-  "bannerPreview",
-  settings.banner
- );
-
 }
 
-
-function renderPreview(
- containerId,
- url
-){
-
- const container =
-  document.getElementById(
-   containerId
-  );
-
- container.innerHTML = "";
-
- if(!url){
-  return;
- }
-
- const img =
-  document.createElement("img");
-
- img.src = url;
- img.alt = "";
-
- container.appendChild(img);
-
+async function activateMedia(item){
+ setStatus(imagesStatus,"Применение изображения...");
+ try{
+  const {error}=await db.from("site_settings").upsert({key:item.type,value:item.url},{onConflict:"key"});
+  if(error)throw error;
+  const {data}=await db.from("site_settings").select("key,value");
+  const settings={};(data||[]).forEach(row=>settings[row.key]=row.value);
+  await loadMediaLibrary(settings);
+  setStatus(imagesStatus,"Изображение установлено.");
+ }catch(error){console.error("ACTIVATE SITE MEDIA ERROR:",error);setStatus(imagesStatus,error.message||"Не удалось установить изображение.",true);}
 }
 
+async function deleteMedia(item){
+ if(!confirm("Удалить это изображение из библиотеки?"))return;
+ try{
+  const {data:setting}=await db.from("site_settings").select("value").eq("key",item.type).maybeSingle();
+  if(setting?.value===item.url){await db.from("site_settings").delete().eq("key",item.type);}
+  const path=item.path||getStoragePathFromUrl(item.url);
+  if(path){const {error:storageError}=await db.storage.from("site-images").remove([path]);if(storageError)throw storageError;}
+  const {error}=await db.from("site_media").delete().eq("id",item.id);
+  if(error)throw error;
+  await loadSiteSettings();
+  setStatus(imagesStatus,"Изображение удалено.");
+ }catch(error){console.error("DELETE SITE MEDIA ERROR:",error);setStatus(imagesStatus,error.message||"Не удалось удалить изображение.",true);}
+}
+
+function getStoragePathFromUrl(url){
+ const marker="/storage/v1/object/public/site-images/";const index=String(url||"").indexOf(marker);
+ if(index===-1)return null;return String(url).slice(index+marker.length).split("?")[0];
+}
 
 async function uploadImage(type){
-
- const input =
-  document.getElementById(
-   type + "File"
-  );
-
- const file =
-  input.files?.[0];
-
- if(!file){
-
-  setStatus(
-   imagesStatus,
-   "Выберите изображение.",
-   true
-  );
-
-  return;
-
- }
-
- if(file.size > 5 * 1024 * 1024){
-
-  setStatus(
-   imagesStatus,
-   "Максимальный размер файла — 5 МБ.",
-   true
-  );
-
-  return;
-
- }
-
- const extension =
-  file.name
-   .split(".")
-   .pop()
-   .toLowerCase();
-
- const path =
-  `site/${type}.${extension}`;
-
- setStatus(
-  imagesStatus,
-  "Загрузка изображения..."
- );
-
+ const input=document.getElementById(type+"File");const file=input.files?.[0];
+ if(!file){setStatus(imagesStatus,"Выберите изображение.",true);return;}
+ if(file.size>5*1024*1024){setStatus(imagesStatus,"Максимальный размер файла — 5 МБ.",true);return;}
  try{
-
-  const {
-   error:uploadError
-  } = await db.storage
-   .from("site-images")
-   .upload(
-    path,
-    file,
-    {
-     upsert:true,
-     contentType:file.type
-    }
-   );
-
-  if(uploadError){
-   throw uploadError;
-  }
-
-  const {
-   data:publicData
-  } = db.storage
-   .from("site-images")
-   .getPublicUrl(path);
-
-  const url =
-   publicData.publicUrl;
-
-  const {
-   error:dbError
-  } = await db
-   .from("site_settings")
-   .upsert(
-    {
-     key:type,
-     value:url
-    },
-    {
-     onConflict:"key"
-    }
-   );
-
-  if(dbError){
-   throw dbError;
-  }
-
-  renderPreview(
-   type + "Preview",
-   url
-  );
-
-  setStatus(
-   imagesStatus,
-   "Изображение успешно обновлено."
-  );
-
- }catch(error){
-
-  console.error(
-   "UPLOAD SITE IMAGE ERROR:",
-   error
-  );
-
-  setStatus(
-   imagesStatus,
-   error.message ||
-    "Не удалось загрузить изображение.",
-   true
-  );
-
- }
-
+  const {count,error:countError}=await db.from("site_media").select("id",{count:"exact",head:true}).eq("type",type);
+  if(countError)throw countError;
+  if((count||0)>=5){setStatus(imagesStatus,"Для этого типа уже загружено 5 файлов. Удалите один, чтобы добавить новый.",true);return;}
+  const extension=file.name.split(".").pop().toLowerCase();
+  const safeName=file.name.replace(/[^a-zA-Z0-9а-яА-Я._-]/g,"_").replace(/\.+/g,".").slice(-80);
+  const unique=Date.now()+"-"+Math.random().toString(36).slice(2,8);
+  const path=`site-library/${type}/${unique}-${safeName||type+"."+extension}`;
+  setStatus(imagesStatus,"Загрузка изображения...");
+  const {error:uploadError}=await db.storage.from("site-images").upload(path,file,{upsert:false,contentType:file.type});
+  if(uploadError)throw uploadError;
+  const {data:publicData}=db.storage.from("site-images").getPublicUrl(path);const url=publicData.publicUrl;
+  const {error:dbError}=await db.from("site_media").insert({type,name:file.name,path,url});
+  if(dbError){await db.storage.from("site-images").remove([path]);throw dbError;}
+  const {error:activateError}=await db.from("site_settings").upsert({key:type,value:url},{onConflict:"key"});
+  if(activateError)throw activateError;
+  input.value="";await loadSiteSettings();setStatus(imagesStatus,"Изображение загружено и установлено.");
+ }catch(error){console.error("UPLOAD SITE IMAGE ERROR:",error);setStatus(imagesStatus,error.message||"Не удалось загрузить изображение.",true);}
 }
 
-
-document
- .querySelectorAll("[data-image-type]")
- .forEach(button=>{
-
-  button.addEventListener(
-   "click",
-   ()=>{
-
-    uploadImage(
-     button.dataset.imageType
-    );
-
-   }
-  );
-
- });
-
+document.querySelectorAll("[data-image-type]").forEach(button=>{button.addEventListener("click",()=>uploadImage(button.dataset.imageType));});
 
 /* =========================================================
    NEWS IMAGE PREVIEW
