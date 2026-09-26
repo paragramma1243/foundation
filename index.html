@@ -2752,6 +2752,11 @@ footer{
   text-transform:uppercase;
 }
 
+.footer-nav-block{
+  position:relative;
+  left:-30px;
+}
+
 .footer-nav-block .footer-title{
   text-align:center;
 }
@@ -2840,6 +2845,10 @@ footer{
 }
 
 @media(max-width:700px){
+
+  .footer-nav-block{
+    left:0;
+  }
 
   .wrap,
   .header-inner{
@@ -4412,6 +4421,72 @@ function updateIdeaAccess(
 }
 
 
+/* ================= BLOCKED DISCORD CHECK ================= */
+
+async function ensureUserIsNotBlocked(
+  user
+){
+
+  if(!user){
+    return null;
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("blocked_users")
+        .select("user_id")
+        .eq(
+          "user_id",
+          user.id
+        )
+        .maybeSingle();
+
+    if(error){
+
+      console.error(
+        "Ошибка проверки блокировки Discord:",
+        error
+      );
+
+      return user;
+
+    }
+
+    if(data){
+
+      await supabaseClient.auth.signOut({
+        scope:"local"
+      });
+
+      alert(
+        "Ваш Discord-аккаунт заблокирован администрацией сайта."
+      );
+
+      return null;
+
+    }
+
+    return user;
+
+  }catch(error){
+
+    console.error(
+      "Ошибка проверки блокировки:",
+      error
+    );
+
+    return user;
+
+  }
+
+}
+
+
 /* ================= RENDER USER ================= */
 
 function renderAuthUser(
@@ -4541,8 +4616,13 @@ async function checkAuth(){
       data.session.user
     ){
 
+      const allowedUser =
+        await ensureUserIsNotBlocked(
+          data.session.user
+        );
+
       renderAuthUser(
-        data.session.user
+        allowedUser
       );
 
     }else{
@@ -4728,8 +4808,20 @@ supabaseClient.auth.onAuthStateChange(
       session.user
     ){
 
-      renderAuthUser(
-        session.user
+      setTimeout(
+        async function(){
+
+          const allowedUser =
+            await ensureUserIsNotBlocked(
+              session.user
+            );
+
+          renderAuthUser(
+            allowedUser
+          );
+
+        },
+        0
       );
 
     }else{
@@ -4993,6 +5085,29 @@ if(ideaSubmitButton){
 
 
       try{
+
+        const allowedUser =
+          await ensureUserIsNotBlocked(
+            currentAuthUser
+          );
+
+        if(!allowedUser){
+
+          currentAuthUser =
+            null;
+
+          updateIdeaAccess(
+            null
+          );
+
+          closeIdeaModal();
+
+          return;
+
+        }
+
+        currentAuthUser =
+          allowedUser;
 
         const discordUser =
           getDiscordUserData(
