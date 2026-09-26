@@ -1110,6 +1110,14 @@ button:disabled{
  overflow-wrap:anywhere;
 }
 
+.suggestion-actions{
+ margin-top:11px;
+ display:flex;
+ flex-wrap:wrap;
+ gap:6px;
+ align-items:flex-start;
+}
+
 .suggestion-status{
  display:inline-block;
  padding:4px 7px;
@@ -1615,6 +1623,27 @@ button:disabled{
  <div class="panel-header">
 
   <h2 class="panel-title">
+   Заблокированные Discord
+  </h2>
+
+  <div class="panel-code">
+   COMMUNITY / BLOCKED
+  </div>
+
+ </div>
+
+ <div id="blockedUsersStatus" class="status"></div>
+
+ <div id="blockedUsersList" class="comments-list"></div>
+
+</section>
+
+
+<section class="panel">
+
+ <div class="panel-header">
+
+  <h2 class="panel-title">
    Новости
   </h2>
 
@@ -1889,7 +1918,7 @@ const db = createClient(
 ========================================================= */
 
 const ADMINS = {
- "bf784edb-644c-457b-b25f-cc3b5bad8c47": "Trash Master Fighter",
+ "bf784edb-644c-457b-b25f-cc3b5bad8c47": "Master Figher",
  "1799bcaf-bf04-472b-a789-fa92ddd9a0f9": "Felty"
 };
 
@@ -2055,6 +2084,12 @@ const suggestionsStatus =
 const suggestionsList =
  document.getElementById("suggestionsList");
 
+const blockedUsersStatus =
+ document.getElementById("blockedUsersStatus");
+
+const blockedUsersList =
+ document.getElementById("blockedUsersList");
+
 const newsList =
  document.getElementById("newsList");
 
@@ -2068,6 +2103,7 @@ const imagesStatus =
 
 let savedEditorRange = null;
 let pendingImageUrl = null;
+let blockedUsers = new Map();
 let selectedInlineImage = null;
 let resizingImage = false;
 let resizeStartX = 0;
@@ -2350,10 +2386,11 @@ async function checkUser(){
   );
 
 
+  await loadSiteSettings();
+  await loadNews();
+  await loadChanges();
+  await loadBlockedUsers();
   await Promise.all([
-   loadSiteSettings(),
-   loadNews(),
-   loadChanges(),
    loadComments(),
    loadSuggestions()
   ]);
@@ -5821,15 +5858,9 @@ async function deleteChange(id){
 
 async function loadSuggestions(){
 
- setStatus(
-  suggestionsStatus,
-  "Загрузка предложений..."
- );
+ setStatus(suggestionsStatus,"Загрузка предложений...");
 
- const {
-  data,
-  error
- } = await db
+ const {data,error}=await db
   .from("suggestions")
   .select("id,user_id,discord_name,discord_avatar,content,status,created_at")
   .order("created_at",{ascending:false})
@@ -5837,17 +5868,12 @@ async function loadSuggestions(){
 
  if(error){
   console.error("LOAD SUGGESTIONS ERROR:",error);
-  setStatus(
-   suggestionsStatus,
-   error.message || "Не удалось загрузить предложения.",
-   true
-  );
+  setStatus(suggestionsStatus,error.message || "Не удалось загрузить предложения.",true);
   suggestionsList.innerHTML="";
   return;
  }
 
  suggestionsList.innerHTML="";
-
  if(!data?.length){
   suggestionsList.innerHTML='<div class="suggestions-empty">Предложений пока нет.</div>';
   setStatus(suggestionsStatus,"");
@@ -5857,13 +5883,10 @@ async function loadSuggestions(){
  data.forEach(suggestion=>{
   const item=document.createElement("article");
   item.className="suggestion-item";
-
   const top=document.createElement("div");
   top.className="suggestion-top";
-
   const author=document.createElement("div");
   author.className="suggestion-author";
-
   if(suggestion.discord_avatar){
    const avatar=document.createElement("img");
    avatar.className="suggestion-avatar";
@@ -5872,36 +5895,148 @@ async function loadSuggestions(){
    avatar.onerror=()=>avatar.remove();
    author.appendChild(avatar);
   }
-
   const authorInfo=document.createElement("div");
   const name=document.createElement("div");
   name.className="suggestion-name";
   name.textContent=suggestion.discord_name || "Неизвестный пользователь";
-
   const date=document.createElement("div");
   date.className="suggestion-date";
-  date.textContent=suggestion.created_at
-   ? new Date(suggestion.created_at).toLocaleString("ru-RU")
-   : "Дата неизвестна";
-
+  date.textContent=suggestion.created_at ? new Date(suggestion.created_at).toLocaleString("ru-RU") : "Дата неизвестна";
   authorInfo.append(name,date);
   author.appendChild(authorInfo);
-
   const status=document.createElement("span");
   status.className="suggestion-status";
   status.textContent=suggestion.status || "pending";
-
   top.append(author,status);
-
   const content=document.createElement("div");
   content.className="suggestion-content";
   content.textContent=suggestion.content || "";
-
-  item.append(top,content);
+  const actions=document.createElement("div");
+  actions.className="suggestion-actions";
+  const deleteButton=document.createElement("button");
+  deleteButton.type="button";
+  deleteButton.className="danger-button";
+  deleteButton.textContent="Удалить";
+  deleteButton.addEventListener("click",()=>deleteSuggestion(suggestion.id,deleteButton));
+  actions.appendChild(deleteButton);
+  if(suggestion.user_id){
+   const blockButton=document.createElement("button");
+   blockButton.type="button";
+   blockButton.className=blockedUsers.has(suggestion.user_id) ? "secondary-button" : "danger-button";
+   blockButton.textContent=blockedUsers.has(suggestion.user_id) ? "Заблокирован" : "Заблокировать";
+   blockButton.disabled=blockedUsers.has(suggestion.user_id);
+   blockButton.addEventListener("click",()=>blockUser(suggestion.user_id,suggestion.discord_name,suggestion.discord_avatar,blockButton));
+   actions.appendChild(blockButton);
+  }
+  item.append(top,content,actions);
   suggestionsList.appendChild(item);
  });
-
  setStatus(suggestionsStatus,"");
+}
+
+async function deleteSuggestion(id,button){
+ if(!id || !confirm("Удалить это предложение?")) return;
+ if(button) button.disabled=true;
+ try{
+  const {data,error}=await db.from("suggestions").delete().eq("id",id).select("id");
+  if(error) throw error;
+  if(!data?.length) throw new Error("Предложение не было удалено. Проверьте RLS-политику DELETE для таблицы suggestions.");
+  await loadSuggestions();
+ }catch(error){
+  console.error("DELETE SUGGESTION ERROR:",error);
+  alert("Не удалось удалить предложение:\n\n"+(error.message || error));
+ }finally{
+  if(button) button.disabled=false;
+ }
+}
+
+/* =========================================================
+   BLOCKED DISCORD USERS
+========================================================= */
+
+async function loadBlockedUsers(){
+ setStatus(blockedUsersStatus,"Загрузка заблокированных...");
+ const {data,error}=await db.from("blocked_users").select("user_id,discord_name,discord_avatar,blocked_at,reason").order("blocked_at",{ascending:false});
+ if(error){
+  console.error("LOAD BLOCKED USERS ERROR:",error);
+  blockedUsers.clear();
+  blockedUsersList.innerHTML="";
+  setStatus(blockedUsersStatus,error.message || "Не удалось загрузить список блокировок.",true);
+  return;
+ }
+ blockedUsers.clear();
+ (data || []).forEach(user=>blockedUsers.set(user.user_id,user));
+ blockedUsersList.innerHTML="";
+ if(!data?.length){
+  setStatus(blockedUsersStatus,"Заблокированных пользователей нет.");
+  return;
+ }
+ data.forEach(user=>{
+  const item=document.createElement("div");
+  item.className="comment-item";
+  const info=document.createElement("div");
+  info.innerHTML=`
+   <div class="comment-author">${escapeHtml(user.discord_name || "Неизвестный пользователь")}</div>
+   <div class="item-meta">ID: ${escapeHtml(user.user_id || "—")}</div>
+   <div class="comment-date">Заблокирован: ${escapeHtml(formatDate(user.blocked_at))}</div>
+  `;
+  if(user.reason){
+   const reason=document.createElement("div");
+   reason.className="comment-content";
+   reason.textContent="Причина: "+user.reason;
+   info.appendChild(reason);
+  }
+  const actions=document.createElement("div");
+  actions.className="comment-actions";
+  const unblockButton=document.createElement("button");
+  unblockButton.type="button";
+  unblockButton.className="secondary-button";
+  unblockButton.textContent="Разблокировать";
+  unblockButton.addEventListener("click",()=>unblockUser(user.user_id,unblockButton));
+  actions.appendChild(unblockButton);
+  item.append(info,actions);
+  blockedUsersList.appendChild(item);
+ });
+ setStatus(blockedUsersStatus,`Заблокировано: ${data.length}.`);
+}
+
+async function blockUser(userId,discordName,discordAvatar,button){
+ if(!userId || blockedUsers.has(userId)) return;
+ if(!confirm(`Заблокировать Discord-аккаунт «${discordName || "Пользователь"}»?\n\nПосле блокировки этот аккаунт не сможет войти на сайт.`)) return;
+ if(button) button.disabled=true;
+ try{
+  const currentAdmin=(await db.auth.getUser()).data?.user?.id || null;
+  const {data,error}=await db.from("blocked_users").insert({user_id:userId,discord_name:discordName || "Неизвестный пользователь",discord_avatar:discordAvatar || null,blocked_by:currentAdmin}).select("user_id,discord_name,discord_avatar,blocked_at,reason").single();
+  if(error){
+   if(error.code === "23505"){ await loadBlockedUsers(); return; }
+   throw error;
+  }
+  if(data) blockedUsers.set(data.user_id,data);
+  await Promise.all([loadBlockedUsers(),loadComments(),loadSuggestions()]);
+ }catch(error){
+  console.error("BLOCK USER ERROR:",error);
+  alert("Не удалось заблокировать Discord-аккаунт:\n\n"+(error.message || error));
+ }finally{
+  if(button) button.disabled=false;
+ }
+}
+
+async function unblockUser(userId,button){
+ if(!userId || !confirm("Разблокировать этот Discord-аккаунт?")) return;
+ if(button) button.disabled=true;
+ try{
+  const {data,error}=await db.from("blocked_users").delete().eq("user_id",userId).select("user_id");
+  if(error) throw error;
+  if(!data?.length) throw new Error("Аккаунт не был разблокирован. Проверьте RLS-политику DELETE для таблицы blocked_users.");
+  await loadBlockedUsers();
+  await loadSuggestions();
+  await loadComments();
+ }catch(error){
+  console.error("UNBLOCK USER ERROR:",error);
+  alert("Не удалось разблокировать Discord-аккаунт:\n\n"+(error.message || error));
+ }finally{
+  if(button) button.disabled=false;
+ }
 }
 
 
@@ -5922,7 +6057,7 @@ async function loadComments(){
  } = await db
   .from("comments")
   .select(
-   "id,news_id,author,content,created_at,status"
+   "id,news_id,user_id,author,avatar_url,content,created_at,status"
   )
   .order(
    "created_at",
@@ -6225,6 +6360,16 @@ function renderComment(
  actions.appendChild(
   deleteButton
  );
+
+ if(comment.user_id){
+  const blockButton = document.createElement("button");
+  blockButton.type = "button";
+  blockButton.className = blockedUsers.has(comment.user_id) ? "secondary-button" : "danger-button";
+  blockButton.textContent = blockedUsers.has(comment.user_id) ? "Заблокирован" : "Заблокировать";
+  blockButton.disabled = blockedUsers.has(comment.user_id);
+  blockButton.addEventListener("click",()=>blockUser(comment.user_id,comment.author,comment.avatar_url,blockButton));
+  actions.appendChild(blockButton);
+ }
 
  item.appendChild(info);
  item.appendChild(actions);
