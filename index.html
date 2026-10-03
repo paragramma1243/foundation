@@ -3066,23 +3066,41 @@ footer{
 
 .footer-grid{
   display:grid;
-  grid-template-columns:2fr 1fr 1fr;
+  grid-template-columns:minmax(0,2fr) minmax(0,1fr);
   gap:50px;
+  align-items:start;
 }
 
 .footer-nav-block{
-  grid-column:2 / 4;
+  grid-column:2;
+  width:100%;
+  min-width:0;
 }
 
-.footer-nav-block .footer-title{
+.footer-nav-table{
+  width:100%;
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:clamp(24px,3vw,42px);
+  align-items:start;
+}
+
+.footer-nav-table .footer-title{
+  grid-column:1 / -1;
+  width:100%;
+  margin:0 0 15px;
   text-align:center;
   transform:none;
 }
 
-.footer-nav-block .footer-links{
+.footer-nav-table .footer-links{
+  grid-column:1 / -1;
+  width:100%;
+  min-width:0;
   display:grid;
-  grid-template-columns:1fr 1fr;
-  column-gap:42px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:clamp(24px,3vw,42px);
   row-gap:9px;
 }
 
@@ -3406,12 +3424,25 @@ footer{
   }
 
   .footer-nav-block{
-    grid-column:auto;
-    left:0;
+    grid-column:1;
   }
 
-  .footer-nav-block .footer-title{
+  .footer-nav-table{
+    width:100%;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:clamp(18px,6vw,32px);
+  }
+
+  .footer-nav-table .footer-title{
+    grid-column:1 / -1;
+    text-align:center;
     transform:none;
+  }
+
+  .footer-nav-table .footer-links{
+    grid-column:1 / -1;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:clamp(18px,6vw,32px);
   }
 
   .footer-bottom{
@@ -4446,20 +4477,22 @@ footer{
 
       <div class="footer-nav-block">
 
-        <div class="footer-title">
-          НАВИГАЦИЯ ПРОЕКТА
-        </div>
+        <div class="footer-nav-table">
 
-        <div class="footer-links">
+          <div class="footer-title">
+            НАВИГАЦИЯ ПРОЕКТА
+          </div>
 
-          <a href="#news" data-nav-category="all">Новости</a>
-          <a href="#">Discord</a>
-          <a href="./archive.html">Архив</a>
-          <a href="#">GitHub</a>
-          <a href="#">Онлайн</a>
-          <a href="#news-suggest">Предложить новость</a>
-          <a href="#about">О проекте</a>
-          <a href="#">Поддержать проект</a>
+          <div class="footer-links">
+
+            <a href="#news" data-nav-category="all">Новости</a>
+            <a href="#">Discord</a>
+            <a href="./archive.html">Архив</a>
+            <a href="#news-suggest">Предложить новость</a>
+            <a href="#about">О проекте</a>
+            <a href="#">Поддержать проект</a>
+
+          </div>
 
         </div>
 
